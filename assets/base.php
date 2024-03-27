@@ -43,6 +43,7 @@ class Base
                     $translate = [];
                     if ($translation)
                         $translate = Translate::Go($base, $lang);
+                    mlog(strtolower(explode(".",$base[1])[1]));
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "Noun":
                             $sentence = new Noun(
@@ -50,7 +51,7 @@ class Base
                                 $word,
                                 "nom",
                                 "s",
-                                null,
+                                strtolower(explode(".",$base[1])[1]),
                                 $translate
                             );
                             break;

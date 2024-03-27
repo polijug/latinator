@@ -53,8 +53,6 @@ class WikiText
                             $obtClass = explode(" ", explode("|", $inflections[$i])[2])[0];
                             continue;
                         }
-                        /*if(str_contains($inflections[$i], "# "))
-                            $inflections[$i] = explode("# ", $inflections[$i])[1];*/
                         $start = explode("||", $inflections[$i]); //sometimes more - start is same
                         $inf = explode("|;|", $start[1]);
                         for ($j = 0; $j < count($inf); $j++) {

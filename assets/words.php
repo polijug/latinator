@@ -382,11 +382,8 @@ class Verb extends Noun
     {
         $this->number = Merge::Values($this->number, $word->number);
         $this->gender = Merge::Values($this->gender, $word->gender);
-        //$this->tense = Merge::Values($this->tense, $word->tense, true);
-        //$this->mood = Merge::Values($this->mood, $word->mood);
         $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
         $this->person = $word->person;
-        //$this->person = Merge::Values($this->person, $word->person, true);
         $this->translation = Merge::Values($this->translation, $word->translation);
         $this->table = strlen($this->table->table) > strlen($word->table->table) ? $this->table : $word->table;
     }

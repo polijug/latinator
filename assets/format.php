@@ -125,9 +125,9 @@ class Formating
                     $variables = ["bold" => $b ];
                 }
                 $gender = "";
-                if (!is_null($word->getGender()) && !is_array($word->getGender()))
+                if (!is_null($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
-                if (isset($variables["gender"]) && !is_null($variables["gender"]))
+                if (isset($variables["gender"]) && !is_null($variables["gender"]) && $variables["gender"] != "")
                     $gender = " " . Czech::Gender($variables["gender"]) . "a";
                 $boldE = $boldS = "";
                 if($variables["bold"]) {$boldS = "<bold>"; $boldE = "</bold>";}

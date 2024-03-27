@@ -114,7 +114,7 @@ class Sentence
     }
     private static function Analysis($sentence)
     {
-        $sentence = explode(" ", trim(strtolower($sentence)));
+        $sentence = explode(" ", lcfirst(trim($sentence)));
         return $sentence;
     }
 }

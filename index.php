@@ -99,9 +99,9 @@ class Sentence
                 continue;
             }
             $words = WikiText::auto($sentence[$i], "cs");
-            if ($words == false || $words == array() || Words::Fullness($words) == false) { //exception in fullness - table
-                $words = Words::Combine($words, WikiText::auto($sentence[$i], "en")); //todo comb array with array - pair with class
-            }
+            //if ($words == false || $words == array() || Words::Fullness($words) == false) { //exception in fullness - table
+            $words = Words::Combine($words, WikiText::auto($sentence[$i], "en")); //todo comb array with array - pair with class
+            //}
             array_push($this->words, $words);
         }
     }

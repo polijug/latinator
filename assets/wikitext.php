@@ -70,10 +70,8 @@ class WikiText
                         }
                     }
                 }
-                /*if (!$derived) {*/
                 $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                 $wordArray = array_merge($wordArray, $base);
-                //}
 
                 return $wordArray;
             case "cs":
@@ -104,12 +102,15 @@ class WikiText
                                     for ($j = 0; $j < $m; $j++) {
                                         $item->addTranslation($translations[$j]->getTranslation());
                                         $item->setTable($translations[$j]->getTable());
+                                        if($item->getGender() == null)
                                         $item->setGender($translations[$j]->getGender());
                                     }
                                 }
                             } else {
                                 $item->addTranslation($wordArray[$i - 1]->getTranslation());
                                 $item->setTable($wordArray[$i - 1]->getTable());
+                                if($item->getGender() == null)
+                                $item->setGender($wordArray[$i - 1]->getGender());
                             }
 
                             $wordArray[] = $item;

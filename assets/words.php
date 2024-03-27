@@ -50,22 +50,22 @@ class Noun extends Word
 
     public function getTable()
     {
-        return $this->table;
+        return isset($this->table) ? $this->table : null;
     }
 
     public function getBold()
     {
-        return $this->bold;
+        return $this->bold ?? null;
     }
 
     public function getForm()
     {
-        return $this->form;
+        return $this->form ?? null;
     }
 
     public function getNumber()
     {
-        return $this->number;
+        return $this->number ?? null;
     }
 
     public function setNumber($num)
@@ -75,7 +75,7 @@ class Noun extends Word
 
     public function getGender()
     {
-        return $this->gender;
+        return $this->gender ?? null;
     }
 
     public function setGender($gen)
@@ -109,10 +109,10 @@ class Noun extends Word
                 $this->addTranslation($trans[$i]);
             }
         }
-        $this->gender = isset($this->gender) ?? $word->gender;
-        $this->number = isset($this->number) ?? $word->number;
+        $this->gender = $this->gender ?? $word->gender;
+        $this->number = $this->number ?? $word->number;
         $this->table = Table::decideTable($this->table, $word->table);
-        $this->form = isset($this->form) ?? $word->form;
+        $this->form = $this->form ?? $word->form;
     }
 
     public function matchSpecParam($word)
@@ -259,7 +259,7 @@ class Preposition extends Word
                 $this->addTranslation($trans[$i]);
             }
         }
-        $this->with = isset($this->with) ?? $word->with;
+        $this->with = $this->with ?? $word->with;
     }
 
     public function Merge($word)
@@ -317,17 +317,17 @@ class Verb extends Noun
 
     public function getTense()
     {
-        return $this->tense;
+        return $this->tense ?? null;
     }
 
     public function getPerson()
     {
-        return $this->person;
+        return $this->person ?? null;
     }
 
     public function getMood()
     {
-        return $this->mood;
+        return $this->mood ?? null;
     }
 
     public function getAllInfo()
@@ -358,10 +358,10 @@ class Verb extends Noun
                 $this->addTranslation($trans[$i]);
             }
         }
-        $this->mood = isset($this->mood) ?? $word->mood;
-        $this->number = isset($this->number) ?? $word->number;
+        $this->mood = $this->mood ?? $word->mood;
+        $this->number = $this->number ?? $word->number;
         $this->table = Table::decideTable($this->table, $word->table);
-        $this->tense = isset($this->tense) ?? $word->tense;
+        $this->tense = $this->tense ?? $word->tense;
     }
 
     public function matchSpecParam($word)
@@ -406,17 +406,17 @@ class Word
 
     public function getClass()
     {
-        return $this->class;
+        return $this->class ?? null;
     }
 
     public function getTranslation()
     {
-        return $this->translation;
+        return $this->translation ?? null;
     }
 
     public function getWord()
     {
-        return $this->word;
+        return $this->word ?? null;
     }
 
     public function toJSON()
@@ -485,7 +485,7 @@ class JSONobj
 
     public function getBold()
     {
-        return $this->bold;
+        return $this->bold ?? null;
     }
     public function setBold($bold)
     {
@@ -498,17 +498,17 @@ class JSONobj
 
     public function getClass()
     {
-        return $this->class;
+        return $this->class ?? null;
     }
 
     public function getTranslation()
     {
-        return $this->translation;
+        return $this->translation ?? null;
     }
 
     public function getTense()
     {
-        return $this->tense;
+        return $this->tense ?? null;
     }
 
     public function getPerson()
@@ -518,7 +518,7 @@ class JSONobj
 
     public function getMood()
     {
-        return $this->mood;
+        return $this->mood ?? null;
     }
 
     public function getTable()
@@ -536,17 +536,17 @@ class JSONobj
 
     public function getNumber()
     {
-        return $this->number;
+        return $this->number ?? null;
     }
 
     public function getGender()
     {
-        return $this->gender;
+        return $this->gender ?? null;
     }
 
     public function getWord()
     {
-        return $this->word;
+        return $word ?? null;
     }
 }
 

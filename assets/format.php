@@ -26,9 +26,6 @@ class Formating
             $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) { //for one word more alternatives
                 $word = $this->word[$i][$p];
-
-                //ONE ARRAY FOR EACH WORD
-
                 //arrays - singular, plural, other - decide what has higher probability - classical more probable, hide not that used
                 //if more decide which
                 //NOT DECIDE
@@ -38,7 +35,7 @@ class Formating
                     case "noun":
                     case "numeral":
                     case "pronoun":
-                        $bold = $word->bold;
+                        $bold = $word->getBold();
                         if (is_array($word->getNumber())) {
                             $arr = [];
                             $n = count($word->getNumber());
@@ -55,10 +52,11 @@ class Formating
                                     $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]][$k], "bold" => $b, "number" => $word->getNumber()[$j]]);
                                 }
                             $str[$base][] = $arr;
-                        } else $str[$base][] = Formating::Class($word);
+                        } else 
+                            $str[$base][] = Formating::Class($word);
                         break;
                     case "adjective":
-                        $bold = $word->bold;
+                        $bold = $word->getBold();
                         $keys = array_keys($word->getForm());
                         $n = count($keys);
                         $arr = [];
@@ -115,20 +113,25 @@ class Formating
     }
     private static function Class($word, $variables = null)
     { //todo translation + variable elements - zvýraznit
-        //mlog($variables);
         $base = "<b>" . $word->getBase() . "</b>";
         switch ($word->getClass()) {
             case "noun":
             case "adjective":
             case "numeral":
             case "pronoun":
+                if($variables == null){
+                    $bold = $word->getBold();$word->getGender() . "_" . 
+                    $b = !is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()]) && in_array($word->getForm()[$word->getNumber()], $bold[$word->getGender() . "_" . $word->getNumber()]);
+                    $variables = ["bold" => $b ];
+                }
                 $gender = "";
                 if (!is_null($word->getGender()) && !is_array($word->getGender()))
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
                 if (isset($variables["gender"]) && !is_null($variables["gender"]))
                     $gender = " " . Czech::Gender($variables["gender"]) . "a";
+                $boldE = $boldS = "";
                 if($variables["bold"]) {$boldS = "<bold>"; $boldE = "</bold>";}
-                $short = $boldS . Czech::Form($variables != null ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE;
+                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE;
                 break;
             case "verb":
                 //todo  // osoba, číslo, čas, rod, způsob? (mood),

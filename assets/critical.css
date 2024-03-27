@@ -1,0 +1,115 @@
+:root {
+    --Main: #005d69;
+    --Secondary: #008fa8;
+    --Back: #140e0f;
+    --Text: #fff;
+    --SText: #dbc8cb;
+}
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--Back);
+    width: 90%;
+    min-width: 300px;
+    margin: 0 auto 0 auto;
+    color: var(--Text);
+}
+
+body {
+    background-color: var(--Main);
+    height: 100%;
+    padding: 10px;
+}
+
+/*heading*/
+.logo {
+    width: 20%;
+    padding-right: 10px;
+}
+
+.heading,
+.logo {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.name,
+.description {
+    margin: 5px;
+}
+
+.name {
+    color: var(--Text);
+}
+
+.description {
+    color: var(--SText);
+}
+
+/*navigation*/
+nav {
+    background-color: var(--Secondary);
+}
+
+nav>ul {
+    list-style: none;
+    margin: 0 auto 0 auto;
+    max-width: fit-content;
+    padding: 0;
+    user-select: none;
+}
+
+nav>ul>li {
+    display: inline-block;
+    padding: 5px 10px 5px 10px;
+    font-size: 1.5rem;
+    background-color: var(--Main);
+    border: solid 1px var(--Secondary);
+    margin: 1px;
+    cursor: pointer;
+}
+
+a {
+    color: var(--SText);
+}
+
+/*table*/
+tr>th {
+    border: 2px solid var(--SText);
+    background: var(--Secondary);
+    padding: 0.3rem;
+}
+
+tr>td {
+    border: 1px solid var(--SText);
+    padding: 0.3rem;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid var(--SText);
+}
+
+/*details*/
+details {
+    user-select: none;
+    background-color: #008fa8;
+    /*(--Second);*/
+    padding: 0.6rem 0.6rem 0;
+    border: solid 1px #005d69;
+}
+
+summary {
+    cursor: pointer;
+    padding-bottom: 0.6rem;
+}
+
+details>div {
+    background-color: #005d69;
+    padding: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+details>div>h4 {
+    margin: 0;
+}

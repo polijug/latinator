@@ -1,0 +1,145 @@
+
+###en###
+# inflection of|la|sum||3|s|pres|actv|indc
+
+ # to eject (originally drive an actor off a stage by clapping/booing)
+
+//pozor na lb
+9 => '===Pronoun===', 10 => 'la-noun|nihil|g=n', 11 => '# lb|la|indefinite nothing',
+
+16 => '# cln|la|cardinal numbers one;
+
+12 => '# lb|la|mathematics plus'
+
+//with form  - must make
+ 8 => '===Preposition===', 9 => 'la-prep|ablative, la-prep|accusative', 10 => '# lb|la|+ ablative #English|in, at, on, upon, from (space)',
+ 17 => '# lb|la|+ ablative under, within, in', 19 => '# lb|la|+ ablative during, within, while in (time)', 20 => '# lb|la|+ ablative about, respecting, concerning (of reference)', 21 => '# lb|la|+ ablative among'
+
+//pozor překlad
+ virus - [7] => Silný zápach koření nebo parfémů.Ainsworthův latinský slovník revidovaný roku 1847 A. Jamiesonem [8] => https://archive.org/details/ainsworthslatind00ains [9] => Slizká tekutina [10] => sliz.
+
+2 => '# lb|la|Late Latin to act or be used as a woman gloss|adopt the submissive role in gay sex'
+'# lb|la|copulative to be, exist, have +obj|la|dat'
+
+7 => '# n-g-lite|The name of the letter \'\'l-lite|la|S\'\'.'
+
+laudabam - loading
+
+//type of adjective
+'== latina ==', 64 => '=== výslovnost ===', 65 => '* IPA|me', 66 => '=== zájmeno ===', 67 => '* \'\'osobní\'\'', 68 => '==== význam ====', 69 => '# \'\'akuzativ zájmena ego#latina|egō\'\'', 70 => '#* Příklad|la|Quis mē umquam sub tālī larvā cognōscet?|Kdo mě kdy v takové masce pozná?', 71 => '# \'\'ablativ zájmena ego#latina|egō\'\'', 72 => '#* Příklad|la|Iam intelligō. Mutātō nōmine de me fābula narrābat.|Nyní již chápu. Pod jiným jménem byla řeč o mně.',
+//and en
+
+nulli
+
+2 => Pronoun::__set_state(array( 'class' => 'pronoun', 'type' => NULL, 'form' => 'nom', 'number' => 's', 'gender' => NULL, 'table' => NULL, 'base' => 'me', 'translation' => array ( 0 => '0', ), 'form' => 'nom', )), )
+
+
+//udělat sjednocení slovních druhů
+/zbavit se mezery ego
+
+form' => 'nom//acc//voc'
+
+ '===Adjective===', 4 => 'la-adj|gentīlitius', 5 => '# alternative form of|la|gentilicius'
+
+☰
+⛛
+⛶
+//Todo exception fui
+//todo infinitiv
+//ukládání do databáze
+//todo zvýraznění v tabulce
+
+//nullius translation
+//'gender' => 'm//f//n',
+
+//same class, same base -> variables to arrays (form=>array())
+
+//femur - verb translation
+//femur - noun detection
+//mood -> subj
+
+//kompatibilita base + inflection
+//pozor závorka
+konjugace od for (první konjugace, deponent)
+
+/pozor na to
+'indc ("you are")
+//same to the same paragraph
+
+//výpis deklinací
+
+//occulta
+
+base 337 chyba - erro
+
+//bold malfunction
+
+//merge possible malfunction
+
+//alba - kněžské roucho
+
+//femina says its only nominative, but its also ablative, vocative
+- special parsage
+
+merge running twice probably
+
+if at the end in table is number, remove
+, [word]1
+
+errato
+
+/malfunction combine
+
+rewrite formate
+rewrite pairable
+
+'translation' => array ( 0 => 'Upřesnění', 1 => 'v klasické latině otrok', 2 => 'Upřesnění', 3 => 've středověké latině sluha', 4 => 'služebník', )
+
+adjective bonus
+
+vir#latina|vir
+
+řazení
+
+essto
+
+SQL
+latinator
+latinator
+QwMVT59PMN86cQ2
+localhost
+
+//implement objects to json
+
+/with-> english
+
+//chyba erro - tulák
+
+0. osoba singuláru
+
+if the class not same
+[{
+            'class': 'verb',
+            'base': 'erro',
+            'word': 'erro',
+            'translation': ['bloudit','zabloudit','chybovat','mýlit se','váhat','kolísat'],
+            'tense': 'pres',
+            'mood': 'indc',
+            'person': {'act_s':1},
+            'gender': 'act',
+            'number': 's'
+        }, {
+            'class': 'noun',
+            'base': 'erro',
+            'word': 'erro',
+            'translation': ['tulák'],
+            'gender': '',
+            'form': {'s':'nom'},
+            'number': 's'
+        }]
+
+        pairing from DB
+'gender' => ''
+'gender' => 'Array'
+
+rody

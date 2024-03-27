@@ -12,7 +12,7 @@ class Formating
                 $this->word[] = $word[$i];
             else{
                 $this->word[] = Words::Merge($word[$i]);
-                //Database::insert($this->word[$i]); For production
+                Database::insert($this->word[$i]);
             }
         $this->word = Words::Pairable($this->word);
     }

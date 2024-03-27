@@ -646,10 +646,10 @@ class Words
                     $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
             }
             if ($result == []) continue;
-            mlog($words, true);
-            if (is_array($words[0]) && !is_null($words[0][$i])) {
-                $words[0][$i - 1]->setBold($result);
-                $words[0][$i]->setBold($result);
+            Mlog($result);
+            if (is_array($words[$i])) {
+                $words[$i - 1][0]->setBold($result);
+                $words[$i][0]->setBold($result);
             } else if(!is_null($words[$i])) {
                 $words[$i - 1]->setBold($result);
                 $words[$i]->setBold($result);

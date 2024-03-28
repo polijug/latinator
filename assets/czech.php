@@ -81,6 +81,10 @@ class Czech
     {
         if ($gender == null) return "";
         switch ($gender) {
+            case "act":
+                return "aktiv";
+            case "pas":
+                return "pasiv";
             case "inf":
                 return "infinitiv";
             case "m":
@@ -93,9 +97,10 @@ class Czech
     }
     public static function Mood($mood)
     {
-        if ($mood == "actv") return "activ";
+        /*if ($mood == "actv") return "aktiv";
         else if ($mood == "inf") return "infinitiv";
-        else return "pasiv";
+        else return "pasiv";*/
+        return $mood;
     }
     public static function Number($num)
     {

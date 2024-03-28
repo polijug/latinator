@@ -52,7 +52,7 @@ class Formating
                                     $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]][$k], "bold" => $b, "number" => $word->getNumber()[$j]]);
                                 }
                             $str[$base][] = $arr;
-                        } else 
+                        } else
                             $str[$base][] = Formating::Class($word);
                         break;
                     case "adjective":
@@ -119,10 +119,11 @@ class Formating
             case "adjective":
             case "numeral":
             case "pronoun":
-                if($variables == null){
-                    $bold = $word->getBold();$word->getGender() . "_" . 
-                    $b = !is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()]) && in_array($word->getForm()[$word->getNumber()], $bold[$word->getGender() . "_" . $word->getNumber()]);
-                    $variables = ["bold" => $b ];
+                if ($variables == null) {
+                    $bold = $word->getBold();
+                    $word->getGender() . "_" .
+                        $b = !is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()]) && in_array($word->getForm()[$word->getNumber()], $bold[$word->getGender() . "_" . $word->getNumber()]);
+                    $variables = ["bold" => $b];
                 }
                 $gender = "";
                 if (!is_null($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
@@ -130,16 +131,19 @@ class Formating
                 if (isset($variables["gender"]) && !is_null($variables["gender"]) && $variables["gender"] != "")
                     $gender = " " . Czech::Gender($variables["gender"]) . "a";
                 $boldE = $boldS = "";
-                if($variables["bold"]) {$boldS = "<bold>"; $boldE = "</bold>";}
+                if ($variables["bold"]) {
+                    $boldS = "<bold>";
+                    $boldE = "</bold>";
+                }
                 $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE;
                 break;
             case "verb":
                 //todo  // osoba, číslo, čas, rod, způsob? (mood),
                 $person = "";
-                if ($variables["person"] != "0"){
+                if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ") . ". osoby " : $variables["person"] . ". osoba ";
-                $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
-                    Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base;
+                    $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
+                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base;
                 } else
                     $short = "infinitiv slovesa " . $base;
                 break;

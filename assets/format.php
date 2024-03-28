@@ -136,10 +136,12 @@ class Formating
             case "verb":
                 //todo  // osoba, číslo, čas, rod, způsob? (mood),
                 $person = "";
-                if ($variables["person"] != "0")
+                if ($variables["person"] != "0"){
                     $person = is_array($variables["person"]) ? implode(". / ") . ". osoby " : $variables["person"] . ". osoba ";
                 $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
                     Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base;
+                } else
+                    $short = "infinitiv slovesa " . $base;
                 break;
             case "adverb":
             case "connective":
@@ -161,7 +163,7 @@ class Formating
         $type = Words::hasForms($word);
         if ($type == 1) $type = "skloňování";
         if ($type == 2) $type = "časování";
-        if (is_string($type) && $word->getTable()->getValidity()) {
+        if (is_string($type) && $word->getTable() != null && $word->getTable()->getValidity()) {
             $str .= "<p> <h4>Tabulka $type</h4>";
             $str .= $word->getTable()->table;
         }

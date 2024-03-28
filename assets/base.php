@@ -46,8 +46,9 @@ class Base
                     mlog(strtolower(explode(".", $base[1])[1]));
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "Noun":
+                            preg_match("/g=(?<letter>[a-z])/i", $base[1], $matches);
                             $gender = explode(".", $base[1]);
-                            $gender = count($gender) >= 3 ? strtolower($gender[1]) : explode("=", $base[1])[1];
+                            $gender = count($gender) >= 3 ? strtolower($gender[1]) : $matches["letter"];
                             $sentence = new Noun(
                                 $word,
                                 $word,

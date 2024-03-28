@@ -23,7 +23,8 @@ class Database
             $base = $word[$i]->getBase();
             $class = $word[$i]->getClass();
             $wor = $word[$i]->getWord();
-            $table = htmlentities($word[$i]->getTable()->table);
+            if (Words::hasForms($word[$i]) > 0)
+                $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
             $sql = "INSERT INTO words (base, class, word, tables, json) VALUES ('$base', '$class', '$wor', '$table',  \"$json\")";
             $conn->query($sql);

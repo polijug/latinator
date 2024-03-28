@@ -103,42 +103,10 @@ vir#latina|vir
 
 essto
 
-SQL
-latinator
-latinator
-QwMVT59PMN86cQ2
-localhost
-
-//implement objects to json
-
 /with-> english
-
-//chyba erro - tulák
 
 0. osoba singuláru
 
-if the class not same
-[{
-            'class': 'verb',
-            'base': 'erro',
-            'word': 'erro',
-            'translation': ['bloudit','zabloudit','chybovat','mýlit se','váhat','kolísat'],
-            'tense': 'pres',
-            'mood': 'indc',
-            'person': {'act_s':1},
-            'gender': 'act',
-            'number': 's'
-        }, {
-            'class': 'noun',
-            'base': 'erro',
-            'word': 'erro',
-            'translation': ['tulák'],
-            'gender': '',
-            'form': {'s':'nom'},
-            'number': 's'
-        }]
-
-        pairing from DB
-
-rody ne u všeho
 chyba nihil
+
+ lb|la|copulative to be, exist, have +obj|la|dat'

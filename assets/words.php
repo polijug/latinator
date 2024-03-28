@@ -202,7 +202,7 @@ class Pronoun extends Noun
             'gender': '$this->gender',
             'form': " . jsonEncode($this->form) . ",
             'number': " . jsonEncode($this->number) . ",
-            'type': $this->type
+            'type': '$this->type'
         }";
     }
 }

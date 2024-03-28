@@ -19,7 +19,7 @@ class Translate
                     }
                 }
                 $text = implode(";", $translation);
-                $translation = explode(";", str_replace([", ", ","], [";", ";"], API::deepL(substr($text, 0, -1))));
+            $translation = explode(";", str_replace([", ", ","], [";", ";"], API::deepL(/*substr(*/$text/*, 0, 0)*/)));
                 return array_values(array_unique($translation));
             case "cs":
                 $text = arrays::array_name_slice($text, "=== význam ===");

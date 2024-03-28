@@ -81,8 +81,8 @@ class Czech
     {
         if ($gender == null) return "";
         switch ($gender) {
-                case "inf":
-                    return "infinitiv";
+            case "inf":
+                return "infinitiv";
             case "m":
                 return "maskulin";
             case "n":
@@ -94,7 +94,7 @@ class Czech
     public static function Mood($mood)
     {
         if ($mood == "actv") return "activ";
-        else if($mood == "inf") return "infinitiv";
+        else if ($mood == "inf") return "infinitiv";
         else return "pasiv";
     }
     public static function Number($num)
@@ -121,8 +121,9 @@ class Czech
         }
     }
 
-    public static function GenderToEn($gender){
-        if($gender == "akt") return "act";
+    public static function GenderToEn($gender)
+    {
+        if ($gender == "akt") return "act";
     }
 
     public static function TableTranslation($table)

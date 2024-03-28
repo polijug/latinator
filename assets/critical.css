@@ -80,7 +80,7 @@ tr>th {
     padding: 0.3rem;
 }
 
-tr>td {                
+tr>td {
     border: 1px solid var(--SText);
     padding: 0.3rem;
 }
@@ -113,7 +113,8 @@ details>div {
 details>div>h4 {
     margin: 0;
 }
+
 /*showing words*/
-bold{
+bold {
     font-weight: 600;
 }

@@ -43,15 +43,17 @@ class Base
                     $translate = [];
                     if ($translation)
                         $translate = Translate::Go($base, $lang);
-                    mlog(strtolower(explode(".",$base[1])[1]));
+                    mlog(strtolower(explode(".", $base[1])[1]));
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "Noun":
+                            $gender = explode(".", $base[1]);
+                            $gender = count($gender) >= 3 ? strtolower($gender[1]) : explode("=", $base[1])[1];
                             $sentence = new Noun(
                                 $word,
                                 $word,
                                 "nom",
                                 "s",
-                                strtolower(explode(".",$base[1])[1]),
+                                $gender,
                                 $translate
                             );
                             break;
@@ -117,7 +119,7 @@ class Base
                             $sentence->ParseWith();
                             break;
                         case "Conjunction":
-                            $sentence = new Connective($word,$word, $translate);
+                            $sentence = new Connective($word, $word, $translate);
                             break;
                         default:
                             continue 2;
@@ -186,7 +188,8 @@ class Base
                             break;
                         case "číslovka": //TODO možná spíše english
                             $sentence = new Numeral(
-                                $word,$word,
+                                $word,
+                                $word,
                                 "nom",
                                 "s",
                                 "", //TODO
@@ -286,7 +289,8 @@ class Inflections
                         );
                         break;
                     case "noun":
-                        $word = new Noun($wordd,
+                        $word = new Noun(
+                            $wordd,
                             $base,
                             $info[2], //form
                             $info[3],
@@ -295,7 +299,8 @@ class Inflections
                         );
                         break;
                     case "adjective":
-                        $word = new Adjective($wordd,
+                        $word = new Adjective(
+                            $wordd,
                             $base,
                             $info[2],
                             $info[4],
@@ -305,7 +310,8 @@ class Inflections
                         break;
                     case "verb":
                         if ($info[5] == "perf")
-                            $word = new Verb($wordd,
+                            $word = new Verb(
+                                $wordd,
                                 $base,
                                 $info[3], //number
                                 "futrperf", //tense
@@ -316,7 +322,8 @@ class Inflections
                             );
                         else
                         if (is_numeric($info[2])) {
-                            $word = new Verb($wordd,
+                            $word = new Verb(
+                                $wordd,
                                 $base,
                                 $info[3], //number
                                 $info[4], //tense
@@ -326,7 +333,8 @@ class Inflections
                                 isset($translation) ? $translation : null
                             ); //mood
                         } else if ($info[2] == "pres") {
-                            $word = new Verb($wordd,
+                            $word = new Verb(
+                                $wordd,
                                 $base,
                                 null, //number
                                 $info[2], //tense
@@ -348,9 +356,10 @@ class Inflections
 
                 $n = count($info);
                 if ($info[2] == "substantiva") {
-                    $word = new Noun($wordd,$info[3], substr($info[0], 0, 3), $info[1][0]);
-                } else if (isset($info[6]) && $info[6] == "slovesa") { 
-                    $word = new Verb($wordd,
+                    $word = new Noun($wordd, $info[3], substr($info[0], 0, 3), $info[1][0]);
+                } else if (isset($info[6]) && $info[6] == "slovesa") {
+                    $word = new Verb(
+                        $wordd,
                         $info[7],
                         $info[2][0],
                         substr($info[4], 0, 4),
@@ -361,14 +370,16 @@ class Inflections
                     for ($i = 9; $i < $n; $i++)
                         $word->addTranslation($info[$i]);
                 } else if ($info[3] == "adjektiva") {
-                    $word = new Adjective($wordd,
+                    $word = new Adjective(
+                        $wordd,
                         $info[4],
                         substr($info[0], 0, 3),
                         $info[1][0],
                         $info[2][0]
                     );
                 } else if ($info[1] == "zájmena") {
-                    $word = new Pronoun($wordd,
+                    $word = new Pronoun(
+                        $wordd,
                         explode("#", $info[2])[0],
                         substr($info[0], 0, 3),
                         "s",

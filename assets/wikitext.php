@@ -41,7 +41,7 @@ class WikiText
                 $derived = $derive ? $this->isDerived() : $derive;
 
                 $this->printText();
-                if ($derived /*&& false*/) {
+                if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
                         return str_starts_with($val, "# inflection of|la") || str_contains($val, "inflection of|la") || str_starts_with($val, "head|la|");
                     }));
@@ -100,15 +100,15 @@ class WikiText
                                     for ($j = 0; $j < $m; $j++) {
                                         $item->addTranslation($translations[$j]->getTranslation());
                                         $item->setTable($translations[$j]->getTable());
-                                        if($item->getGender() == null)
-                                        $item->setGender($translations[$j]->getGender());
+                                        if ($item->getGender() == null)
+                                            $item->setGender($translations[$j]->getGender());
                                     }
                                 }
                             } else {
                                 $item->addTranslation($wordArray[$i - 1]->getTranslation());
                                 $item->setTable($wordArray[$i - 1]->getTable());
-                                if($item->getGender() == null)
-                                $item->setGender($wordArray[$i - 1]->getGender());
+                                if ($item->getGender() == null)
+                                    $item->setGender($wordArray[$i - 1]->getGender());
                             }
 
                             $wordArray[] = $item;

@@ -74,8 +74,9 @@ function MLog($text, $die = false)
     $output->setContent(var_export($text, true) . "<p>", $die);
 }
 
-function jsonEncode($object){
-    return str_replace("\"", "'",json_encode($object, JSON_UNESCAPED_UNICODE));
+function jsonEncode($object)
+{
+    return str_replace("\"", "'", json_encode($object, JSON_UNESCAPED_UNICODE));
 }
 
 
@@ -94,7 +95,7 @@ class Sentence
         $this->count = count($sentence);
         for ($i = 0; $i < $this->count; $i++) {
             $database = Database::getWordDB($sentence[$i]);
-            if($database !== false){
+            if ($database !== false) {
                 array_push($this->words, $database);
                 continue;
             }
@@ -105,7 +106,8 @@ class Sentence
             array_push($this->words, $words);
         }
     }
-    public function Formate(){
+    public function Formate()
+    {
 
         $format = new Formating($this->words);
         $format->formatAnswer();

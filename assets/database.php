@@ -15,33 +15,29 @@ class Database
         }
         return $conn;
     }
-    public static function insert($word){
+    public static function insert($word)
+    {
         $conn = self::connect();
-        $base = $word[0]->getBase();
-        $class = $word[0]->getClass();
-        $wor = $word[0]->getWord();
-        $table = htmlentities($word[0]->getTable()->table);
-
         $n = count($word);
-        $json = "[";
-        for($i = 0; $i < $n; $i++){
-            $word[$i] = $word[$i]->toJSON();
-            $json .= $word[$i];
-            if($i < $n -1) $json .= ", ";
+        for ($i = 0; $i < $n; $i++) {
+            $base = $word[$i]->getBase();
+            $class = $word[$i]->getClass();
+            $wor = $word[$i]->getWord();
+            $table = htmlentities($word[$i]->getTable()->table);
+            $json = $word[$i]->toJSON();
+            $sql = "INSERT INTO words (base, class, word, tables, json) VALUES ('$base', '$class', '$wor', '$table',  \"$json\")";
+            $conn->query($sql);
         }
-        $json .="]";
-
-        $sql = "INSERT INTO words (base, class, word, tables, json) VALUES ('$base', '$class', '$wor', '$table',  \"$json\")";
-        $conn->query($sql);
     }
-    public static function getWordDB($word){
+    public static function getWordDB($word)
+    {
         $conn = self::connect();
         $sql = "SELECT * FROM words WHERE word = '$word'";
 
         $result = $conn->query($sql);
-        if($result->num_rows == 0) return false;
+        if ($result->num_rows == 0) return false;
         $out = [];
-        while($res = $result->fetch_array(MYSQLI_ASSOC)){
+        while ($res = $result->fetch_array(MYSQLI_ASSOC)) {
             $out[] = Words::decodeJSON($res);
         }
         return $out;

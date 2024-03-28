@@ -679,7 +679,7 @@ class Words
     public static function decodeJSON($word)
     {
         if (isset($word["tables"])) $table = $word["tables"];
-        $word = json_decode(str_replace(["'", "\n", "\r"], ["\"", "", ""], $word["json"]))[0];
+        $word = json_decode(str_replace(["'", "\n", "\r"], ["\"", "", ""], $word["json"]));
         $out = new JSONobj();
         $out->class = $word->class;
         $out->base = $word->base;

@@ -45,20 +45,14 @@ form' => 'nom//acc//voc'
 ⛛
 ⛶
 //Todo exception fui
-//todo infinitiv
-//ukládání do databáze
 //todo zvýraznění v tabulce
 
 //nullius translation
-//'gender' => 'm//f//n',
-
-//same class, same base -> variables to arrays (form=>array())
 
 //femur - verb translation
 //femur - noun detection
 //mood -> subj
 
-//kompatibilita base + inflection
 //pozor závorka
 konjugace od for (první konjugace, deponent)
 
@@ -72,32 +66,19 @@ konjugace od for (první konjugace, deponent)
 
 base 337 chyba - erro
 
-//bold malfunction
-
-//merge possible malfunction
-
 //alba - kněžské roucho
 
 //femina says its only nominative, but its also ablative, vocative
 - special parsage
-
-merge running twice probably
 
 if at the end in table is number, remove
 , [word]1
 
 errato
 
-/malfunction combine
-
-rewrite formate
-rewrite pairable
-
 'translation' => array ( 0 => 'Upřesnění', 1 => 'v klasické latině otrok', 2 => 'Upřesnění', 3 => 've středověké latině sluha', 4 => 'služebník', )
 
 adjective bonus
-
-vir#latina|vir
 
 řazení
 
@@ -105,8 +86,12 @@ essto
 
 /with-> english
 
-0. osoba singuláru
-
-chyba nihil
-
  lb|la|copulative to be, exist, have +obj|la|dat'
+
+ prázdný překlad
+
+ '# man gl|adult male human',
+
+base: 1. person or infinitive
+
+chybí indikativ ve výkladu

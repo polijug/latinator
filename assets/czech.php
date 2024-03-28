@@ -118,6 +118,10 @@ class Czech
         switch ($tense) {
             case "plus":
                 return "plup";
+            case "impe":
+                return "impf";
+            default:
+                return $tense;
         }
     }
 

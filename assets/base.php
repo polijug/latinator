@@ -357,13 +357,13 @@ class Inflections
 
                 $n = count($info);
                 if ($info[2] == "substantiva") {
-                    $word = new Noun($wordd, $info[3], substr($info[0], 0, 3), $info[1][0]);
+                    $word = new Noun($wordd, explode("#", $info[3])[0], substr($info[0], 0, 3), $info[1][0]);
                 } else if (isset($info[6]) && $info[6] == "slovesa") {
                     $word = new Verb(
                         $wordd,
-                        $info[7],
+                        explode("#", $info[7])[0],
                         $info[2][0],
-                        substr($info[4], 0, 4),
+                        Czech::TenseToEn(substr($info[4], 0, 4)),
                         Czech::Person($info[0]),
                         Czech::GenderToEn(substr($info[5], 0, 3)),
                         substr($info[3], 0, 3),
@@ -373,7 +373,7 @@ class Inflections
                 } else if ($info[3] == "adjektiva") {
                     $word = new Adjective(
                         $wordd,
-                        $info[4],
+                        explode("#", $info[4])[0],
                         substr($info[0], 0, 3),
                         $info[1][0],
                         $info[2][0]

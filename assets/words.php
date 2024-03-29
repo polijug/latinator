@@ -50,7 +50,6 @@ class Noun extends Word
     {
         $this->bold = $array;
     }
-
     public function getDeclination(){
         return $this->declination ?? null;
     }
@@ -347,6 +346,9 @@ class Verb extends Noun
     {
         return $this->conjugation ?? null;
     }
+    public function setConjugation($con){
+        $this->conjugation = $con;
+    }
 
     public function getAllInfo()
     {
@@ -572,6 +574,9 @@ class JSONobj
     public function getConjugation()
     {
         return $this->conjugation ?? null;
+    }
+    public function setConjugation($con){
+        $this->conjugation = $con;
     }
 
     public function getWord()

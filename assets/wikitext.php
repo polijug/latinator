@@ -67,6 +67,8 @@ class WikiText
                                     $item->setGender($translations[$j]->getGender());
                                 if ($item->getDeclination() == null)
                                     $item->setDeclination($translations[$j]->getDeclination());
+                                if ($item->getConjugation() == null)
+                                    $item->setConjugation($translations[$j]->getConjugation());
                             }
                             $wordArray[] = $item;
                         }
@@ -108,6 +110,8 @@ class WikiText
                                             $item->setGender($translations[$j]->getGender());
                                         if ($item->getDeclination() == null)
                                             $item->setDeclination($translations[$j]->getDeclination());
+                                        if ($item->getConjugation() == null)
+                                            $item->setConjugation($translations[$j]->getConjugation());
                                     }
                                 }
                             } else {
@@ -117,6 +121,8 @@ class WikiText
                                     $item->setGender($wordArray[$i - 1]->getGender());
                                 if ($item->getDeclination() == null)
                                     $item->setDeclination($wordArray[$i - 1]->getDeclination());
+                                if ($item->getConjugation() == null)
+                                    $item->setConjugation($wordArray[$i - 1]->getConjugation());
                             }
 
                             $wordArray[] = $item;

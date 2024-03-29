@@ -47,8 +47,9 @@ class Base
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "Noun":
                             preg_match("/g=(?<letter>[a-z])/i", $base[1], $matches);
-                            $gender = explode(".", $base[1]);
-                            $gender = count($gender) >= 3 ? strtolower($gender[1]) : $matches["letter"];
+                            preg_match("/<\d.(?<letter>[a-z])/i", $base[1], $matchesDot);
+                            $gender = strtolower($matchesDot["letter"]);
+                            $gender = strlen($gender) == 1 ? $gender : $matches["letter"];
                             $sentence = new Noun(
                                 $word,
                                 $word,

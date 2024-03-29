@@ -619,7 +619,11 @@ class Words
                     $array[5] = "abl";
                     break;
             }
-        return array_values($array);
+        $out = [];
+        for ($i = 0; $i < 6; $i++)
+            if (isset($array[$i]))
+                $out[] = $array[$i];
+        return $out;
     }
     public static function hasForms($word): int
     { //0 -other, 1 -form, 2 -coniug

@@ -40,7 +40,7 @@ class WikiText
 
                 $derived = $derive ? $this->isDerived() : $derive;
 
-                $this->printText();
+                //$this->printText();
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
                         return str_starts_with($val, "# inflection of|la") || str_contains($val, "inflection of|la") || str_starts_with($val, "head|la|");
@@ -88,7 +88,7 @@ class WikiText
 
                 $derived = $derive ? $this->isDerived() : $derive;
 
-                $this->printText();
+                //$this->printText();
 
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {

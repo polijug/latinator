@@ -63,6 +63,10 @@ class WikiText
                             for ($j = 0; $j < $m; $j++) {
                                 $item->addTranslation($translations[$j]->getTranslation());
                                 $item->setTable($translations[$j]->getTable());
+                                if ($item->getGender() == null)
+                                    $item->setGender($translations[$j]->getGender());
+                                if ($item->getDeclination() == null)
+                                    $item->setDeclination($translations[$j]->getDeclination());
                             }
                             $wordArray[] = $item;
                         }

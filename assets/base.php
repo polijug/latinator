@@ -105,7 +105,7 @@ class Base
                                 1,
                                 "act",
                                 "indc",
-                                $conj, //todo
+                                $conj, 
                                 $translate
                             );
                             break;
@@ -169,17 +169,19 @@ class Base
                                 "nom",
                                 "s",
                                 explode("''", $base[1], 3)[1][0],
-                                null, //todo
+                                $base[2][2], //todo
                                 $translate
                             );
                             break;
                         case "přídavnéjméno": //TODO deklination
+                            preg_match_all("/\d/i", $base[2], $matches);
                             $sentence = new Adjective(
                                 $word,
                                 $word,
                                 "nom",
                                 "s",
                                 "m",
+                                $matches[0],
                                 $translate
                             );
                             break;
@@ -270,7 +272,7 @@ class Inflections
                     $start = explode("|", $info[0]);
                     $inf[] = $start[count($start) - 1];
                     for ($i = 1; $i < $n - 1; $i++) {
-                        $inf[] = $inf[$i];
+                        $inf[] = $info[$i];
                     }
                     $end = explode("|", $info[$n - 1]);
                     $inf[] = $end[0];

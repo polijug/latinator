@@ -12,7 +12,7 @@ class Formating
                 $this->word[] = $word[$i];
             else {
                 $this->word[] = Words::Merge($word[$i]);
-                Database::insert($this->word[$i]);
+                //Database::insert($this->word[$i]);
             }
         $this->word = Words::Pairable($this->word);
     }
@@ -44,6 +44,7 @@ class Formating
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()[$j]]) && in_array($word->getForm()[$word->getNumber()[$j]], $bold))
                                         $b = true;
                                     else $b = false;
+                                    //pozor, dává array form dovnitř, to nemůže fungovat
                                     $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]], "bold" => $b, "number" => $word->getNumber()[$j]]);
                                 } else for ($k = 0; $k < count($word->getForm()[$word->getNumber()[$j]]); $k++) {
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()[$j]]) && in_array($word->getForm()[$word->getNumber()[$j]][$k], $bold[$word->getGender() . "_" . $word->getNumber()[$j]]))

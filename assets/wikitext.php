@@ -62,12 +62,14 @@ class WikiText
                             $m = count($translations);
                             for ($j = 0; $j < $m; $j++) {
                                 $item->addTranslation($translations[$j]->getTranslation());
-                                $item->setTable($translations[$j]->getTable());
-                                if ($item->getGender() == null)
+                                $type = Words::hasForms($item);
+                                if ($type > 0)
+                                    $item->setTable($translations[$j]->getTable());
+                                if ($type > 0 && $item->getGender() == null)
                                     $item->setGender($translations[$j]->getGender());
-                                if ($item->getDeclination() == null)
+                                if ($type == 1 && $item->getDeclination() == null)
                                     $item->setDeclination($translations[$j]->getDeclination());
-                                if ($item->getConjugation() == null)
+                                if ($type == 2 && $item->getConjugation() == null)
                                     $item->setConjugation($translations[$j]->getConjugation());
                             }
                             $wordArray[] = $item;
@@ -105,23 +107,27 @@ class WikiText
                                     $m = count($translations);
                                     for ($j = 0; $j < $m; $j++) {
                                         $item->addTranslation($translations[$j]->getTranslation());
-                                        $item->setTable($translations[$j]->getTable());
-                                        if ($item->getGender() == null)
+                                        $type = Words::hasForms($item);
+                                        if ($type > 0)
+                                            $item->setTable($translations[$j]->getTable());
+                                        if ($type > 0 && $item->getGender() == null)
                                             $item->setGender($translations[$j]->getGender());
-                                        if ($item->getDeclination() == null)
+                                        if ($type == 1 && $item->getDeclination() == null)
                                             $item->setDeclination($translations[$j]->getDeclination());
-                                        if ($item->getConjugation() == null)
+                                        if ($type == 2 && $item->getConjugation() == null)
                                             $item->setConjugation($translations[$j]->getConjugation());
                                     }
                                 }
                             } else {
                                 $item->addTranslation($wordArray[$i - 1]->getTranslation());
-                                $item->setTable($wordArray[$i - 1]->getTable());
-                                if ($item->getGender() == null)
+                                $type = Words::hasForms($item);
+                                if ($type > 0)
+                                    $item->setTable($wordArray[$i - 1]->getTable());
+                                if ($type > 0 && $item->getGender() == null)
                                     $item->setGender($wordArray[$i - 1]->getGender());
-                                if ($item->getDeclination() == null)
+                                if ($type == 1 && $item->getDeclination() == null)
                                     $item->setDeclination($wordArray[$i - 1]->getDeclination());
-                                if ($item->getConjugation() == null)
+                                if ($type == 2 && $item->getConjugation() == null)
                                     $item->setConjugation($wordArray[$i - 1]->getConjugation());
                             }
 

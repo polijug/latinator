@@ -80,7 +80,7 @@ class WikiText
 
                 $derived = $derive ? $this->isDerived() : $derive;
 
-                //$this->printText();
+                $this->printText();
 
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
@@ -102,6 +102,8 @@ class WikiText
                                         $item->setTable($translations[$j]->getTable());
                                         if ($item->getGender() == null)
                                             $item->setGender($translations[$j]->getGender());
+                                        if ($item->getDeclination() == null)
+                                            $item->setDeclination($translations[$j]->getDeclination());
                                     }
                                 }
                             } else {
@@ -109,6 +111,8 @@ class WikiText
                                 $item->setTable($wordArray[$i - 1]->getTable());
                                 if ($item->getGender() == null)
                                     $item->setGender($wordArray[$i - 1]->getGender());
+                                if ($item->getDeclination() == null)
+                                    $item->setDeclination($wordArray[$i - 1]->getDeclination());
                             }
 
                             $wordArray[] = $item;

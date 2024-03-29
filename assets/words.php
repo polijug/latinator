@@ -54,6 +54,9 @@ class Noun extends Word
     public function getDeclination(){
         return $this->declination ?? null;
     }
+    public function setDeclination($declination){
+        $this->declination = $declination;
+    }
     public function getTable()
     {
         return isset($this->table) ? $this->table : null;
@@ -561,6 +564,9 @@ class JSONobj
     public function getDeclination()
     {
         return $this->declination ?? null;
+    }
+    public function setDeclination($declination){
+        $this->declination = $declination;
     }
 
     public function getConjugation()

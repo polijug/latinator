@@ -97,10 +97,19 @@ class Czech
     }
     public static function Mood($mood)
     {
+        switch ($mood) {
+            case "ind":
+                return "indikativ";
+            case "imp":
+                return "imperativ";
+            case "sub":
+                return "konjunktiv";
+            default:
+                return $mood;
+        }
         /*if ($mood == "actv") return "aktiv";
         else if ($mood == "inf") return "infinitiv";
         else return "pasiv";*/
-        return $mood;
     }
     public static function Number($num)
     {

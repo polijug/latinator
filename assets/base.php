@@ -51,6 +51,7 @@ class Base
                             $gender = strtolower($matchesDot["letter"]);
                             $gender = strlen($gender) == 1 ? $gender : $matches["letter"];
                             preg_match("/<(?<number>\d)/i", $base[1], $decl);
+                            $decl = $decl["number"];
                             $sentence = new Noun(
                                 $word,
                                 $word,
@@ -95,6 +96,8 @@ class Base
                             );
                             break;
                         case "Verb":
+                            preg_match("/la-verb|(?<number>\d)/i", $base[1], $conj);
+                            $conj = $conj["number"];
                             $sentence = new Verb( //TODO konjugace
                                 $word,
                                 $word,
@@ -103,7 +106,7 @@ class Base
                                 1,
                                 "act",
                                 "indc",
-                                null, //todo
+                                $conj, //todo
                                 $translate
                             );
                             break;

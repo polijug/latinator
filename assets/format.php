@@ -36,22 +36,21 @@ class Formating
                     case "numeral":
                     case "pronoun":
                         $bold = $word->getBold();
-                        if (is_array($word->getNumber()) || is_array($word->getClass()[$word->getNumber()]) ) { //chybná podmínka -> array do nearrayového
+                        if (is_array($word->getNumber()) || is_array($word->getForm()[$word->getNumber()]) ) { //chybná podmínka -> array do nearrayového
                             $arr = [];
-                            $n = count($word->getNumber());
+                            $number = is_array($word->getNumber()) ? $word->getNumber() : [$word->getNumber()];
+                            $n = count($number);
                             for ($j = 0; $j < $n; $j++)
-                                if (!is_array($word->getForm()[$word->getNumber()[$j]])) {
-                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()[$j]]) && in_array($word->getForm()[$word->getNumber()[$j]], $bold))
+                                if (!is_array($word->getForm()[$number[$j]])) {
+                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]], $bold))
                                         $b = true;
                                     else $b = false;
-                                    //pozor, dává array form dovnitř, to nemůže fungovat
-                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]], "bold" => $b, "number" => $word->getNumber()[$j]]);
-                                } else for ($k = 0; $k < count($word->getForm()[$word->getNumber()[$j]]); $k++) {
-                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()[$j]]) && in_array($word->getForm()[$word->getNumber()[$j]][$k], $bold[$word->getGender() . "_" . $word->getNumber()[$j]]))
+                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$number[$j]], "bold" => $b, "number" => $number[$j]]);
+                                } else for ($k = 0; $k < count($word->getForm()[$number[$j]]); $k++) {
+                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
                                         $b = true;
                                     else $b = false;
-                                    MLog("here");
-                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]][$k], "bold" => $b, "number" => $word->getNumber()[$j]]);
+                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
                                 }
                             $str[$base][] = $arr;
                         } else

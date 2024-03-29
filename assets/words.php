@@ -8,8 +8,9 @@ class Noun extends Word
     protected $gender;
     protected $table;
     protected $bold = [];
+    protected $declination;
 
-    public function __construct($word, $base, $form, $number, $gender = null, $translation = [])
+    public function __construct($word, $base, $form, $number, $gender = null, $declination = null, $translation = [])
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
@@ -18,6 +19,7 @@ class Noun extends Word
         $this->number = $number;
         $this->gender = $gender;
         $this->translation = $translation;
+        $this->declination = $declination;
     }
 
     public function toJSON()
@@ -32,7 +34,8 @@ class Noun extends Word
             'translation': " . jsonEncode($this->translation) . ",
             'gender': $gender,
             'form': " . jsonEncode($this->form) . ",
-            'number': " . jsonEncode($this->number) . "
+            'number': " . jsonEncode($this->number) . ",
+            'declination': '$this->declination'
         }";
     }
 
@@ -48,6 +51,9 @@ class Noun extends Word
         $this->bold = $array;
     }
 
+    public function getDeclination(){
+        return $this->declination ?? null;
+    }
     public function getTable()
     {
         return isset($this->table) ? $this->table : null;
@@ -138,7 +144,7 @@ class Adjective extends Noun
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        parent::__construct($word, $base, $form, $number, $gender, $translation);
+        parent::__construct($word, $base, $form, $number, $gender, null, $translation);
         $this->form = [$gender . "_" . $number => $form];
     }
 
@@ -161,7 +167,7 @@ class Numeral extends Noun
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        parent::__construct($word, $base, $form, $number, $gender, $translation);
+        parent::__construct($word, $base, $form, $number, $gender, null, $translation);
     }
 
     public $class = "numeral";
@@ -185,7 +191,7 @@ class Pronoun extends Noun
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        parent::__construct($word, $base, $form, $number, $gender, $translation);
+        parent::__construct($word, $base, $form, $number, $gender, null, $translation);
         $this->type = $type; //todo type
     }
 
@@ -202,7 +208,8 @@ class Pronoun extends Noun
             'gender': '$this->gender',
             'form': " . jsonEncode($this->form) . ",
             'number': " . jsonEncode($this->number) . ",
-            'type': '$this->type'
+            'type': '$this->type',
+            'declination': '$this->declination'
         }";
     }
 }
@@ -285,8 +292,9 @@ class Verb extends Noun
     protected $tense;
     protected $person;
     protected $mood;
+    protected $conjugation;
 
-    public function __construct($word, $base, $number, $tense, $person, $gender, $mood, $translation = [])
+    public function __construct($word, $base, $number, $tense, $person, $gender, $mood, $conjugation = null, $translation = [])
     {
         $this->word = $word;
         $this->base = trim($base);
@@ -296,6 +304,7 @@ class Verb extends Noun
         $this->mood = $mood;
         $this->number = $number;
         $this->translation = $translation;
+        $this->conjugation = $conjugation;
     }
 
     public function toJSON()
@@ -309,7 +318,8 @@ class Verb extends Noun
             'mood': '$this->mood',
             'person': " . jsonEncode($this->person) . ",
             'gender': " . jsonEncode($this->gender) . ",
-            'number': " . jsonEncode($this->number) . "
+            'number': " . jsonEncode($this->number) . ",
+            'conjugation': '$this->conjugation'
         }";
     }
 
@@ -328,6 +338,11 @@ class Verb extends Noun
     public function getMood()
     {
         return $this->mood ?? null;
+    }
+
+    public function getConjugation()
+    {
+        return $this->conjugation ?? null;
     }
 
     public function getAllInfo()
@@ -479,6 +494,8 @@ class JSONobj
     public $mood;
     public $with;
     public $bold;
+    public $declination;
+    public $conjugation;
 
     public function getBold()
     {
@@ -541,9 +558,19 @@ class JSONobj
         return $this->gender ?? null;
     }
 
+    public function getDeclination()
+    {
+        return $this->declination ?? null;
+    }
+
+    public function getConjugation()
+    {
+        return $this->conjugation ?? null;
+    }
+
     public function getWord()
     {
-        return $word ?? null;
+        return $this->word ?? null;
     }
 }
 
@@ -693,6 +720,8 @@ class Words
         if (isset($word->person)) $out->person = $word->person;
         if (isset($word->mood)) $out->mood = $word->mood;
         if (isset($word->with)) $out->with = $word->with;
+        if (isset($word->conjugation)) $out->conjugation = $word->conjugation;
+        if (isset($word->declination)) $out->declination = $word->declination;
         return $out;
     }
 }

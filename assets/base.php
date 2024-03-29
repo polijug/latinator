@@ -50,12 +50,14 @@ class Base
                             preg_match("/<\d.(?<letter>[a-z])/i", $base[1], $matchesDot);
                             $gender = strtolower($matchesDot["letter"]);
                             $gender = strlen($gender) == 1 ? $gender : $matches["letter"];
+                            preg_match("/<(?<number>\d)/i", $base[1], $decl);
                             $sentence = new Noun(
                                 $word,
                                 $word,
                                 "nom",
                                 "s",
                                 $gender,
+                                $decl,
                                 $translate
                             );
                             break;
@@ -101,6 +103,7 @@ class Base
                                 1,
                                 "act",
                                 "indc",
+                                null, //todo
                                 $translate
                             );
                             break;
@@ -164,6 +167,7 @@ class Base
                                 "nom",
                                 "s",
                                 explode("''", $base[1], 3)[1][0],
+                                null, //todo
                                 $translate
                             );
                             break;
@@ -207,6 +211,7 @@ class Base
                                 0,
                                 "inf",
                                 "indc",
+                                null,
                                 $translate
                             );
                             break;
@@ -297,6 +302,7 @@ class Inflections
                             $info[2], //form
                             $info[3],
                             null,
+                            null,
                             isset($translation) ? $translation : null
                         );
                         break;
@@ -320,6 +326,7 @@ class Inflections
                                 (int) $info[2], //person
                                 $info[6], //gender
                                 $info[7],
+                                null,
                                 isset($translation) ? $translation : null
                             );
                         else
@@ -332,6 +339,7 @@ class Inflections
                                 (int) $info[2], //person
                                 substr($info[5], 0, 3), //gender
                                 substr($info[6], 0, 3),
+                                null,
                                 isset($translation) ? $translation : null
                             ); //mood
                         } else if ($info[2] == "pres") {
@@ -343,6 +351,7 @@ class Inflections
                                 0, //person
                                 $info[3], //gender
                                 $info[4],
+                                null,
                                 isset($translation) ? $translation : null
                             );
                         }

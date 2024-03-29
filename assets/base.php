@@ -43,7 +43,6 @@ class Base
                     $translate = [];
                     if ($translation)
                         $translate = Translate::Go($base, $lang);
-                    mlog(strtolower(explode(".", $base[1])[1]));
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "Noun":
                             preg_match("/g=(?<letter>[a-z])/i", $base[1], $matches);
@@ -96,7 +95,7 @@ class Base
                             );
                             break;
                         case "Verb":
-                            preg_match("/la-verb|(?<number>\d)/i", $base[1], $conj);
+                            preg_match("/la-verb\|(?<number>\d)/i", $base[1], $conj);
                             $conj = $conj["number"];
                             $sentence = new Verb( //TODO konjugace
                                 $word,

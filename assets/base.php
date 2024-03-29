@@ -29,7 +29,6 @@ class Base
                     $bool = preg_match("/Etymology [0-9]+/i", $bases[1]);
                     $i++;
                 }
-                //MLog($bases);
                 $n = count($bases);
                 $history = [];
 
@@ -311,6 +310,7 @@ class Inflections
                         );
                         break;
                     case "adjective":
+                        mlog($info[2]);
                         $word = new Adjective(
                             $wordd,
                             $base,

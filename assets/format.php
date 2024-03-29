@@ -50,6 +50,7 @@ class Formating
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
                                         $b = true;
                                     else $b = false;
+
                                     $arr[] = Formating::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
                                 }
                             $str[$base][] = $arr;

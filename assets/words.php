@@ -50,10 +50,12 @@ class Noun extends Word
     {
         $this->bold = $array;
     }
-    public function getDeclination(){
+    public function getDeclination()
+    {
         return $this->declination ?? null;
     }
-    public function setDeclination($declination){
+    public function setDeclination($declination)
+    {
         $this->declination = $declination;
     }
     public function getTable()
@@ -132,7 +134,7 @@ class Noun extends Word
 
     public function Merge($word)
     {
-        $word->form[$this->number] = isset($word->form[$this->number]) ? Merge::Values($this->form[$this->number], $word->form[$this->number]) : $this->form[$this->number];
+        $word->form[$this->number] = isset($word->form[$this->number]) ? Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
         $this->form = $word->form;
         $this->number = Merge::Values($this->number, $word->number);
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -154,7 +156,7 @@ class Adjective extends Noun
 
     public function Merge($word)
     {
-        $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number]) : $this->form[$this->gender . "_" . $this->number];
+        $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Words::sortForms(Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number])) : $this->form[$this->gender . "_" . $this->number];
         $this->form = $word->form;
         $this->number = Merge::Values($this->number, $word->number);
         $this->gender = Merge::Values($this->gender, $word->gender);
@@ -346,7 +348,8 @@ class Verb extends Noun
     {
         return $this->conjugation ?? null;
     }
-    public function setConjugation($con){
+    public function setConjugation($con)
+    {
         $this->conjugation = $con;
     }
 
@@ -567,7 +570,8 @@ class JSONobj
     {
         return $this->declination ?? null;
     }
-    public function setDeclination($declination){
+    public function setDeclination($declination)
+    {
         $this->declination = $declination;
     }
 
@@ -575,7 +579,8 @@ class JSONobj
     {
         return $this->conjugation ?? null;
     }
-    public function setConjugation($con){
+    public function setConjugation($con)
+    {
         $this->conjugation = $con;
     }
 
@@ -587,8 +592,37 @@ class JSONobj
 
 class Words
 {
+    public static function sortForms($form)
+    {
+        if (!is_array($form))
+            return $form;
+        $array = array();
+        $n = count($form);
+        for ($i = 0; $i < $n; $i++)
+            switch ($form[$i]) {
+                case "nom":
+                    $array[0] = "nom";
+                    break;
+                case "gen":
+                    $array[1] = "gen";
+                    break;
+                case "dat":
+                    $array[2] = "dat";
+                    break;
+                case "acc":
+                    $array[3] = "acc";
+                    break;
+                case "voc":
+                    $array[4] = "voc";
+                    break;
+                case "abl":
+                    $array[5] = "abl";
+                    break;
+            }
+        return array_values($array);
+    }
     public static function hasForms($word): int
-    { //0 -other, 1 -form, 2 -coniug, 3 -preposition
+    { //0 -other, 1 -form, 2 -coniug
         $class = $word->getClass();
         switch ($class) {
             case "verb":
@@ -642,7 +676,6 @@ class Words
                 unset($words[$i - 1]);
             }
         }
-        //mlog($words, true);
         return array_values($words);
     }
 
@@ -752,6 +785,6 @@ class Merge
                 $value1[] = $value2;
         } else $value1 = [$value1, $value2];
         //mlog(array_unique($value1));
-        return array_unique($value1);
+        return array_values(array_unique($value1));
     }
 }

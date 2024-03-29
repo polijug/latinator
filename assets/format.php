@@ -36,7 +36,7 @@ class Formating
                     case "numeral":
                     case "pronoun":
                         $bold = $word->getBold();
-                        if (is_array($word->getNumber())) {
+                        if (is_array($word->getNumber()) || is_array($word->getClass()[$word->getNumber()]) ) { //chybná podmínka -> array do nearrayového
                             $arr = [];
                             $n = count($word->getNumber());
                             for ($j = 0; $j < $n; $j++)
@@ -50,6 +50,7 @@ class Formating
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()[$j]]) && in_array($word->getForm()[$word->getNumber()[$j]][$k], $bold[$word->getGender() . "_" . $word->getNumber()[$j]]))
                                         $b = true;
                                     else $b = false;
+                                    MLog("here");
                                     $arr[] = Formating::Class($word, ["form" => $word->getForm()[$word->getNumber()[$j]][$k], "bold" => $b, "number" => $word->getNumber()[$j]]);
                                 }
                             $str[$base][] = $arr;

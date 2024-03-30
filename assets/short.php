@@ -36,6 +36,10 @@ class Short
                 return "střední";
         }
     }
+    public static function Gender_V($gender){
+        if($gender == "pas") return "trpný";
+        else return "činný";
+    }
     public static function Tense($tense)
     {
         switch ($tense) {

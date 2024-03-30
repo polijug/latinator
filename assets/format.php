@@ -1,11 +1,31 @@
 <?php
-class Formating
+class Formating{
+    public static function Formate($words){
+        $int = new Interpretation($words);
+        $interpretations = $int->format;
+        $words = $int->word;
+        unset($int);
+        mlog($words, true);
+        m
+        //array pro každé slovo - výhodné
+        //bold - jedna z podmínek pro upřednostnění
+        //další - sloveso na konci, přídavné jméno po podstatném, pasující číslo a osoba slovesa, párování předložky a pods/příd jm.
+        // častější jednodušší než složitější:
+        //nom/acc/abl      act      ind/inf     pres/impf/futr
+        //rating každého slova(?)
+
+    }
+    public static function Short($word){
+        
+    }
+}
+
+class Interpretation
 {
     public $word = [];
     public $format = []; //string
     public function __construct($word)
     {
-        //WORD DUPLICITY
         $n = count($word);
         for ($i = 0; $i < $n; $i++)
             if ($word[$i][0] instanceof JSONobj)
@@ -15,13 +35,12 @@ class Formating
                 //Database::insert($this->word[$i]);
             }
         $this->word = Words::Pairable($this->word);
+        $this->formatAnswer();
     }
     public function formatAnswer()
     {
         $str = [];
         $o = count($this->word);
-
-        //mlog($this->word, false);
         for ($i = 0; $i < $o; $i++) {
             $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) { //for one word more alternatives
@@ -45,17 +64,17 @@ class Formating
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]], $bold))
                                         $b = true;
                                     else $b = false;
-                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$number[$j]], "bold" => $b, "number" => $number[$j]]);
+                                    $arr[] = self::Class($word, ["form" => $word->getForm()[$number[$j]], "bold" => $b, "number" => $number[$j]]);
                                 } else for ($k = 0; $k < count($word->getForm()[$number[$j]]); $k++) {
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
                                         $b = true;
                                     else $b = false;
 
-                                    $arr[] = Formating::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
+                                    $arr[] = self::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
                                 }
                             $str[$base][] = $arr;
                         } else
-                            $str[$base][] = Formating::Class($word);
+                            $str[$base][] = self::Class($word);
                         break;
                     case "adjective":
                         $bold = $word->getBold();
@@ -70,48 +89,45 @@ class Formating
                                     if (!is_null($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]][$j], $bold[$keys[$k]]))
                                         $b = true;
                                     else $b = false;
-                                    $arr[] = Formating::Class($word, ["form" => $form[$j], "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
+                                    $arr[] = self::Class($word, ["form" => $form[$j], "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                                 }
                             } else {
                                 if (!is_null($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]], $bold[$keys[$k]]))
                                     $b = true;
                                 else $b = false;
-                                $arr[] = Formating::Class($word, ["form" => $form, "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
+                                $arr[] = self::Class($word, ["form" => $form, "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                             }
                         }
                         $str[$base][] = $arr;
                         break;
                     case "verb":
-                        //todo edit for actual regime
                         $keys = array_keys($word->getPerson());
                         $n = count($keys);
                         $arr = [];
                         for ($k = 0; $k < $n; $k++)
-                            $arr[] = Formating::Class($word, ["person" => $word->getPerson()[$keys[$k]], "gender" => substr($keys[$k], 0, 3), "number" => $keys[$k][strlen($keys[$k]) - 1]]);
+                            $arr[] = self::Class($word, ["person" => $word->getPerson()[$keys[$k]], "gender" => substr($keys[$k], 0, 3), "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                         $str[$base][] = $arr;
                         break;
                     case "adverb":
                     case "connective":
-                        $str[$base][] = Formating::Class($word);
+                        $str[$base][] = self::Class($word);
                         break;
                     case "connective":
                         if (is_array($word->with)) {
                             $arr = [];
                             $n = count($word->with);
                             for ($j = 0; $j < $n; $j++)
-                                $arr[] = Formating::Class($word, ["with" => $word->with[$j]]);
+                                $arr[] = self::Class($word, ["with" => $word->with[$j]]);
                             $str[$base][] = $arr;
-                        } else $str[$base][] = Formating::Class($word);
+                        } else $str[$base][] = self::Class($word);
                         break;
                 }
                 if ($base != $last)
-                    $str[$base]["long"] = Formating::Long($this->word[$i][$p]);
+                    $str[$base]["long"] = self::Long($this->word[$i][$p]);
                 $last = $base;
             }
         }
-        //mlog($str);
-        //or there send
-        $this->format = Formating::Build($str);
+        $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
     { //todo translation + variable elements - zvýraznit
@@ -140,7 +156,6 @@ class Formating
                 $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE;
                 break;
             case "verb":
-                //todo  // osoba, číslo, čas, rod, způsob? (mood),
                 $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ") . ". osoby " : $variables["person"] . ". osoba ";

@@ -64,17 +64,17 @@ class Czech
     {
         switch ($tense) {
             case "pres":
-                return "prézent";
+                return "prézens";
             case "impf":
-                return "imperfekt";
+                return "imperfektum";
             case "futr":
-                return "furuturum";
+                return "futurum I.";
             case "perf":
                 return "perfektum";
             case "plup":
                 return "plusquamperfektum";
             case "futrperf":
-                "futurum perfektum";
+                "futurum II.";
         }
     }
     public static function Gender($gender)

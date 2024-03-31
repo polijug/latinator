@@ -153,7 +153,7 @@ class Czech
             "ablative" => "Ablativ", "vocative" => "Vokativ", "case" => "Pád", "indicative" => "indikativ", "active" => "aktivum", "passive" => "pasivum", "present" => "prézent",
             /*"imperfect" => "imperfektum",*/ "future" => "futurum", "perfect" => "perfektum", "pluperfekt" => "plusquamperfekt", "of" => "od", "subjunctive" => "konjunktiv",
             "imperative" => "imperativ", "infinitives" => "infinitivy", "participles" => "participia", "verbal nouns" => "zpodstatnělá slovesa", "gerund" => "podstatné jméno",
-            "supine" => "přídavné jméno", "non-finite forms" => "neurčité slovesné tvary"
+            "supine" => "přídavné jméno", "non-finite forms" => "neurčité slovesné tvary", "reflexive" => "zvratné"
         ];
         $search = array_keys($translations);
         $replace = array_values($translations);

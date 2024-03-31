@@ -37,6 +37,7 @@ class Sentence
     }
     private function Decide()
     {
+        $output = [];
         $n = count($this->words);
         $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
         $firstNumber = "";
@@ -46,6 +47,7 @@ class Sentence
             for ($j = 0; $j < $m && !$end; $j++) {
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
+                    //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
                     case "noun":
                     case "adjective":
                     case "numeral":
@@ -57,18 +59,20 @@ class Sentence
                                 if (Words::formIntersection($word->getForm()[$keys[$k]], "nom")[0] == "nom") {
                                     $shortW = new Noun(
                                         $word->getWord(),
-                                        @$word->getBase(),
+                                        $word->getBase(),
                                         [$keys[$k] => "nom"],
                                         $keys[$k],
                                         $word->getGender(),
                                         $word->getDeclination(),
                                         $word->getTranslation()
                                     );
+                                    $shortW->class = $word->getClass();
                                     $long = $this->format[$i][$j];
                                     $end = true;
                                     $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
                                     $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
                                     $firstNumber = $word->getNumber();
+                                    unset($this->format[$i][$j]);
                                 }
                             }
                         }
@@ -85,6 +89,7 @@ class Sentence
                                     $word->getTranslation()
                                 );
                                 $long = $this->format[$i][$j];
+                                unset($this->format[$i][$j]);
                                 $end = true;
                             } else {
                                 $keys = $word->getForm();
@@ -103,6 +108,7 @@ class Sentence
                                             $word->getTranslation()
                                         );
                                         $long = $this->format[$i][$j];
+                                        unset($this->format[$i][$j]);
                                         $end = true;
                                     }
                                 }
@@ -110,8 +116,8 @@ class Sentence
                         }
                         break;
                     case "verb":
-                        if ($i == $n - 1 && $firstPerson != -1) { 
-                            $keys = array_keys($word->getPerson()); 
+                        if ($i == $n - 1 && $firstPerson != -1) {
+                            $keys = array_keys($word->getPerson());
                             $o = count($keys);
                             for ($k = 0; $k < $o; $k++) {
                                 $gender = substr($keys[$k], 0, 3);
@@ -134,33 +140,64 @@ class Sentence
                                         $word->getTranslation()
                                     );
                                     $long = $this->format[$i][$j];
+                                    unset($this->format[$i][$j]);
                                     $end = true;
                                 }
                             }
-                        } if (!$end){ //act   ind/inf     pres/impf/futr  3.
+                        }
+                        if (!$end) { //act   ind/inf     pres/impf/futr  3.
                             $mood = Words::formIntersection($word->getMood(), ["ind", "inf"]);
-                            $tense = Words::formIntersection($word->getTense(), ["pres","impf", "futr"]);
-                            if(Words::formIntersection($word->getGender(), "act")[0] == "act"){ 
-                                if($mood != [])
-                                    if($tense != []){
-                                        
+                            $tense = Words::formIntersection($word->getTense(), ["pres", "impf", "futr"]);
+                            if (Words::formIntersection($word->getGender(), "act")[0] == "act") {  //možná moc přísné
+                                if ($mood != [])
+                                    if ($tense != []) {
+                                        $number = is_array($word->getNumber()) ? $word->getNumber()[0] : $word->getNumber();
+                                        $person = $word->getPerson()["act_$number"];
+                                        $person = is_array($person) ? $person[0] : $person;
+                                        $shortW = new Verb(
+                                            $word->getWord(),
+                                            $word->getBase(),
+                                            $number,
+                                            $tense[0],
+                                            $person,
+                                            "act",
+                                            $mood[0],
+                                            $word->getConjugation(),
+                                            $word->getTranslation()
+                                        );
+                                        $long = $this->format[$i][$j];
+                                        unset($this->format[$i][$j]);
+                                        $end = true;
                                     }
-                                
-                                //ind/inf - co když na konci se nic takového nenajde?
-                            } else{//pass
+
+                                //ind/inf - co když na konci se nic takového nenajde? (tady se nebavíme o konci) - tak to má blbý, tohle je překlad vět, ne slov.
+                            } else { //passive - určitě?
 
                             }
                         }
                         break;
                     case "preposition":
+                        $with = $word->getWith();
+                        $bold = $word->getBold();
+                        if ($bold != null) {
+                            $keys = array_keys($bold)[0];
+                            $shortW = new Preposition($word->getWord(), $word->getBase(), $bold[$keys], $word->getTranslation());
+                            $long = $this->format[$i][$j];
+                            unset($this->format[$i][$j]);
+                        }
                         break;
                     default:
+                        //dont know if
                         break;
                 }
             }
             $short = false;
-            if ($end && isset($shortW))
-                $short = self::FormateShort($shortW);
+            if ($end && isset($shortW)){
+               $short = self::FormateShort($shortW);
+               $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$i]];
+            }
+            //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
+
         }
     }
     private static function FormateShort($word)

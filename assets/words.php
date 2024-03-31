@@ -684,9 +684,9 @@ class Words
             $n2 = count($word2);
             for ($j = 0; $j < $n2; $j++) {
                 if ($word1[$i]->getClass() != $word2[$j]->getClass() || $word1[$i]->getBase() != $word2[$j]->getBase()) continue;
-                if ($word1[$i]->matchSpecParam($word2[$i])) {
-                    $word1[$i]->Combine($word2[$i]);
-                    unset($word2[$i]);
+                if ($word1[$i]->matchSpecParam($word2[$j])) {
+                    $word1[$i]->Combine($word2[$j]);
+                    unset($word2[$j]);
                     $word2 = array_values($word2);
                 }
             }

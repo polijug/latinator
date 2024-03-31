@@ -3,9 +3,10 @@ class Formating{
     public static function Formate($words){
         $int = new Interpretation($words);
         $interpretations = $int->format;
+        return $interpretations;
         $words = $int->word;
         unset($int);
-        mlog($words, true);
+        //mlog($words, true);
         //array pro každé slovo - výhodné
         //další - sloveso na konci, přídavné jméno po podstatném, pasující číslo a osoba slovesa, párování předložky a pods/příd jm.
         // častější jednodušší než složitější:

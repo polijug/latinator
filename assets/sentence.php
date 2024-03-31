@@ -110,13 +110,12 @@ class Sentence
                         }
                         break;
                     case "verb":
-                        if ($i == $n - 1 && $firstPerson != -1) { //on the end, first was noun (1), last must be 3. pers., if the first pronoun (2) -> 1., 2. 
-                            $keys = array_keys($word->getPerson()); //pairing number of noun, pairing person of pronoun
+                        if ($i == $n - 1 && $firstPerson != -1) { 
+                            $keys = array_keys($word->getPerson()); 
                             $o = count($keys);
                             for ($k = 0; $k < $o; $k++) {
                                 $gender = substr($keys[$k], 0, 3);
                                 $person = $word->getPerson()[$keys[$k]];
-                                //špatná podmínka - potřeba průpis (osoby) a čísla
                                 if ($firstNumber == $keys[$k][4] && ($firstPerson == 0 && Words::formIntersection($person, 3)[0] == 3 || $firstPerson > 0 && (Words::formIntersection($person, $firstPerson) != [] || $firstPerson == 4))) {
                                     if ($firstPerson == 0)
                                         $pers = 3;
@@ -134,10 +133,23 @@ class Sentence
                                         $word->getConjugation(),
                                         $word->getTranslation()
                                     );
+                                    $long = $this->format[$i][$j];
+                                    $end = true;
                                 }
                             }
-                        } else { //act   ind/inf     pres/impf/futr  3 os.   č: Podle příd.
+                        } if (!$end){ //act   ind/inf     pres/impf/futr  3.
+                            $mood = Words::formIntersection($word->getMood(), ["ind", "inf"]);
+                            $tense = Words::formIntersection($word->getTense(), ["pres","impf", "futr"]);
+                            if(Words::formIntersection($word->getGender(), "act")[0] == "act"){ 
+                                if($mood != [])
+                                    if($tense != []){
+                                        
+                                    }
+                                
+                                //ind/inf - co když na konci se nic takového nenajde?
+                            } else{//pass
 
+                            }
                         }
                         break;
                     case "preposition":

@@ -43,6 +43,28 @@ class Czech
                     return "třetí";
             }
     }
+    public static function PersonToEn($person)
+    {
+        switch ($person) {
+            case "first":
+                return 1;
+            case "second":
+                return 2;
+            case "third":
+                return 3;
+        }
+    }
+    public static function TypeToEn($type)
+    {
+        switch ($type) {
+            case "osobní":
+                return "personal";
+            case "ukazovací":
+                return "determiners";
+            default:
+                return $type;
+        }
+    }
     public static function Form($form)
     {
         switch ($form) {

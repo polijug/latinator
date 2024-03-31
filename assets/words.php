@@ -191,16 +191,18 @@ class Adverb extends Word
 
 class Pronoun extends Noun
 {
-    public function __construct($word, $base, $form, $number, $type, $gender = null, $translation = [])
+    public function __construct($word, $base, $form, $number, $type, $person = null, $gender = null, $translation = [])
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
         parent::__construct($word, $base, $form, $number, $gender, null, $translation);
-        $this->type = $type; //todo type
+        $this->type = $type;
+        $this->person = $person;
     }
 
     public $class = "pronoun";
     public $type;
+    public $person;
 
     public function toJSON()
     {
@@ -213,7 +215,8 @@ class Pronoun extends Noun
             'form': " . jsonEncode($this->form) . ",
             'number': " . jsonEncode($this->number) . ",
             'type': '$this->type',
-            'declination': '$this->declination'
+            'declination': '$this->declination',
+            'person': '$this->person'
         }";
     }
 }

@@ -71,12 +71,24 @@ class Base
                             );
                             break;
                         case "Pronoun":
+                            if(str_starts_with($base[1], "head|la|pronoun")){
+                                preg_match("/cat2=(?<letter>[a-z]+)/i", $base[1], $matches);
+                                $type = $matches["letter"];
+                                preg_match("/\|(?<letter>[a-z]+) person/i", $base[1], $matches);
+                                $person = $matches["letter"];
+                            } else if(str_starts_with($base[1], "la-det")){
+                                preg_match("/cat3=(?<letter>[a-z]+)/i", $base[1], $matches);
+                                $type = $matches["letter"]; //determiners
+                                $person = 3;
+                            }
+                            $base[1];/////
                             $sentence = new Pronoun(
                                 $word,
                                 $word,
                                 "nom",
                                 "s",
-                                null,
+                                $type,
+                                Czech::PersonToEn($person),
                                 null,
                                 //explode("''", $base[1], 3)[1], //TODO english type
                                 //explode("''", $base[2], 3)[1], //TODO english gender
@@ -190,7 +202,8 @@ class Base
                                 $word,
                                 "nom",
                                 "s",
-                                explode("''", $base[1], 3)[1], //TODO english type
+                                Czech::TypeToEn(explode("''", $base[1], 3)[1]),
+                                null, 
                                 explode("''", $base[2], 3)[1], //TODO english gender
                                 $translate
                             );
@@ -293,6 +306,7 @@ class Inflections
                             $base,
                             $info[2], //form
                             $info[3],
+                            null,
                             null,
                             null,
                             isset($translation) ? $translation : null
@@ -398,6 +412,7 @@ class Inflections
                         explode("#", $info[2])[0],
                         substr($info[0], 0, 3),
                         "s",
+                        null,
                         null
                     ); //form, number, type
                 }

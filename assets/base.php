@@ -90,8 +90,6 @@ class Base
                                 $type,
                                 Czech::PersonToEn($person),
                                 null,
-                                //explode("''", $base[1], 3)[1], //TODO english type
-                                //explode("''", $base[2], 3)[1], //TODO english gender
                                 $translate
                             );
                             break;

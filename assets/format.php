@@ -6,7 +6,6 @@ class Formating{
         $words = $int->word;
         unset($int);
         mlog($words, true);
-        m
         //array pro každé slovo - výhodné
         //bold - jedna z podmínek pro upřednostnění
         //další - sloveso na konci, přídavné jméno po podstatném, pasující číslo a osoba slovesa, párování předložky a pods/příd jm.

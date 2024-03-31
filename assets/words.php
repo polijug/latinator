@@ -677,6 +677,8 @@ class Words
 
     public static function Combine($word1, $word2)
     {
+        mlog($word1);
+        mlog($word2, true); //řešil jsem chybu v tomto - párování s null
         if ($word1 == false || $word1 == [] || $word2 == false || $word2 == []) return $word1 == false || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];

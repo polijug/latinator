@@ -188,10 +188,14 @@ class Interpretation
         }
         return $str;
     }
-    private static function Build($str)
+    private static function Build($words)
     {
-        $output = "";
-        foreach ($str as $word) {
+        $output = [];
+        $keys = array_keys($words);
+        $o = count($keys);
+        for($k = 0; $k < $o; $k++){
+            $word = $words[$keys[$k]];
+            $output[$k] = [];
             $n = count($word) - 1;
             for ($i = 0; $i < $n; $i++) {
                 $short = "";
@@ -201,10 +205,12 @@ class Interpretation
                 if ($short == "") $short = $word[$i];
                 //for each array - make
                 //----
-                $output .= "<details><summary>" . $short . "</summary>";
-                $output .= "<div>" . $word["long"] . "</div></details>";
+                $str = "<details><summary>" . $short . "</summary>";
+                $str .= "<div>" . $word["long"] . "</div></details>";
+                $output[$k][] = $str;
             }
         }
+        mlog($output);
         return $output;
     }
 }

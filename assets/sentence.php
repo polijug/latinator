@@ -71,7 +71,7 @@ class Sentence
                                     $shortW = new Noun(
                                         $word->getWord(),
                                         $word->getBase(),
-                                        [$keys[$k] => "nom"],
+                                        "nom",
                                         $keys[$k],
                                         $word->getGender(),
                                         $word->getDeclination(),
@@ -85,7 +85,8 @@ class Sentence
                                     }
                                     $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
                                     $firstNumber = $word->getNumber();
-                                    unset($this->format[$i][$j]);
+                                    //mlog($this->format, true);
+                                    //unset($this->format[$i][$j]);
                                 }
                             }
                         }
@@ -95,7 +96,7 @@ class Sentence
                                 $shortW = new Noun(
                                     $word->getWord(),
                                     $word->getBase(),
-                                    [$key => $word->getBold()[$key]],
+                                    $word->getBold()[$key],
                                     $key[strlen($key) - 1],
                                     $word->getGender(),
                                     $word->getDeclination(),
@@ -103,7 +104,7 @@ class Sentence
                                 );
                                 $shortW->class = $word->getClass();
                                 $long = $this->format[$i][$j];
-                                unset($this->format[$i][$j]);
+                                //unset($this->format[$i][$j]);
                                 $end = true;
                             } else {
                                 $keys = $word->getForm();
@@ -117,7 +118,7 @@ class Sentence
                                         $shortW = new Noun(
                                             $word->getWord(),
                                             $word->getBase(),
-                                            [$keys[$k] => $form],
+                                            $form,
                                             $keys[$k],
                                             $word->getGender(),
                                             $word->getDeclination(),
@@ -125,7 +126,7 @@ class Sentence
                                         );
                                         $shortW->class = $word->getClass();
                                         $long = $this->format[$i][$j];
-                                        unset($this->format[$i][$j]);
+                                        //unset($this->format[$i][$j]);
                                         $end = true;
                                     }
                                 }
@@ -159,7 +160,7 @@ class Sentence
                                         $word->getTranslation()
                                     );
                                     $long = $this->format[$i][$j];
-                                    unset($this->format[$i][$j]);
+                                    //unset($this->format[$i][$j]);
                                     $end = true;
                                 }
                             }
@@ -193,7 +194,7 @@ class Sentence
                                             $word->getTranslation()
                                         );
                                         $long = $this->format[$i][$j];
-                                        unset($this->format[$i][$j]);
+                                        //unset($this->format[$i][$j]);
                                         $end = true;
                                     }
 
@@ -211,14 +212,14 @@ class Sentence
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $bold[$keys], $word->getTranslation());
                             $long = $this->format[$i][$j];
                             $end = true;
-                            unset($this->format[$i][$j]);
+                            //unset($this->format[$i][$j]);
                         } else if ($obey) {
                             $with = $this->getWith();
                             $with = is_array($with) ? $with[0] : $with;
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
                             $long = $this->format[$i][$j];
                             $end = true;
-                            unset($this->format[$i][$j]);
+                            //unset($this->format[$i][$j]);
                         }
                         break;
                     default:
@@ -229,7 +230,7 @@ class Sentence
                             $shortW->class = $word->getClass();
                             $end = true;
                             $long = $this->format[$i][$j];
-                            unset($this->format[$i][$j]);
+                            //unset($this->format[$i][$j]);
                         }
                         break;
                 }

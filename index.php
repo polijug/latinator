@@ -13,6 +13,8 @@ include_once("assets/base.php");
 include_once("assets/table.php");
 include_once("assets/format.php");
 include_once("assets/database.php");
+include_once("assets/sentence.php");
+include_once("assets/short.php");
 if (PHP_MAJOR_VERSION < 8)
     include_once("assets/compatibility.php");
 /*
@@ -53,7 +55,6 @@ if (!$sentence) { //show main page
  */
 
 $sent = new Sentence($sentence);
-//MLog($sent);
 $sent->Formate();
 
 

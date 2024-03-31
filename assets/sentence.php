@@ -38,6 +38,8 @@ class Sentence
     private function Decide()
     {
         $n = count($this->words);
+        $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
+        $firstNumber = "";
         for ($i = 0; $i < $n; $i++) {
             $m = count($this->words[$i]);
             $end = false;
@@ -48,38 +50,32 @@ class Sentence
                     case "adjective":
                     case "numeral":
                     case "pronoun":
-                        if ($i == 0 && $word->getClass() == "noun") { //chyba s číslem slovesa
-                            if (isset($word->getForm()["s"]) && Words::formIntersection($word->getForm()["s"], "nom")[0] == "nom") {
-                                $shortW = self::FormateShort(new Noun(
-                                    $word->getWord(),
-                                    $word->getBase(),
-                                    ["s" => "nom"],
-                                    "s",
-                                    $word->getGender(),
-                                    $word->getDeclination(),
-                                    $word->getTranslation()
-                                ));
-                                $long = $this->format[$i][$j];
-                                $end = true;
-                            } else if (isset($word->getForm()["p"]) && Words::formIntersection($word->getForm()["p"], "nom")[0] == "nom") {
-                                $shortW = self::FormateShort(new Noun(
-                                    $word->getWord(),
-                                    $word->getBase(),
-                                    ["p" => "nom"],
-                                    "p",
-                                    $word->getGender(),
-                                    $word->getDeclination(),
-                                    $word->getTranslation()
-                                ));
-                                $long = $this->format[$i][$j];
-                                $end = true;
+                        if ($i == 0 && $word->getClass() == "noun" || $word->getClass() == "pronoun") { //chyba s číslem slovesa
+                            $keys = array_keys($word->getForm());
+                            $o = count($keys);
+                            for ($k = 0; $k < $o && !$end; $k++) {
+                                if (Words::formIntersection($word->getForm()[$keys[$k]], "nom")[0] == "nom") {
+                                    $shortW = new Noun(
+                                        $word->getWord(),
+                                        @$word->getBase(),
+                                        [$keys[$k] => "nom"],
+                                        $keys[$k],
+                                        $word->getGender(),
+                                        $word->getDeclination(),
+                                        $word->getTranslation()
+                                    );
+                                    $long = $this->format[$i][$j];
+                                    $end = true;
+                                    $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
+                                    $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
+                                    $firstNumber = $word->getNumber();
+                                }
                             }
-                            $end = true;
                         }
                         if (!$end) {
                             if ($word->getBold() != null) {
                                 $key = array_keys($word->getBold())[0];
-                                $shortW = self::FormateShort(new Noun(
+                                $shortW = new Noun(
                                     $word->getWord(),
                                     $word->getBase(),
                                     [$key => $word->getBold()[$key]],
@@ -87,7 +83,7 @@ class Sentence
                                     $word->getGender(),
                                     $word->getDeclination(),
                                     $word->getTranslation()
-                                ));
+                                );
                                 $long = $this->format[$i][$j];
                                 $end = true;
                             } else {
@@ -97,7 +93,7 @@ class Sentence
                                     $arr = Words::formIntersection($word->getForm[$keys[$k]], ["nom", "acc"]);
                                     if (in_array("acc", $arr) || in_array("nom", $arr)) { //možná špatné pořadí
                                         $form = in_array("acc", $arr) ? "acc" : "nom";
-                                        $shortW = self::FormateShort(new Noun(
+                                        $shortW = new Noun(
                                             $word->getWord(),
                                             $word->getBase(),
                                             [$keys[$k] => $form],
@@ -105,7 +101,7 @@ class Sentence
                                             $word->getGender(),
                                             $word->getDeclination(),
                                             $word->getTranslation()
-                                        ));
+                                        );
                                         $long = $this->format[$i][$j];
                                         $end = true;
                                     }
@@ -114,6 +110,35 @@ class Sentence
                         }
                         break;
                     case "verb":
+                        if ($i == $n - 1 && $firstPerson != -1) { //on the end, first was noun (1), last must be 3. pers., if the first pronoun (2) -> 1., 2. 
+                            $keys = array_keys($word->getPerson()); //pairing number of noun, pairing person of pronoun
+                            $o = count($keys);
+                            for ($k = 0; $k < $o; $k++) {
+                                $gender = substr($keys[$k], 0, 3);
+                                $person = $word->getPerson()[$keys[$k]];
+                                //špatná podmínka - potřeba průpis (osoby) a čísla
+                                if ($firstNumber == $keys[$k][4] && ($firstPerson == 0 && Words::formIntersection($person, 3)[0] == 3 || $firstPerson > 0 && (Words::formIntersection($person, $firstPerson) != [] || $firstPerson == 4))) {
+                                    if ($firstPerson == 0)
+                                        $pers = 3;
+                                    else if ($firstPerson == 4) $pers = Words::formIntersection($person, [1, 2, 3])[0];
+                                    else $pers = Words::formIntersection($person, $firstPerson)[0];
+
+                                    $shortW = new Verb(
+                                        $word->getWord(),
+                                        $word->getBase(),
+                                        $firstNumber,
+                                        $word->getTense(),
+                                        $pers,
+                                        $gender,
+                                        $word->getMood(),
+                                        $word->getConjugation(),
+                                        $word->getTranslation()
+                                    );
+                                }
+                            }
+                        } else { //act   ind/inf     pres/impf/futr  3 os.   č: Podle příd.
+
+                        }
                         break;
                     case "preposition":
                         break;
@@ -121,6 +146,7 @@ class Sentence
                         break;
                 }
             }
+            $short = false;
             if ($end && isset($shortW))
                 $short = self::FormateShort($shortW);
         }

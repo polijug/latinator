@@ -61,7 +61,7 @@ class Short
     {
         switch ($mood) {
             case "ind":
-                return ""; //oznamovací
+                return "oznamovací"; 
             case "imp":
                 return "rozkazovací";
             case "sub":

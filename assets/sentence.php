@@ -40,13 +40,75 @@ class Sentence
         $n = count($this->words);
         for ($i = 0; $i < $n; $i++) {
             $m = count($this->words[$i]);
-            $end= false;
+            $end = false;
             for ($j = 0; $j < $m && !$end; $j++) {
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
                     case "noun":
-                        if($i == 0){
+                        if ($i == 0) { //chyba s číslem slovesa
+                            if (isset($word->getForm["s"]) && Words::formIntersection($word->getForm["s"], "nom")[0] == "nom") {
+                                $shortW = self::FormateShort(new Noun(
+                                    $word->getWord(),
+                                    $word->getBase(),
+                                    ["s" => "nom"],
+                                    "s",
+                                    $word->getGender(),
+                                    $word->getDeclination(),
+                                    $word->getTranslation()
+                                ));
+                                $long = $this->format[$i][$j];
+                                $end = true;
+                            } else
+                            if (isset($word->getForm["p"]) && Words::formIntersection($word->getForm["p"], "nom")[0] == "nom") {
+                                $shortW = self::FormateShort(new Noun(
+                                    $word->getWord(),
+                                    $word->getBase(),
+                                    ["p" => "nom"],
+                                    "p",
+                                    $word->getGender(),
+                                    $word->getDeclination(),
+                                    $word->getTranslation()
+                                ));
+                                $long = $this->format[$i][$j];
+                                $end = true;
+                            }
                             $end = true;
+                        }
+                        if ($end != true) {
+                            if ($word->getBold() != null) {
+                                $key = array_keys($word->getBold())[0];
+                                $shortW = self::FormateShort(new Noun(
+                                    $word->getWord(),
+                                    $word->getBase(),
+                                    [$key => $word->getBold()[$key]],
+                                    $key[strlen($key) - 1],
+                                    $word->getGender(),
+                                    $word->getDeclination(),
+                                    $word->getTranslation()
+                                ));
+                                $long = $this->format[$i][$j];
+                                $end = true;
+                            } else {
+                                $keys = $word->getForm();
+                                $o = count($keys);
+                                for ($k = 0; $k < $o; $k++) {
+                                    $arr = Words::formIntersection($word->getForm[$keys[$k]], ["nom", "acc"]);
+                                    if (in_array("acc", $arr) || in_array("nom", $arr)) { //možná špatné pořadí
+                                        $form = in_array("acc", $arr) ? "acc" : "nom";
+                                        $shortW = self::FormateShort(new Noun(
+                                            $word->getWord(),
+                                            $word->getBase(),
+                                            [$keys[$k] => $form],
+                                            $keys[$k],
+                                            $word->getGender(),
+                                            $word->getDeclination(),
+                                            $word->getTranslation()
+                                        ));
+                                        $long = $this->format[$i][$j];
+                                        $end = true;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case "adjective":
@@ -62,6 +124,8 @@ class Sentence
                         break;
                 }
             }
+            if ($end && isset($shortW))
+                $short = self::FormateShort($shortW);
         }
     }
     private static function FormateShort($word)

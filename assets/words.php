@@ -204,13 +204,16 @@ class Pronoun extends Noun
     public $type;
     public $person;
 
-    public function getType(){
+    public function getType()
+    {
         return $this->type ?? null;
     }
-    public function setType($type){
+    public function setType($type)
+    {
         $this->type = $type;
     }
-    public function getPerson(){
+    public function getPerson()
+    {
         return $this->person ?? null;
     }
 
@@ -602,10 +605,12 @@ class JSONobj
     {
         return $this->word ?? null;
     }
-    public function getType(){
+    public function getType()
+    {
         return $this->type ?? null;
     }
-    public function setType($type){
+    public function setType($type)
+    {
         $this->type = $type;
     }
 }
@@ -733,7 +738,7 @@ class Words
                 }
                 $keys = array_keys($other->getForm());
                 $n = count($keys);
-                for($i = 0; $i < $n; $i++){
+                for ($i = 0; $i < $n; $i++) {
                     $result[$keys[$i]] = Words::formIntersection($other->getForm(), $preposition->getWith());
                 }
             } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
@@ -801,7 +806,7 @@ class Words
         if (isset($word->with)) $out->with = $word->with;
         if (isset($word->conjugation)) $out->conjugation = $word->conjugation;
         if (isset($word->declination)) $out->declination = $word->declination;
-        if(isset($word->type)) $out->type = $word->type;
+        if (isset($word->type)) $out->type = $word->type;
         return $out;
     }
 }

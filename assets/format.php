@@ -7,11 +7,9 @@ class Formating{
         unset($int);
         mlog($words, true);
         //array pro každé slovo - výhodné
-        //bold - jedna z podmínek pro upřednostnění
         //další - sloveso na konci, přídavné jméno po podstatném, pasující číslo a osoba slovesa, párování předložky a pods/příd jm.
         // častější jednodušší než složitější:
         //nom/acc/abl      act      ind/inf     pres/impf/futr
-        //rating každého slova(?)
 
     }
     public static function Short($word){

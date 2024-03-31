@@ -45,8 +45,11 @@ class Sentence
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
                     case "noun":
-                        if ($i == 0) { //chyba s číslem slovesa
-                            if (isset($word->getForm["s"]) && Words::formIntersection($word->getForm["s"], "nom")[0] == "nom") {
+                    case "adjective":
+                    case "numeral":
+                    case "pronoun":
+                        if ($i == 0 && $word->getClass() == "noun") { //chyba s číslem slovesa
+                            if (isset($word->getForm()["s"]) && Words::formIntersection($word->getForm()["s"], "nom")[0] == "nom") {
                                 $shortW = self::FormateShort(new Noun(
                                     $word->getWord(),
                                     $word->getBase(),
@@ -58,8 +61,7 @@ class Sentence
                                 ));
                                 $long = $this->format[$i][$j];
                                 $end = true;
-                            } else
-                            if (isset($word->getForm["p"]) && Words::formIntersection($word->getForm["p"], "nom")[0] == "nom") {
+                            } else if (isset($word->getForm()["p"]) && Words::formIntersection($word->getForm()["p"], "nom")[0] == "nom") {
                                 $shortW = self::FormateShort(new Noun(
                                     $word->getWord(),
                                     $word->getBase(),
@@ -74,7 +76,7 @@ class Sentence
                             }
                             $end = true;
                         }
-                        if ($end != true) {
+                        if (!$end) {
                             if ($word->getBold() != null) {
                                 $key = array_keys($word->getBold())[0];
                                 $shortW = self::FormateShort(new Noun(
@@ -110,11 +112,6 @@ class Sentence
                                 }
                             }
                         }
-                        break;
-                    case "adjective":
-                    case "numeral":
-                    case "pronoun":
-
                         break;
                     case "verb":
                         break;

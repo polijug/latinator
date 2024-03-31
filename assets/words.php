@@ -687,7 +687,7 @@ class Words
     {
         $n = count($words);
         //mlog($words); //two allein
-        $pairable = ["noun", "adjective", "numeral", "pronoun"];
+        $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
         for ($i = 1; $i < $n; $i++) {
             if (is_array($words[0])) {
                 $word1 = $words[$i][0];
@@ -703,7 +703,20 @@ class Words
             $gender = self::formIntersection($word1->getGender(), $word2->getGender());
 
             $m = count($numbers);
-            if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
+            if ($word1->getClass() == "preposition" xor $word2->getClass() == "preposition") {
+                if ($word1->getClass() == "preposition") {
+                    $preposition =  $word1;
+                    $other = $word2;
+                } else {
+                    $preposition =  $word2;
+                    $other = $word1;
+                }
+                $keys = array_keys($other->getForm());
+                $n = count($keys);
+                for($i = 0; $i < $n; $i++){
+                    $result[$keys[$i]] = Words::formIntersection($other->getForm(), $preposition->getWith());
+                }
+            } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
                 for ($j = 0; $j < $m; $j++) {
                     if ($word1->getClass() != "adjective" and $word2->getClass() != "adjective")
                         $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($word1->getForm()[$numbers[$j]], $word2->getForm()[$numbers[$j]]);
@@ -714,17 +727,15 @@ class Words
                             $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($adjective->getForm()[$gender[0] . "_" . $numbers[$j]], $other->getForm()[$numbers[$j]]);
                     }
                 }
-            else {
-                if (!is_null($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
-                    $keys = array_keys($word2->getBold());
-                    for ($k = 0; $k < count($keys); $k++)
-                        if (array_key_exists($keys[$k], $word1->getForm()))
-                            $result[$keys[$k]] = self::formIntersection($word2->getBold()[$keys[$k]], $word1->getForm()[$keys[$k]]);
-                } else {
-                    $keys = self::formIntersection(array_keys($word1->getForm()), array_keys($word2->getForm()));
-                    for ($k = 0; $k < count($keys); $k++)
-                        $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
-                }
+            else if (!is_null($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
+                $keys = array_keys($word2->getBold());
+                for ($k = 0; $k < count($keys); $k++)
+                    if (array_key_exists($keys[$k], $word1->getForm()))
+                        $result[$keys[$k]] = self::formIntersection($word2->getBold()[$keys[$k]], $word1->getForm()[$keys[$k]]);
+            } else {
+                $keys = self::formIntersection(array_keys($word1->getForm()), array_keys($word2->getForm()));
+                for ($k = 0; $k < count($keys); $k++)
+                    $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
             }
             if ($result == []) continue;
             Mlog($result);
@@ -738,7 +749,7 @@ class Words
         }
         return array_values($words);
     }
-    private static function formIntersection($form1, $form2)
+    public static function formIntersection($form1, $form2)
     {
         if (is_array($form1) && is_array($form2)) {
             $result = array_intersect($form1, $form2);

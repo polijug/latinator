@@ -25,7 +25,6 @@ class Sentence
     }
     public function Formate()
     {
-
         $this->format = Formating::Formate($this->words);
         $this->Decide();
         mlog($this->format);
@@ -44,14 +43,22 @@ class Sentence
         for ($i = 0; $i < $n; $i++) {
             $m = count($this->words[$i]);
             $end = false;
+            $candidate = "";
+            $obey = false;
             for ($j = 0; $j < $m && !$end; $j++) {
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
-                    //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
+                        //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
                     case "noun":
+                        $val = 3;
                     case "adjective":
+                        $val = $val ?? 1;
                     case "numeral":
+                        $val = $val ?? 3;
                     case "pronoun":
+                        $val = $val ?? 4;
+                        if ($candidate == "" ||  explode("_", $candidate)[0] < $val) //podmínka, ale jaká? nebo array? no ale pak bych musel rozhodovat o tom, co vybrat
+                            $candidate = $val . "_" . $j;
                         if ($i == 0 && $word->getClass() == "noun" || $word->getClass() == "pronoun") { //chyba s číslem slovesa
                             $keys = array_keys($word->getForm());
                             $o = count($keys);
@@ -88,16 +95,19 @@ class Sentence
                                     $word->getDeclination(),
                                     $word->getTranslation()
                                 );
+                                $shortW->class = $word->getClass();
                                 $long = $this->format[$i][$j];
                                 unset($this->format[$i][$j]);
                                 $end = true;
                             } else {
                                 $keys = $word->getForm();
                                 $o = count($keys);
-                                for ($k = 0; $k < $o; $k++) {
+                                for ($k = 0; $k < $o && !$end; $k++) {
                                     $arr = Words::formIntersection($word->getForm[$keys[$k]], ["nom", "acc"]);
-                                    if (in_array("acc", $arr) || in_array("nom", $arr)) { //možná špatné pořadí
+                                    if ($obey || in_array("acc", $arr) || in_array("nom", $arr)) { //možná špatné pořadí
                                         $form = in_array("acc", $arr) ? "acc" : "nom";
+                                        if ($obey)
+                                            $form = $word->getForm[$keys[$k]][0];
                                         $shortW = new Noun(
                                             $word->getWord(),
                                             $word->getBase(),
@@ -107,6 +117,7 @@ class Sentence
                                             $word->getDeclination(),
                                             $word->getTranslation()
                                         );
+                                        $shortW->class = $word->getClass();
                                         $long = $this->format[$i][$j];
                                         unset($this->format[$i][$j]);
                                         $end = true;
@@ -116,6 +127,8 @@ class Sentence
                         }
                         break;
                     case "verb":
+                        if ($candidate == "" || explode("_", $candidate)[0] < 2) //podmínka, ale jaká?
+                            $candidate = 2 . "_" . $j;
                         if ($i == $n - 1 && $firstPerson != -1) {
                             $keys = array_keys($word->getPerson());
                             $o = count($keys);
@@ -148,19 +161,27 @@ class Sentence
                         if (!$end) { //act   ind/inf     pres/impf/futr  3.
                             $mood = Words::formIntersection($word->getMood(), ["ind", "inf"]);
                             $tense = Words::formIntersection($word->getTense(), ["pres", "impf", "futr"]);
-                            if (Words::formIntersection($word->getGender(), "act")[0] == "act") {  //možná moc přísné
-                                if ($mood != [])
-                                    if ($tense != []) {
+                            if ($obey || Words::formIntersection($word->getGender(), "act")[0] == "act") {  //možná moc přísné
+                                if ($mood != [] || $obey)
+                                    if ($tense != [] || $obey) {
                                         $number = is_array($word->getNumber()) ? $word->getNumber()[0] : $word->getNumber();
                                         $person = $word->getPerson()["act_$number"];
                                         $person = is_array($person) ? $person[0] : $person;
+                                        $gender = "act";
+                                        if ($obey) {
+                                            $tense = [$word->getTense()];
+                                            $mood = [$word->getMood()];
+                                            $key = array_keys($word->getPerson())[0];
+                                            $person = $word->getPerson()[$key];
+                                            $gender = substr($key, 0, 3);
+                                        }
                                         $shortW = new Verb(
                                             $word->getWord(),
                                             $word->getBase(),
                                             $number,
                                             $tense[0],
                                             $person,
-                                            "act",
+                                            $gender,
                                             $mood[0],
                                             $word->getConjugation(),
                                             $word->getTranslation()
@@ -171,9 +192,9 @@ class Sentence
                                     }
 
                                 //ind/inf - co když na konci se nic takového nenajde? (tady se nebavíme o konci) - tak to má blbý, tohle je překlad vět, ne slov.
-                            } else { //passive - určitě?
+                            } /*else { //passive - určitě?
 
-                            }
+                            }*/
                         }
                         break;
                     case "preposition":
@@ -183,20 +204,40 @@ class Sentence
                             $keys = array_keys($bold)[0];
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $bold[$keys], $word->getTranslation());
                             $long = $this->format[$i][$j];
+                            $end = true;
+                            unset($this->format[$i][$j]);
+                        } else if ($obey) {
+                            $with = $this->getWith();
+                            $with = is_array($with) ? $with[0] : $with;
+                            $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
+                            $long = $this->format[$i][$j];
+                            $end = true;
                             unset($this->format[$i][$j]);
                         }
                         break;
                     default:
-                        //dont know if
+                        if ($candidate == "")
+                            $candidate = "0_" . $j;
+                        if ($obey) {
+                            $shortW = new Connective($word->getBase(), $word->getTranslation());
+                            $shortW->class = $word->getClass();
+                            $end = true;
+                            $long = $this->format[$i][$j];
+                            unset($this->format[$i][$j]);
+                        }
                         break;
                 }
+                if($j == $m -1 && !$end){
+                    $j = explode("_",$candidate)[1];
+                    $obey = true;
+                }            //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
+
             }
             $short = false;
-            if ($end && isset($shortW)){
-               $short = self::FormateShort($shortW);
-               $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$i]];
+            if ($end && isset($shortW)) {
+                $short = self::FormateShort($shortW);
+                $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$i]];
             }
-            //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
             $this->format = $output;
         }
     }

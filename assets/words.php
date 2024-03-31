@@ -204,6 +204,16 @@ class Pronoun extends Noun
     public $type;
     public $person;
 
+    public function getType(){
+        return $this->type ?? null;
+    }
+    public function setType($type){
+        $this->type = $type;
+    }
+    public function getPerson(){
+        return $this->person ?? null;
+    }
+
     public function toJSON()
     {
         return "{
@@ -507,6 +517,7 @@ class JSONobj
     public $bold;
     public $declination;
     public $conjugation;
+    public $type;
 
     public function getBold()
     {
@@ -590,6 +601,12 @@ class JSONobj
     public function getWord()
     {
         return $this->word ?? null;
+    }
+    public function getType(){
+        return $this->type ?? null;
+    }
+    public function setType($type){
+        $this->type = $type;
     }
 }
 
@@ -784,6 +801,7 @@ class Words
         if (isset($word->with)) $out->with = $word->with;
         if (isset($word->conjugation)) $out->conjugation = $word->conjugation;
         if (isset($word->declination)) $out->declination = $word->declination;
+        if(isset($word->type)) $out->type = $word->type;
         return $out;
     }
 }

@@ -430,7 +430,7 @@ class Verb extends Noun
 
 class Word
 {
-    protected $class;
+    public $class;
     protected $base;
     protected $word;
     protected $translation = [];

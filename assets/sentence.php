@@ -28,11 +28,15 @@ class Sentence
         $this->format = Formating::Formate($this->words);
         $this->Decide();
         mlog($this->format);
+        $this->Print();
     }
     private static function Analysis($sentence)
     {
         $sentence = explode(" ", lcfirst(trim($sentence)));
         return $sentence;
+    }
+    private function Print(){
+
     }
     private function Decide()
     {
@@ -76,7 +80,9 @@ class Sentence
                                     $shortW->class = $word->getClass();
                                     $long = $this->format[$i][$j];
                                     $end = true;
-                                    $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
+                                    if($word->getClass() == "pronoun"){
+                                        $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
+                                    }
                                     $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
                                     $firstNumber = $word->getNumber();
                                     unset($this->format[$i][$j]);

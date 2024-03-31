@@ -26,8 +26,8 @@ class Sentence
     public function Formate()
     {
 
-        $format = Formating::Formate($this->words);
-        $this->format = $format;
+        $this->format = Formating::Formate($this->words);
+        $this->Decide();
         mlog($this->format);
     }
     private static function Analysis($sentence)
@@ -197,7 +197,7 @@ class Sentence
                $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$i]];
             }
             //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
-
+            $this->format = $output;
         }
     }
     private static function FormateShort($word)

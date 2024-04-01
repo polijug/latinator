@@ -72,10 +72,7 @@ function GExisT($string)
 function MLog($text, $die = false)
 {
     global $output;
-    if (is_string($text))
-        $str = $text;
-    else $str = var_export($text, true);
-    $output->setContent($str . "<p>", $die);
+    $output->setContent(var_export($text, true) . "<p>", $die);
 }
 
 function jsonEncode($object)
@@ -91,7 +88,7 @@ class Output
     }
     public function return()
     {
-        //header('Content-type: text/plain; charset=utf-8');
+        header('Content-type: text/html; charset=utf-8');
         print(str_replace(["[title]", "[content]"], "", $this->content));
         die;
     }

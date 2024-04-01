@@ -25,9 +25,11 @@ class Sentence
     }
     public function Formate()
     {
-        $this->format = Formating::Formate($this->words);
+        $format = Formating::Formate($this->words);
+        $this->format = $format->format;
+        $this->words = $format->word;
         $this->Decide();
-        mlog($this->format);
+        mlog($this->format, true);
         $this->Print();
     }
     private static function Analysis($sentence)
@@ -40,7 +42,6 @@ class Sentence
     }
     private function Decide()
     {
-        mlog($this->words);
         $output = [];
         $n = count($this->words);
         mlog($n);
@@ -264,7 +265,7 @@ class Sentence
                 $form = Short::Form($form[array_keys($form)[0]]);
                 $str = $word->getTranslation()[0] . " - $form. pád čísla " . Short::Number($word->getNumber())
                     . "ho, rod " . Short::Gender_N($word->getGender()) . ", " . Czech::Class($word->getClass());
-                $tooltip = "$form. p., č. " . Short::Number($word->getNumber())[0] . ", rod " . substr(Short::Gender_N($word->getGender()), 0, 2) . "., " .
+                $tooltip = "$form. p., č. " . Short::Number($word->getNumber(), true) . "., rod " . Short::Gender_N($word->getGender(), true) . "., " .
                     Czech::Class($word->getClass());
                 break;
             case "verb":
@@ -273,8 +274,8 @@ class Sentence
                 //Být - 3. osoba čísla jednotného, čas přítomný, způsob oznamovací, rod činný, sloveso
                 $str = $word->getTranslation()[0] . " - $person. osoba čísla " . Short::Number($word->getNumber()) . "ho, čas " . Short::Tense($word->getTense()) .
                     ", způsob " . Short::Mood($word->getMood()) . ", rod " . Short::Gender_V($word->getGender()) . ", " . Czech::Class($word->getClass());
-                $tooltip = "$person. os., č. " . Short::Number($word->getNumber())[0] . "., čas " . substr(Short::Tense($word->getTense()), 0, 4) .
-                    "., zp. " . substr(Short::Mood($word->getMood()), 0, 3) . "., rod " . substr(Short::Gender_V($word->getGender()), 0, 3) . "., " . Czech::Class($word->getClass());
+                $tooltip = "$person. os., č. " . Short::Number($word->getNumber(), true) . "., čas " . Short::Tense($word->getTense(), true) .
+                    ", zp. " . substr(Short::Mood($word->getMood()), 0, 3) . "., rod " . Short::Gender_V($word->getGender(), true) . ", " . Czech::Class($word->getClass());
                 break;
             case "preposition":
                 $str = $word->getTranslation()[0] . " - s " . Short::Form($word->form) . ". pádem, " . Czech::Class($word->getClass());

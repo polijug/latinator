@@ -19,49 +19,67 @@ class Short
         }
     }
 
-    public static function Number($num)
+    public static function Number($num, $short = false)
     {
-        if ($num == "s") return "jednotné";
+        if ($num == "s") {
+            if ($short) return "j";
+            return "jednotné";
+        }
+        if ($short) return "mn";
         return "množné";
     }
 
-    public static function Gender_N($gender)
+    public static function Gender_N($gender, $short = false)
     {
         switch ($gender) {
             case "m":
+                if ($short) return "m";
                 return "mužský";
             case "f":
+                if ($short) return "ž";
                 return "ženský";
             case "n":
+                if ($short) return "s";
                 return "střední";
         }
     }
-    public static function Gender_V($gender){
-        if($gender == "pas") return "trpný";
-        else return "činný";
+    public static function Gender_V($gender, $short = false)
+    {
+        if ($gender == "pas") {
+            if ($short) return "trp.";
+            return "trpný";
+        }
+        if ($short) return "čin.";
+        return "činný";
     }
-    public static function Tense($tense)
+    public static function Tense($tense, $short = false)
     {
         switch ($tense) {
             case "pres":
+                if ($short) return "přít.";
                 return "přítomný";
             case "impf":
+                if ($short) return "min. (imp)";
                 return "minulý (imperfekt)";
             case "futr":
+                if ($short) return "bud.";
                 return "budoucí";
             case "perf":
+                if ($short) return "min. (perf)";
                 return "minulý (perfekt)";
             case "plup":
+                if ($short) return "předmin.";
                 return "předminulý";
             case "futrperf":
-                "předbudoucí";
+                if ($short) return "předbud.";
+                return "předbudoucí";
         }
     }
     public static function Mood($mood)
     {
         switch ($mood) {
             case "ind":
-                return "oznamovací"; 
+                return "oznamovací";
             case "imp":
                 return "rozkazovací";
             case "sub":

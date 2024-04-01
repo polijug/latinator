@@ -677,8 +677,6 @@ class Words
 
     public static function Combine($word1, $word2)
     {
-        mlog($word1);
-        mlog($word2, true); //řešil jsem chybu v tomto - párování s null
         if ($word1 == false || $word1 == [] || $word2 == false || $word2 == []) return $word1 == false || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];
@@ -687,9 +685,11 @@ class Words
             for ($j = 0; $j < $n2; $j++) {
                 if ($word1[$i]->getClass() != $word2[$j]->getClass() || $word1[$i]->getBase() != $word2[$j]->getBase()) continue;
                 if ($word1[$i]->matchSpecParam($word2[$j])) {
-                    $word1[$i]->Combine($word2[$j]);
-                    unset($word2[$j]);
+                    $word1[$i]->Combine($word2[$j]); //žeby chybné indexy?
+                    unset($word2[$j]); //hodně chybné indexy vzhledem k tomu, že tu dělám takové čachry machry
                     $word2 = array_values($word2);
+                    $j--;
+                    $n2--;
                 }
             }
             array_push($output, $word1[$i]);

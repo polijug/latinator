@@ -29,7 +29,6 @@ class Sentence
         $this->format = $format->format;
         $this->words = $format->word;
         $this->Decide();
-        mlog($this->format, true);
         $this->Print();
     }
     private static function Analysis($sentence)
@@ -44,7 +43,6 @@ class Sentence
     {
         $output = [];
         $n = count($this->words);
-        mlog($n);
         $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
         $firstNumber = "";
         for ($i = 0; $i < $n; $i++) {
@@ -52,6 +50,7 @@ class Sentence
             $end = false;
             $candidate = "";
             $obey = false;
+            $shape = $this->words[$i][0]->getWord();
             for ($j = 0; $j < $m && !$end; $j++) {
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
@@ -81,15 +80,14 @@ class Sentence
                                         $word->getTranslation()
                                     );
                                     $shortW->class = $word->getClass();
-                                    $long = $this->format[$i][$j];
+                                    $long = $this->format[$shape][$j];
                                     $end = true;
                                     if ($word->getClass() == "pronoun") {
                                         $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
                                     }
                                     $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
                                     $firstNumber = $word->getNumber();
-                                    //mlog($this->format, true);
-                                    //unset($this->format[$i][$j]);
+                                    unset($this->format[$shape][$j]);
                                 }
                             }
                         }
@@ -106,9 +104,8 @@ class Sentence
                                     $word->getTranslation()
                                 );
                                 $shortW->class = $word->getClass();
-                                $long = $this->format[$i][$j];header('Content-type: text/plain; charset=utf-8');
-
-                                //unset($this->format[$i][$j]);
+                                $long = $this->format[$shape][$j];
+                                unset($this->format[$shape][$j]);
                                 $end = true;
                             } else {
                                 $keys = $word->getForm();
@@ -131,8 +128,8 @@ class Sentence
                                             $word->getTranslation()
                                         );
                                         $shortW->class = $word->getClass();
-                                        $long = $this->format[$i][$j];
-                                        //unset($this->format[$i][$j]);
+                                        $long = $this->format[$shape][$j];
+                                        unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
                                 }
@@ -165,8 +162,8 @@ class Sentence
                                         $word->getConjugation(),
                                         $word->getTranslation()
                                     );
-                                    $long = $this->format[$i][$j];
-                                    //unset($this->format[$i][$j]);
+                                    $long = $this->format[$shape][$j];
+                                    unset($this->format[$shape][$j]);
                                     $end = true;
                                 }
                             }
@@ -199,15 +196,14 @@ class Sentence
                                             $word->getConjugation(),
                                             $word->getTranslation()
                                         );
-                                        $long = $this->format[$i][$j];
-                                        //unset($this->format[$i][$j]);
+                                        mlog($this->format[$shape]);
+                                        $long = $this->format[$shape][$j];
+                                        unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
 
                                 //ind/inf - co když na konci se nic takového nenajde? (tady se nebavíme o konci) - tak to má blbý, tohle je překlad vět, ne slov.
-                            } /*else { //passive - určitě?
-
-                            }*/
+                            } 
                         }
                         break;
                     case "preposition":
@@ -216,16 +212,16 @@ class Sentence
                         if ($bold != null) {
                             $keys = array_keys($bold)[0];
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $bold[$keys], $word->getTranslation());
-                            $long = $this->format[$i][$j];
+                            $long = $this->format[$shape][$j];
                             $end = true;
-                            //unset($this->format[$i][$j]);
+                            unset($this->format[$shape][$j]);
                         } else if ($obey) {
                             $with = $this->getWith();
                             $with = is_array($with) ? $with[0] : $with;
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
-                            $long = $this->format[$i][$j];
+                            $long = $this->format[$shape][$j];
                             $end = true;
-                            //unset($this->format[$i][$j]);
+                            unset($this->format[$shape][$j]);
                         }
                         break;
                     default:
@@ -235,8 +231,8 @@ class Sentence
                             $shortW = new Connective($word->getBase(), $word->getTranslation());
                             $shortW->class = $word->getClass();
                             $end = true;
-                            $long = $this->format[$i][$j];
-                            //unset($this->format[$i][$j]);
+                            $long = $this->format[$shape][$j];
+                            unset($this->format[$shape][$j]);
                         }
                         break;
                 }
@@ -249,10 +245,10 @@ class Sentence
             $short = false;
             if ($end && isset($shortW)) {
                 $short = self::FormateShort($shortW);
-                $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$i]];
+                $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$shape]];
             }
-            $this->format = $output;
         }
+        $this->format = $output;
     }
     private static function FormateShort($word)
     {
@@ -271,7 +267,6 @@ class Sentence
             case "verb":
                 $person = $word->getPerson();
                 $person = $person[array_keys($person)[0]];
-                //Být - 3. osoba čísla jednotného, čas přítomný, způsob oznamovací, rod činný, sloveso
                 $str = $word->getTranslation()[0] . " - $person. osoba čísla " . Short::Number($word->getNumber()) . "ho, čas " . Short::Tense($word->getTense()) .
                     ", způsob " . Short::Mood($word->getMood()) . ", rod " . Short::Gender_V($word->getGender()) . ", " . Czech::Class($word->getClass());
                 $tooltip = "$person. os., č. " . Short::Number($word->getNumber(), true) . "., čas " . Short::Tense($word->getTense(), true) .

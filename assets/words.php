@@ -680,13 +680,13 @@ class Words
         if ($word1 == false || $word1 == [] || $word2 == false || $word2 == []) return $word1 == false || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];
-        for ($i = 0; $i < $n1; $i++) { //
+        for ($i = 0; $i < $n1; $i++) {
             $n2 = count($word2);
             for ($j = 0; $j < $n2; $j++) {
                 if ($word1[$i]->getClass() != $word2[$j]->getClass() || $word1[$i]->getBase() != $word2[$j]->getBase()) continue;
                 if ($word1[$i]->matchSpecParam($word2[$j])) {
-                    $word1[$i]->Combine($word2[$j]); //žeby chybné indexy?
-                    unset($word2[$j]); //hodně chybné indexy vzhledem k tomu, že tu dělám takové čachry machry
+                    $word1[$i]->Combine($word2[$j]);
+                    unset($word2[$j]); 
                     $word2 = array_values($word2);
                     $j--;
                     $n2--;

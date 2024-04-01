@@ -35,13 +35,15 @@ class Sentence
         $sentence = explode(" ", lcfirst(trim($sentence)));
         return $sentence;
     }
-    private function Print(){
-
+    private function Print()
+    {
     }
     private function Decide()
     {
+        mlog($this->words);
         $output = [];
         $n = count($this->words);
+        mlog($n);
         $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
         $firstNumber = "";
         for ($i = 0; $i < $n; $i++) {
@@ -80,7 +82,7 @@ class Sentence
                                     $shortW->class = $word->getClass();
                                     $long = $this->format[$i][$j];
                                     $end = true;
-                                    if($word->getClass() == "pronoun"){
+                                    if ($word->getClass() == "pronoun") {
                                         $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
                                     }
                                     $firstPerson = $word->getClass() == "noun" ? 0 : $firstPerson;
@@ -96,14 +98,15 @@ class Sentence
                                 $shortW = new Noun(
                                     $word->getWord(),
                                     $word->getBase(),
-                                    $word->getBold()[$key],
+                                    $word->getBold()[$key][0],
                                     $key[strlen($key) - 1],
-                                    $word->getGender(),
+                                    $key[0],
                                     $word->getDeclination(),
                                     $word->getTranslation()
                                 );
                                 $shortW->class = $word->getClass();
-                                $long = $this->format[$i][$j];
+                                $long = $this->format[$i][$j];header('Content-type: text/plain; charset=utf-8');
+
                                 //unset($this->format[$i][$j]);
                                 $end = true;
                             } else {
@@ -115,12 +118,14 @@ class Sentence
                                         $form = in_array("acc", $arr) ? "acc" : "nom";
                                         if ($obey)
                                             $form = $word->getForm[$keys[$k]][0];
+                                        if (is_array($word->getGender())) $gender = $keys[$k][0];
+                                        else $gender = $word->getGender();
                                         $shortW = new Noun(
                                             $word->getWord(),
                                             $word->getBase(),
                                             $form,
                                             $keys[$k],
-                                            $word->getGender(),
+                                            $gender,
                                             $word->getDeclination(),
                                             $word->getTranslation()
                                         );
@@ -234,8 +239,8 @@ class Sentence
                         }
                         break;
                 }
-                if($j == $m -1 && !$end){
-                    $j = explode("_",$candidate)[1];
+                if ($j == $m - 1 && !$end) {
+                    $j = explode("_", $candidate)[1];
                     $obey = true;
                 }            //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
 
@@ -259,7 +264,7 @@ class Sentence
                 $form = Short::Form($form[array_keys($form)[0]]);
                 $str = $word->getTranslation()[0] . " - $form. pád čísla " . Short::Number($word->getNumber())
                     . "ho, rod " . Short::Gender_N($word->getGender()) . ", " . Czech::Class($word->getClass());
-                $tooltip = "$form. p., č. " . Short::Number($word->getNumber())[0] . ", rod " . Short::Gender_N($word->getGender())[0] . "., " .
+                $tooltip = "$form. p., č. " . Short::Number($word->getNumber())[0] . ", rod " . substr(Short::Gender_N($word->getGender()), 0, 2) . "., " .
                     Czech::Class($word->getClass());
                 break;
             case "verb":

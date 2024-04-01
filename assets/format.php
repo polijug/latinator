@@ -203,8 +203,6 @@ class Interpretation
                     for ($j = 0; $j < count($word[$i]); $j++)
                         $short .= $word[$i][$j] . "<br>";
                 if ($short == "") $short = $word[$i];
-                //for each array - make
-                //----
                 $str = "<details><summary>" . $short . "</summary>";
                 $str .= "<div>" . $word["long"] . "</div></details>";
                 $output[$k][] = $str;

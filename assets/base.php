@@ -322,7 +322,6 @@ class Inflections
                         );
                         break;
                     case "adjective":
-                        mlog($info[2]);
                         $word = new Adjective(
                             $wordd,
                             $base,

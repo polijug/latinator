@@ -695,6 +695,7 @@ class Words
             array_push($output, $word1[$i]);
         }
         if (count($word2) > 0) $output = array_merge($output, $word2);
+        mlog($output, true);
         return $output;
     }
 
@@ -827,7 +828,6 @@ class Merge
             } else
                 $value1[] = $value2;
         } else $value1 = [$value1, $value2];
-        //mlog(array_unique($value1));
         return array_values(array_unique($value1));
     }
 }

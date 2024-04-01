@@ -103,4 +103,4 @@ chyba db alba
 navigation menu for every word -> click on word show the match (bold will be first and it will be possible to show another possibilities,
 not that probable hidden)
 
-   //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
+//unset repair

@@ -1,9 +1,10 @@
 <?php
-class Formating{
-    public static function Formate($words){
+class Formating
+{
+    public static function Formate($words)
+    {
         $int = new Interpretation($words);
-        $interpretations = $int->format;
-        return $interpretations;
+        return $int;
         $words = $int->word;
         unset($int);
         //mlog($words, true);
@@ -13,8 +14,8 @@ class Formating{
         //nom/acc/abl      act      ind/inf     pres/impf/futr
 
     }
-    public static function Short($word){
-        
+    public static function Short($word)
+    {
     }
 }
 
@@ -32,7 +33,8 @@ class Interpretation
                 $this->word[] = Words::Merge($word[$i]);
                 //Database::insert($this->word[$i]);
             }
-        $this->word = Words::Pairable($this->word);
+        if ($n > 1)
+            $this->word = Words::Pairable($this->word);
         $this->formatAnswer();
     }
     public function formatAnswer()
@@ -53,7 +55,7 @@ class Interpretation
                     case "numeral":
                     case "pronoun":
                         $bold = $word->getBold();
-                        if (is_array($word->getNumber()) || is_array($word->getForm()[$word->getNumber()]) ) { //chybná podmínka -> array do nearrayového
+                        if (is_array($word->getNumber()) || is_array($word->getForm()[$word->getNumber()])) { //chybná podmínka -> array do nearrayového
                             $arr = [];
                             $number = is_array($word->getNumber()) ? $word->getNumber() : [$word->getNumber()];
                             $n = count($number);
@@ -193,7 +195,7 @@ class Interpretation
         $output = [];
         $keys = array_keys($words);
         $o = count($keys);
-        for($k = 0; $k < $o; $k++){
+        for ($k = 0; $k < $o; $k++) {
             $word = $words[$keys[$k]];
             $output[$k] = [];
             $n = count($word) - 1;

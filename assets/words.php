@@ -695,7 +695,6 @@ class Words
             array_push($output, $word1[$i]);
         }
         if (count($word2) > 0) $output = array_merge($output, $word2);
-        mlog($output, true);
         return $output;
     }
 

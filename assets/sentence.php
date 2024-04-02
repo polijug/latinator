@@ -40,12 +40,29 @@ class Sentence
     {
         $words = $this->words;
         $n = count($words);
-        for($i = 0; $i < $n; $i++){
-            
+        $btn = "<div class='words'>";
+        $body = "";
+        for ($i = 0; $i < $n; $i++) {
+            $format = $this->format[$i];
+            $short = $format["short"];
+            $word = $words[$i][0]->getWord();
+            $style = $i == 0 ? "style='background-color: #005d69;'" : "";
+            $btn .= "<div class='word' id='$word' $style title='" . $short[1] . "'>" . $short[2] . "</div>";
+            $body .= "<item id='" . $word . "_body'><p>" . $short[0] . "</p>";
+            $body .= $format["long"] . "<p><details><summary>Další možnosti</summary>";
+            foreach ($format["other"] as $oth) {
+                $body .= $oth;
+            }
+            $body .= "</details></item>";
         }
+        $btn .= "</div>";
+        global $output;
+        $output->setContent($btn . $body, true);
     }
     private function Decide()
     {
+        mlog($this->words);
+        //end - albi pueri
         $output = [];
         $n = count($this->words);
         $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
@@ -85,7 +102,7 @@ class Sentence
                                     );
                                     $shortW->class = $word->getClass();
                                     $long = $this->format[$shape][$j];
-                                    $choose = $word;
+
                                     $end = true;
                                     if ($word->getClass() == "pronoun") {
                                         $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
@@ -110,7 +127,7 @@ class Sentence
                                 );
                                 $shortW->class = $word->getClass();
                                 $long = $this->format[$shape][$j];
-                                $choose = $word;
+
                                 unset($this->format[$shape][$j]);
                                 $end = true;
                             } else {
@@ -135,7 +152,7 @@ class Sentence
                                         );
                                         $shortW->class = $word->getClass();
                                         $long = $this->format[$shape][$j];
-                                        $choose = $word;
+
                                         unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
@@ -170,7 +187,7 @@ class Sentence
                                         $word->getTranslation()
                                     );
                                     $long = $this->format[$shape][$j];
-                                    $choose = $word;
+
                                     unset($this->format[$shape][$j]);
                                     $end = true;
                                 }
@@ -204,17 +221,14 @@ class Sentence
                                             $word->getConjugation(),
                                             $word->getTranslation()
                                         );
-                                        mlog($this->format[$shape]);
                                         $long = $this->format[$shape][$j];
-                                        $choose = $word;
                                         unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
-                            } 
+                            }
                         }
                         break;
                     case "preposition":
-                        $with = $word->getWith();
                         $bold = $word->getBold();
                         if ($bold != null) {
                             $keys = array_keys($bold)[0];
@@ -227,7 +241,6 @@ class Sentence
                             $with = is_array($with) ? $with[0] : $with;
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
                             $long = $this->format[$shape][$j];
-                            $choose = $word;
                             $end = true;
                             unset($this->format[$shape][$j]);
                         }
@@ -240,7 +253,6 @@ class Sentence
                             $shortW->class = $word->getClass();
                             $end = true;
                             $long = $this->format[$shape][$j];
-                            $choose = $word;
                             unset($this->format[$shape][$j]);
                         }
                         break;
@@ -249,6 +261,7 @@ class Sentence
                     $j = explode("_", $candidate)[1];
                     $obey = true;
                 }
+                mlog($candidate);
             }
             $short = false;
             if ($end && isset($shortW)) {
@@ -260,6 +273,7 @@ class Sentence
     }
     private static function FormateShort($word)
     {
+        mlog($word);
         switch ($word->getClass()) {
             case "noun":
             case "adjective":
@@ -289,7 +303,7 @@ class Sentence
                 $tooltip = Czech::Class($word->getClass());
                 break;
         }
-        $button = $word->getWord() . "<br>" . $word->getTranslation()[0];
+        $button = "<b>" . $word->getWord() . "</b><br>" . $word->getTranslation()[0];
         return [$str, $tooltip, $button];
     }
     /*private function Struct()

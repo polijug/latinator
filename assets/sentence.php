@@ -38,6 +38,11 @@ class Sentence
     }
     private function Print()
     {
+        $words = $this->words;
+        $n = count($words);
+        for($i = 0; $i < $n; $i++){
+            
+        }
     }
     private function Decide()
     {
@@ -54,7 +59,6 @@ class Sentence
             for ($j = 0; $j < $m && !$end; $j++) {
                 $word = $this->words[$i][$j];
                 switch ($word->getClass()) {
-                        //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
                     case "noun":
                         $val = 3;
                     case "adjective":
@@ -63,9 +67,9 @@ class Sentence
                         $val = $val ?? 3;
                     case "pronoun":
                         $val = $val ?? 4;
-                        if ($candidate == "" ||  explode("_", $candidate)[0] < $val) //podmínka, ale jaká? nebo array? no ale pak bych musel rozhodovat o tom, co vybrat
+                        if ($candidate == "" ||  explode("_", $candidate)[0] < $val)
                             $candidate = $val . "_" . $j;
-                        if ($i == 0 && $word->getClass() == "noun" || $word->getClass() == "pronoun") { //chyba s číslem slovesa
+                        if ($i == 0 && $word->getClass() == "noun" || $word->getClass() == "pronoun") {
                             $keys = array_keys($word->getForm());
                             $o = count($keys);
                             for ($k = 0; $k < $o && !$end; $k++) {
@@ -81,6 +85,7 @@ class Sentence
                                     );
                                     $shortW->class = $word->getClass();
                                     $long = $this->format[$shape][$j];
+                                    $choose = $word;
                                     $end = true;
                                     if ($word->getClass() == "pronoun") {
                                         $firstPerson = $word->getPerson() != null ? $word->getPerson() : 4;
@@ -105,6 +110,7 @@ class Sentence
                                 );
                                 $shortW->class = $word->getClass();
                                 $long = $this->format[$shape][$j];
+                                $choose = $word;
                                 unset($this->format[$shape][$j]);
                                 $end = true;
                             } else {
@@ -129,6 +135,7 @@ class Sentence
                                         );
                                         $shortW->class = $word->getClass();
                                         $long = $this->format[$shape][$j];
+                                        $choose = $word;
                                         unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
@@ -163,6 +170,7 @@ class Sentence
                                         $word->getTranslation()
                                     );
                                     $long = $this->format[$shape][$j];
+                                    $choose = $word;
                                     unset($this->format[$shape][$j]);
                                     $end = true;
                                 }
@@ -198,11 +206,10 @@ class Sentence
                                         );
                                         mlog($this->format[$shape]);
                                         $long = $this->format[$shape][$j];
+                                        $choose = $word;
                                         unset($this->format[$shape][$j]);
                                         $end = true;
                                     }
-
-                                //ind/inf - co když na konci se nic takového nenajde? (tady se nebavíme o konci) - tak to má blbý, tohle je překlad vět, ne slov.
                             } 
                         }
                         break;
@@ -220,6 +227,7 @@ class Sentence
                             $with = is_array($with) ? $with[0] : $with;
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
                             $long = $this->format[$shape][$j];
+                            $choose = $word;
                             $end = true;
                             unset($this->format[$shape][$j]);
                         }
@@ -232,6 +240,7 @@ class Sentence
                             $shortW->class = $word->getClass();
                             $end = true;
                             $long = $this->format[$shape][$j];
+                            $choose = $word;
                             unset($this->format[$shape][$j]);
                         }
                         break;
@@ -239,8 +248,7 @@ class Sentence
                 if ($j == $m - 1 && !$end) {
                     $j = explode("_", $candidate)[1];
                     $obey = true;
-                }            //if nothing set in the end, have list of the best and return to the $j position and with bool force set that
-
+                }
             }
             $short = false;
             if ($end && isset($shortW)) {
@@ -281,7 +289,8 @@ class Sentence
                 $tooltip = Czech::Class($word->getClass());
                 break;
         }
-        return [$str, $tooltip];
+        $button = $word->getWord() . "<br>" . $word->getTranslation()[0];
+        return [$str, $tooltip, $button];
     }
     /*private function Struct()
     { //decide when formatting

@@ -48,7 +48,7 @@ class Interpretation
                 //arrays - singular, plural, other - decide what has higher probability - classical more probable, hide not that used
                 //if more decide which
                 //NOT DECIDE
-                $base = $word->getBase() . "_" . substr($word->getClass(), 0, 2);
+                $base = $word->getWord();
                 if (!isset($str[$base])) $str[$base] = [];
                 switch ($word->getClass()) {
                     case "noun":
@@ -127,6 +127,7 @@ class Interpretation
                 $last = $base;
             }
         }
+        //chyba v base do formátu
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
@@ -197,7 +198,7 @@ class Interpretation
         $o = count($keys);
         for ($k = 0; $k < $o; $k++) {
             $word = $words[$keys[$k]];
-            $output[$k] = [];
+            $output[$keys[$k]] = [];
             $n = count($word) - 1;
             for ($i = 0; $i < $n; $i++) {
                 $short = "";
@@ -207,10 +208,9 @@ class Interpretation
                 if ($short == "") $short = $word[$i];
                 $str = "<details><summary>" . $short . "</summary>";
                 $str .= "<div>" . $word["long"] . "</div></details>";
-                $output[$k][] = $str;
+                $output[$keys[$k]][] = $str;
             }
         }
-        mlog($output);
         return $output;
     }
 }

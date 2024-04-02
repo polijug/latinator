@@ -237,7 +237,7 @@ class Sentence
                             $end = true;
                             unset($this->format[$shape][$j]);
                         } else if ($obey) {
-                            $with = $this->getWith();
+                            $with = $word->getWith();
                             $with = is_array($with) ? $with[0] : $with;
                             $shortW = new Preposition($word->getWord(), $word->getBase(), $with, $word->getTranslation());
                             $long = $this->format[$shape][$j];

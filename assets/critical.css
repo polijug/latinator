@@ -110,11 +110,29 @@ details>div {
     margin-bottom: 0.6rem;
 }
 
-details>div>h4 {
+details > div > h4 {
     margin: 0;
 }
 
 /*showing words*/
 bold {
     font-weight: 600;
+}
+
+/*showing sentence*/
+.words {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.word {
+    padding: 0 auto;
+    text-align: center;
+    border: #008fa8 1px solid;
+    background-color: #008fa8;
+    cursor: pointer;
+    user-select: none;
+    flex-grow: 1;
+    margin-right: 0.5rem;
 }

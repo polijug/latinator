@@ -392,11 +392,9 @@ class Verb extends Noun
     {
         $trans = $word->getTranslation();
         $n = count($trans);
-        for ($i = 0; $i < $n; $i++) {
-            if (!in_array($trans[$i], $this->getTranslation(), true)) {
+        for ($i = 0; $i < $n; $i++)
+            if (!in_array($trans[$i], $this->getTranslation(), true))
                 $this->addTranslation($trans[$i]);
-            }
-        }
         $this->mood = $this->mood ?? $word->mood;
         $this->number = $this->number ?? $word->number;
         $this->table = Table::decideTable($this->table, $word->table);
@@ -415,12 +413,13 @@ class Verb extends Noun
     public function isSame($word)
     {
         return $this->base == $word->base && $this->class == $word->class && $this->mood == $word->mood && $this->tense == $word->tense;
-    } // skrývání nepodstatných?
+    }
 
     public function Merge($word)
     {
         $this->number = Merge::Values($this->number, $word->number);
         $this->gender = Merge::Values($this->gender, $word->gender);
+        //pozor na array
         $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
         $this->person = $word->person;
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -765,7 +764,6 @@ class Words
                     $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
             }
             if ($result == []) continue;
-            Mlog($result);
             if (is_array($words[$i])) {
                 $words[$i - 1][0]->setBold($result);
                 $words[$i][0]->setBold($result);

@@ -18,21 +18,27 @@
             cursor: pointer;
             user-select: none;
             flex-grow: 1;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
 
 <body>
-    <div class="words">
-        <div class="word" id="femina" style="background-color: #005d69;" title="1. p., č. j., rod ž., podstatné jméno"><b>femina</b><br>
-            Žena</div>&nbsp;
-        <div class="word" id="alba" title="1. p., č. j., rod ž., přídavné jméno"><b>alba</b><br>
-            bílý</div>&nbsp;
-        <div class="word" id="pulchra" title="1. p., č. j., rod ž., přídavné jméno"><b>pulchra</b><br>
-            pěkný</div>&nbsp;
-        <div class="word" id="est" title="3. os., č. j., čas přít., sloveso"><b>est</b><br>
-            být</div>
+<div class="words">
+    <div class="word" id="femina" style="background-color: #005d69;" tabindex="0"
+         title="1. p., č. j., rod ž., podstatné jméno"><b>femina</b><br>
+        Žena
     </div>
+    <div class="word" id="alba" tabindex="1" title="1. p., č. j., rod ž., přídavné jméno"><b>alba</b><br>
+        bílý
+    </div>
+    <div class="word" id="pulchra" tabindex="2" title="1. p., č. j., rod ž., přídavné jméno"><b>pulchra</b><br>
+        pěkný
+    </div>
+    <div class="word" id="est" tabindex="3" title="3. os., č. j., čas přít., sloveso"><b>est</b><br>
+        být
+    </div>
+</div>
     <item id="femina_body" style="display: inline;">
         <p>
             Žena - 1. pád čísla jednotného, rod ženský, podstatné jméno
@@ -734,28 +740,27 @@
         const elements = document.getElementsByClassName("word");
         let last = elements[0];
         for (let i = 0; i < elements.length; i++) {
-            elements[i].addEventListener("click", (event) => {
-                let id = event.target.id;
-                if (event.target.id == "")
-                    id = event.target.innerText;
-                let element = document.getElementById(id + "_body");
-                const elements = document.getElementsByTagName("item");
-                if (element.style.display == "none") {
-                    for (let j = 0; j < elements.length; j++) {
-                        elements[j].style.display = "none"
+            if (i == 0) document.getElementById(elements[i].id + "_body").style.display = "inline";
+            else document.getElementById(elements[i].id + "_body").style.display = "none";
+            ["click", "keyup"].forEach(ev => {
+                elements[i].addEventListener(ev, (event) => {
+                    if (event.type != "click" && event.keyCode != 13) return;
+                    let id = event.target.id;
+                    if (event.target.id == "")
+                        id = event.target.innerText;
+                    let element = document.getElementById(id + "_body");
+                    if (element.style.display == "none") {
+                        document.getElementById(last.id + "_body").style.display = "none";
+                        last.style.background = "#008fa8"
+                        document.getElementById(id).style.background = "#005d69"
+                        element.style.display = "inline";
+                    } else {
+                        element.style.display = "none";
+                        last.style.background = "#008fa8"
                     }
-                    last.style.background = "#008fa8"
-                    document.getElementById(id).style.background = "#005d69"
-                    element.style.display = "inline";
-                }
-                else {
-                    element.style.display = "none";
-                    last.style.background = "#008fa8"
-                }
-                last = document.getElementById(id);
-            })
-
-
+                    last = document.getElementById(id);
+                })
+            });
         }
     </script>
 </body>

@@ -1,37 +1,69 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta name="author" content="Erža">
-        <meta name="keywords" content="latina, latinský jazyk, skloňování, tabulky, překlad, výklad, slovník">
-        <meta name="description" content="Latinátor je nástroje, poskytující analýzu latinského textu v češtině">
-        <title>[title]</title>
-        <link type="text/css" rel="stylesheet" href="assets/critical.css">
-        <link rel="icon" href="assets/latinator.webp">
-        <!-- <base href=""> -->
-    </head>
-    <body>
-        <header>
-            <a href="https://latinator.erza.cz/">
-            <img class="logo" src="assets/latinator.webp">
-            <hgroup class="heading">
-                <h1 class="name">Latinátor</h1>
-                <h4 class="description">Překlad a analýza latinského textu</h4>
-            </hgroup>
-        </a>
-        </header>
-        <nav>
-            <ul>
-                <li>Překlad věty</li>
-                <li>Výklad slova</li>
-            </ul>
-        </nav>
-       <section>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="Erža" name="author">
+    <meta content="latina, latinský jazyk, skloňování, tabulky, překlad, výklad, slovník" name="keywords">
+    <meta content="Latinátor je nástroje, poskytující analýzu latinského textu v češtině" name="description">
+    <title>[title]</title>
+    <link href="assets/critical.css" rel="stylesheet" type="text/css">
+    <link href="assets/latinator.webp" rel="icon">
+    <!-- <base href=""> -->
+</head>
+
+<body>
+<header>
+    <a href="https://latinator.erza.cz/">
+        <img alt="logo" class="logo" src="assets/latinator.webp">
+        <hgroup class="heading">
+            <h1 class="name">Latinátor</h1>
+            <h4 class="description">Překlad a analýza latinského textu</h4>
+        </hgroup>
+    </a>
+</header>
+<nav>
+    <ul>
+        <li>Překlad věty</li>
+        <li>Výklad slova</li>
+    </ul>
+</nav>
+<section>
+    <p>
         [content]
-       </section>
-       <footer>
-           <p>&copy; 2023 - [year] <b><a href="https://erza.cz">Erža</a></b></p>
-       </footer>
-   </body>
+    </p>
+</section>
+<footer>
+    <p>&copy; 2023 - [year] <b><a href="https://erza.cz">Erža</a></b></p>
+</footer>
+<script>
+    const elements = document.getElementsByClassName("word");
+    let last = elements[0];
+    for (let i = 0; i < elements.length; i++) {
+        if (i === 0) document.getElementById(elements[i].id + "_body").style.display = "inline";
+        else document.getElementById(elements[i].id + "_body").style.display = "none";
+        ["click", "keyup"].forEach(ev => {
+            elements[i].addEventListener(ev, (event) => {
+                if (event.type != "click" && event.keyCode != 13) return;
+                let id = event.target.id;
+                if (event.target.id == "")
+                    id = event.target.innerText;
+                let element = document.getElementById(id + "_body");
+                if (element.style.display == "none") {
+                    document.getElementById(last.id + "_body").style.display = "none";
+                    last.style.background = "#008fa8"
+                    document.getElementById(id).style.background = "#005d69"
+                    element.style.display = "inline";
+                } else {
+                    element.style.display = "none";
+                    last.style.background = "#008fa8"
+                }
+                last = document.getElementById(id);
+            })
+        });
+    }
+</script>
+</body>
+
 </html>

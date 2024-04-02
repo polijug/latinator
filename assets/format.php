@@ -5,17 +5,6 @@ class Formating
     {
         $int = new Interpretation($words);
         return $int;
-        $words = $int->word;
-        unset($int);
-        //mlog($words, true);
-        //array pro každé slovo - výhodné
-        //další - sloveso na konci, přídavné jméno po podstatném, pasující číslo a osoba slovesa, párování předložky a pods/příd jm.
-        // častější jednodušší než složitější:
-        //nom/acc/abl      act      ind/inf     pres/impf/futr
-
-    }
-    public static function Short($word)
-    {
     }
 }
 
@@ -109,7 +98,6 @@ class Interpretation
                         $str[$base][] = $arr;
                         break;
                     case "adverb":
-                    case "connective":
                         $str[$base][] = self::Class($word);
                         break;
                     case "connective":
@@ -159,7 +147,7 @@ class Interpretation
             case "verb":
                 $person = "";
                 if ($variables["person"] != "0") {
-                    $person = is_array($variables["person"]) ? implode(". / ") . ". osoby " : $variables["person"] . ". osoba ";
+                    $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
                         Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base;
                 } else

@@ -40,7 +40,6 @@ $sentence = GExisT("s"); //"s" stands for sentence
 
 if (!$sentence) { //show main page
     die("<H1 style='color: red'> Na stránce se pracuje! </H1>");
-    $output->setTitleContent("Latinátor", "<H1 style='color: red'> Na stránce se pracuje! </H1>", true);
 }
 
 /*
@@ -72,7 +71,8 @@ function GExisT($string)
 function MLog($text, $die = false)
 {
     global $output;
-    $output->setContent(var_export($text, true) . "<p>", $die);
+    $text = is_string($text) ? $text : var_export($text, true);
+    $output->setContent($text . "<p>", $die);
 }
 
 function jsonEncode($object)

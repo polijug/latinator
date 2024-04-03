@@ -419,7 +419,7 @@ class Verb extends Noun
     {
         $this->number = Merge::Values($this->number, $word->number);
         $this->gender = Merge::Values($this->gender, $word->gender);
-        //pozor na array
+        //pozor na array!!
         $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
         $this->person = $word->person;
         $this->translation = Merge::Values($this->translation, $word->translation);

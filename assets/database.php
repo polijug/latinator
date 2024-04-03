@@ -26,8 +26,13 @@ class Database
             if (Words::hasForms($word[$i]) > 0)
                 $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
-            $sql = "INSERT INTO words (base, class, word, tables, json) VALUES ('$base', '$class', '$wor', '$table',  \"$json\")";
+            $sql = "INSERT INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
+            $tab = "IF NOT EXISTS (SELECT * FROM tables WHERE base = '$base' AND class = '$class')
+BEGIN
+INSERT INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');
+END";
             $conn->query($sql);
+            $conn->query($tab);
         }
     }
     public static function getWordDB($word)
@@ -39,7 +44,9 @@ class Database
         if ($result->num_rows == 0) return false;
         $out = [];
         while ($res = $result->fetch_array(MYSQLI_ASSOC)) {
-            $out[] = Words::decodeJSON($res);
+            $act = Words::decodeJSON($res);
+            $act->table  = $conn->query("SELECT tables FROM tables WHERE base = '".$act->getBase()."' AND class = '".$act->getClass()."'");
+            $out[] = $act;
         }
         return $out;
     }

@@ -63,6 +63,7 @@ class WikiText
                             for ($j = 0; $j < $m; $j++) {
                                 $item->addTranslation($translations[$j]->getTranslation());
                                 $type = Words::hasForms($item);
+                                mlog($translations[$j]->getGender());
                                 if ($type > 0)
                                     $item->setTable($translations[$j]->getTable());
                                 if ($type > 0 && $item->getGender() == null)
@@ -76,6 +77,7 @@ class WikiText
                         }
                     }
                 }
+                //wikitext->base() - here get from database, insert, and make real base parse
                 $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                 $wordArray = array_merge($wordArray, $base);
 
@@ -143,6 +145,24 @@ class WikiText
                 }
                 return $wordArray;
         }
+    }
+    private static function Base($base, $class = null)
+    {
+        $words = Database::getWordDB(new Word($base, $class));
+        if ($words != false) return $words[0];
+
+        $text = API::enDict($base);
+        $text = arrays::array_name_slice($text, "==Latin==");
+        $cstext = API::csDict($base);
+        $cstext = arrays::array_name_slice($cstext, "== latina ==");
+        if (count($text) == 0 && count($cstext) == 0) return false;
+        if ($class != null){
+            $text = arrays::array_name_slice($text, "===" . ucfirst($class) . "===");
+            $cstext = arrays::array_name_slice($cstext, "=== " . Czech::Class($class) . " ===");
+        }
+        Base::Parse($text, "en", $base, $class);
+        Base::Parse($cstext, "cs", $base, $class);
+        Words::Merge();
     }
     private static function Isolate($text)
     {

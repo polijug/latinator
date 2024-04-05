@@ -38,7 +38,10 @@ END";
     public static function getWordDB($word)
     {
         $conn = self::connect();
+        if(is_string($word))
         $sql = "SELECT * FROM words WHERE word = '$word'";
+        else if(!is_null($word->getClass())) $sql = "SELECT * FROM words WHERE word = '". $word->getBase() ."' AND base = '" . $word->getBase() . "' AND class = '" . $word->getClass() . "'";
+        else $sql = "SELECT * FROM words WHERE word = '". $word->getBase() ."' AND base = '" . $word->getBase() . "'";
 
         $result = $conn->query($sql);
         if ($result->num_rows == 0) return false;
@@ -48,6 +51,7 @@ END";
             $act->table  = $conn->query("SELECT tables FROM tables WHERE base = '".$act->getBase()."' AND class = '".$act->getClass()."'");
             $out[] = $act;
         }
+        if($out == []) return false;
         return $out;
     }
 }

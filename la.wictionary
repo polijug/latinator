@@ -100,5 +100,6 @@ femina twice
 
 chyba db alba
 
-navigation menu for every word -> click on word show the match (bold will be first and it will be possible to show another possibilities,
-not that probable hidden)
+ 'word' => 'pueri', 'translation' => array ( 0 => 'dítě', 1 => ' chit', 2 => ' otrok', 3 => ' starý mládenec', 4 => 'chlapec', 5 => 'hoch', 
+
+ lang of base

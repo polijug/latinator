@@ -3,6 +3,9 @@ class Base
 {
     public static function Parse($text, $lang, $word, $class = null, $translation = true)
     {
+        $words = Database::getWordDB(new Word($word, $class));
+        if($words != false) return $words[0];
+
         $words = [];
         $word = trim($word);
         switch ($lang) {
@@ -172,6 +175,8 @@ class Base
                     $base[0] = $preparse[0];
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "podstatnéjméno":
+                            mlog(explode("''", $base[1], 3)[1][0]);
+                            mlog($word);
                             $sentence = new Noun(
                                 $word,
                                 $word,
@@ -254,10 +259,13 @@ class Base
                     $table = new Table($sentence->getClass(), $sentence->getBase(), $lang);
                     if ($table->getValidity())
                         $sentence->setTable($table);
+                    //mlog($sentence);
                     $words[] = $sentence;
                 }
                 //print_r($words);
         }
+        //merging and searching en + cs here
+        Database::insert($sentence);
         return $words;
     }
 }
@@ -265,6 +273,7 @@ class Inflections
 {
     public static function Parse($info, $lang, $wordd, $class = "") //TODO numeral
     { //i cannot for every word - how to do it?
+        
         switch ($lang) {
             case "en":
                 if (str_contains($info, "#English|")) {

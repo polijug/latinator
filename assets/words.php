@@ -434,6 +434,12 @@ class Word
     protected $word;
     protected $translation = [];
 
+    public function __construct($base, $class)
+    {
+        $this->base = $base;
+        $this->word = $base;
+        $this->class = $class;
+    }
     public function getBase()
     {
         return trim($this->base);

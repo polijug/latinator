@@ -34,9 +34,6 @@ class Interpretation
             $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) { //for one word more alternatives
                 $word = $this->word[$i][$p];
-                //arrays - singular, plural, other - decide what has higher probability - classical more probable, hide not that used
-                //if more decide which
-                //NOT DECIDE
                 $base = $word->getWord();
                 if (!isset($str[$base])) $str[$base] = [];
                 switch ($word->getClass()) {
@@ -115,7 +112,6 @@ class Interpretation
                 $last = $base;
             }
         }
-        //chyba v base do formátu
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
@@ -165,7 +161,7 @@ class Interpretation
     }
     private static function Long($word)
     {
-        $str = "<h4>Překlady</h4>"; //really bad
+        $str = "<h4>Překlady</h4>";
         $translation = $word->getTranslation();
         $n = count($translation);
         for ($i = 0; $i < $n; $i++)

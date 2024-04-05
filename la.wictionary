@@ -1,6 +1,5 @@
 
 ###en###
-# inflection of|la|sum||3|s|pres|actv|indc
 
  # to eject (originally drive an actor off a stage by clapping/booing)
 
@@ -91,6 +90,7 @@ essto
  '# man gl|adult male human',
 
 base: 1. person or infinitive
+laudo/laudare
 
 indikativ perfekta - o slovo více
 
@@ -102,5 +102,3 @@ chyba db alba
 
 navigation menu for every word -> click on word show the match (bold will be first and it will be possible to show another possibilities,
 not that probable hidden)
-
-//unset repair

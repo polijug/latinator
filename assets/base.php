@@ -151,8 +151,7 @@ class Base
                 }
 
                 return $words;
-            case
-            "cs":
+            case "cs":
                 $bases = array_values(array_filter($text, function ($val) use ($class) {
                     $regex = "/^===(?:(?!=).)+===$/i";
                     if ($class != null) {
@@ -259,21 +258,16 @@ class Base
                     $table = new Table($sentence->getClass(), $sentence->getBase(), $lang);
                     if ($table->getValidity())
                         $sentence->setTable($table);
-                    //mlog($sentence);
                     $words[] = $sentence;
                 }
-                //print_r($words);
         }
-        //merging and searching en + cs here
-        Database::insert($sentence);
         return $words;
     }
 }
 class Inflections
 {
     public static function Parse($info, $lang, $wordd, $class = "") //TODO numeral
-    { //i cannot for every word - how to do it?
-        
+    {
         switch ($lang) {
             case "en":
                 if (str_contains($info, "#English|")) {

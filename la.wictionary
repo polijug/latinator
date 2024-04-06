@@ -103,3 +103,5 @@ chyba db alba
  'word' => 'pueri', 'translation' => array ( 0 => 'dítě', 1 => ' chit', 2 => ' otrok', 3 => ' starý mládenec', 4 => 'chlapec', 5 => 'hoch', 
 
  lang of base
+
+output of prepositions

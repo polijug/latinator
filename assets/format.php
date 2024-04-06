@@ -115,7 +115,7 @@ class Interpretation
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
-    { //todo translation + variable elements - zvýraznit
+    { 
         $base = "<b>" . $word->getBase() . "</b>";
         switch ($word->getClass()) {
             case "noun":

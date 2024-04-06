@@ -818,7 +818,7 @@ class Words
 }
 
 class Merge
-{ //chyba při merge několika po sobě - pozor - později možnost chybného
+{
     public static function Values($value1, $value2, $sidetoside = false)
     {
         if ($sidetoside) $value1 = [$value1, $value2];

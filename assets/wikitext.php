@@ -15,7 +15,6 @@ class WikiText
         if ($lang == "en")
             $wikitext = new WikiText(API::enDict($word), "en", $word);
         else $wikitext = new WikiText(API::csDict($word), "cs", $word);
-        //MLog($wikitext);
         return $wikitext->Parse();
     }
     public function getWord()
@@ -57,8 +56,7 @@ class WikiText
                         $inf = explode("|;|", $start[1]);
                         for ($j = 0; $j < count($inf); $j++) {
                             $item = Inflections::Parse($start[0] . "||" . $inf[$j], $this->lang, $this->word, $obtClass);
-                            $WikiText = new WikiText(API::enDict($item->getBase()), $this->lang, $item->getBase());
-                            $translations = $WikiText->Parse(false, $item->getClass()); //todo: no translation
+                            $translations = WikiText::Base($item->getBase(), $item->getClass()); //todo: no translation
                             $m = count($translations);
                             for ($j = 0; $j < $m; $j++) {
                                 $item->addTranslation($translations[$j]->getTranslation());
@@ -103,8 +101,7 @@ class WikiText
                         $item = Inflections::Parse($inflections[$i], $this->lang, $this->word);
                         if ($item != false) {
                             if ($item->getBase() != $lastBase || $lastBase == "") {
-                                $WikiText = new WikiText(API::csDict($item->getBase()), $this->lang, $item->getBase());
-                                $translations = $WikiText->Parse(false, $item->getClass());
+                                $translations = WikiText::Base($item->getBase(), $item->getClass());
                                 if ($translations != false) {
                                     $m = count($translations);
                                     for ($j = 0; $j < $m; $j++) {
@@ -138,11 +135,8 @@ class WikiText
                         }
                     }
                 }
-
-                if (!$derived) {
                     $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                     $wordArray = array_merge($wordArray, $base);
-                }
                 return $wordArray;
         }
     }
@@ -160,9 +154,9 @@ class WikiText
             $text = arrays::array_name_slice($text, "===" . ucfirst($class) . "===");
             $cstext = arrays::array_name_slice($cstext, "=== " . Czech::Class($class) . " ===");
         }
-        Base::Parse($text, "en", $base, $class);
-        Base::Parse($cstext, "cs", $base, $class);
-        Words::Merge();
+        $en = Base::Parse($text, "en", $base, $class);
+        $cs = Base::Parse($cstext, "cs", $base, $class);
+        return Words::Merge(array_merge($cs, $en));
     }
     private static function Isolate($text)
     {

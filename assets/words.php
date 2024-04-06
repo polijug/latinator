@@ -144,7 +144,7 @@ class Noun extends Word
 
 class Adjective extends Noun
 {
-    public function __construct($word, $base, $form, $number, $gender, $translation = [])
+    public function __construct($word, $base, $form, $number, $gender, $declination = null, $translation = [])
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);

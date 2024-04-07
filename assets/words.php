@@ -148,7 +148,7 @@ class Adjective extends Noun
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        parent::__construct($word, $base, $form, $number, $gender, null, $translation);
+        parent::__construct($word, $base, $form, $number, $gender, $declination, $translation);
         $this->form = [$gender . "_" . $number => $form];
     }
 

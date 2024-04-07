@@ -27,10 +27,7 @@ class Database
                 $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
             $sql = "INSERT INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
-            $tab = "IF NOT EXISTS (SELECT * FROM tables WHERE base = '$base' AND class = '$class')
-BEGIN
-INSERT INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');
-END";
+            $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');";
             $conn->query($sql);
             $conn->query($tab);
         }
@@ -48,7 +45,8 @@ END";
         $out = [];
         while ($res = $result->fetch_array(MYSQLI_ASSOC)) {
             $act = Words::decodeJSON($res);
-            $act->table  = $conn->query("SELECT tables FROM tables WHERE base = '".$act->getBase()."' AND class = '".$act->getClass()."'");
+            $table  = $conn->query("SELECT tables FROM tables WHERE base = '".$act->getBase()."' AND class = '".$act->getClass()."'")->fetch_row();
+            $act->table = html_entity_decode($table[0]);
             $out[] = $act;
         }
         if($out == []) return false;

@@ -4,7 +4,7 @@ class Base
     public static function Parse($text, $lang, $word, $class = null, $translation = true)
     {
         $words = Database::getWordDB(new Word($word, $class));
-        if($words != false) return $words[0];
+        if($words != false) return $words;
 
         $words = [];
         $word = trim($word);
@@ -70,6 +70,7 @@ class Base
                                 "nom",
                                 "s",
                                 "m",
+                                null,
                                 $translate
                             );
                             break;
@@ -174,8 +175,6 @@ class Base
                     $base[0] = $preparse[0];
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "podstatnéjméno":
-                            mlog(explode("''", $base[1], 3)[1][0]);
-                            mlog($word);
                             $sentence = new Noun(
                                 $word,
                                 $word,
@@ -187,7 +186,7 @@ class Base
                             );
                             break;
                         case "přídavnéjméno": //TODO deklination
-                            preg_match_all("/\d/i", $base[2], $matches);
+                            preg_match_all("/\d/i", $base[1], $matches);
                             $sentence = new Adjective(
                                 $word,
                                 $word,
@@ -331,6 +330,7 @@ class Inflections
                             $info[2],
                             $info[4],
                             $info[3],
+                            null,
                             isset($translation) ? $translation : null
                         );
                         break;

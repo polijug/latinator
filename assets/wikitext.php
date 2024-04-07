@@ -135,28 +135,34 @@ class WikiText
                         }
                     }
                 }
-                    $base = Base::Parse($this->text, $this->lang, $this->word, $class);
-                    $wordArray = array_merge($wordArray, $base);
+                $base = Base::Parse($this->text, $this->lang, $this->word, $class);
+                $wordArray = array_merge($wordArray, $base);
                 return $wordArray;
         }
     }
     private static function Base($base, $class = null)
     {
         $words = Database::getWordDB(new Word($base, $class));
-        if ($words != false) return $words[0];
+        if ($words != false) return $words;
 
-        $text = API::enDict($base);
+        $text = WikiText::Isolate(API::enDict($base));
         $text = arrays::array_name_slice($text, "==Latin==");
-        $cstext = API::csDict($base);
+        $cstext = WikiText::Isolate(API::csDict($base));
         $cstext = arrays::array_name_slice($cstext, "== latina ==");
         if (count($text) == 0 && count($cstext) == 0) return false;
-        if ($class != null){
+        if ($class != null) {
             $text = arrays::array_name_slice($text, "===" . ucfirst($class) . "===");
             $cstext = arrays::array_name_slice($cstext, "=== " . Czech::Class($class) . " ===");
         }
         $en = Base::Parse($text, "en", $base, $class);
         $cs = Base::Parse($cstext, "cs", $base, $class);
-        return Words::Merge(array_merge($cs, $en));
+
+        mlog($en);
+        mlog($cs);
+
+        $word = Words::Merge(array_merge($cs, $en));
+        Database::insert($word);
+        return $word;
     }
     private static function Isolate($text)
     {

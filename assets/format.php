@@ -36,7 +36,10 @@ class Interpretation
             $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) { //for one word more alternatives
                 $word = $this->word[$i][$p];
+                mlog($word);
+                mlog($p . "_formatAnswer_40");
                 $base = $word->getWord();
+                $TBase = $word->getBase();
                 if (!isset($str[$base])) $str[$base] = [];
                 switch ($word->getClass()) {
                     case "noun":
@@ -109,11 +112,12 @@ class Interpretation
                         } else $str[$base][] = self::Class($word);
                         break;
                 }
-                if ($base != $last)
-                    $str[$base]["long"] = self::Long($this->word[$i][$p]);
-                $last = $base;
+                if ($TBase != $last)
+                    $str[$base]["long_$p"] = self::Long($this->word[$i][$p]);
+                $last = $TBase;
             }
         }
+        mlog($str);
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
@@ -185,7 +189,7 @@ class Interpretation
         for ($k = 0; $k < $o; $k++) {
             $word = $words[$keys[$k]];
             $output[$keys[$k]] = [];
-            $n = count($word) - 1;
+            $n = count($word)/2;
             for ($i = 0; $i < $n; $i++) {
                 $short = "";
                 if (is_array($word[$i]))
@@ -193,7 +197,7 @@ class Interpretation
                         $short .= $word[$i][$j] . "<br>";
                 if ($short == "") $short = $word[$i];
                 $str = "<details><summary>" . $short . "</summary>";
-                $str .= "<div>" . $word["long"] . "</div></details>";
+                $str .= "<div>" . $word["long_$i"] . "</div></details>";
                 $output[$keys[$k]][] = $str;
             }
         }

@@ -3,9 +3,6 @@ class Base
 {
     public static function Parse($text, $lang, $word, $class = null, $translation = true)
     {
-        $words = Database::getWordDB(new Word($word, $class));
-        if($words != false) return $words;
-
         $words = [];
         $word = trim($word);
         switch ($lang) {
@@ -51,6 +48,16 @@ class Base
                             preg_match("/<\d.(?<letter>[a-z])/i", $base[1], $matchesDot);
                             $gender = strtolower($matchesDot["letter"]);
                             $gender = strlen($gender) == 1 ? $gender : $matches["letter"];
+                            if(strlen($gender) == 0){
+                                $f = preg_match("/m=/i", $base[1]);
+                                $m = preg_match("/f=/i", $base[1]);
+                                if($m && !$f)
+                                    $gender = "m";
+                                if(!$m && $f)
+                                    $gender = "f";
+                                if(!$m && !$f)
+                                    $gender = "n";
+                            }
                             preg_match("/<(?<number>\d)/i", $base[1], $decl);
                             $decl = $decl["number"];
                             $sentence = new Noun(

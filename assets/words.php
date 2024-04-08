@@ -19,23 +19,22 @@ class Noun extends Word
         $this->number = $number;
         $this->gender = $gender;
         $this->translation = $translation;
-        $this->declination = $declination;
+        $this->declination = is_string($declination) ? $declination : array_filter($declination, static function ($var) {
+            return !is_null($var);
+        });
     }
 
     public function toJSON()
     {
-        $gender = $this->gender;
-        if (is_array($gender)) $gender = jsonEncode($gender);
-        else $gender = "'" . $gender . "'";
         return "{
-            'class': '$this->class',
+            'class': '$this->class',   
             'base': '$this->base',
             'word': '$this->word',
             'translation': " . jsonEncode($this->translation) . ",
-            'gender': $gender,
+            'gender': " . jsonEncode($this->gender) . ",
             'form': " . jsonEncode($this->form) . ",
             'number': " . jsonEncode($this->number) . ",
-            'declination': '$this->declination'
+            'declination': " . jsonEncode($this->declination) . "
         }";
     }
 
@@ -106,7 +105,6 @@ class Noun extends Word
         $number = isset($this->number);
         $table = isset($this->table) && $this->table->getValidity();
 
-
         return $translate && $base && $form && $number && $table;
     }
 
@@ -121,6 +119,7 @@ class Noun extends Word
         }
         $this->gender = $this->gender ?? $word->gender;
         $this->number = $this->number ?? $word->number;
+        $this->declination = $this->declination ?? $word->declination;
         $this->table = Table::decideTable($this->table, $word->table);
         $this->form = $this->form ?? $word->form;
     }
@@ -132,12 +131,16 @@ class Noun extends Word
         return true;
     }
 
-    public function Merge($word)
+    public function Merge($word, $full = true)
     {
-        $word->form[$this->number] = isset($word->form[$this->number]) ? Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
-        $this->form = $word->form;
-        $this->number = Merge::Values($this->number, $word->number);
+        if ($full) {
+            $word->form[$this->number] = isset($word->form[$this->number]) ? Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
+            $this->form = $word->form;
+            $this->number = Merge::Values($this->number, $word->number);
+        }
+        $this->gender = Merge::Values($this->gender, $word->gender);
         $this->translation = Merge::Values($this->translation, $word->translation);
+        $this->declination = Merge::Values($this->declination, $word->declination);
         $this->table = strlen($this->table->table) > strlen($word->table->table) ? $this->table : $word->table;
     }
 }
@@ -154,12 +157,15 @@ class Adjective extends Noun
 
     public $class = "adjective";
 
-    public function Merge($word)
+    public function Merge($word, $full = true)
     {
-        $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Words::sortForms(Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number])) : $this->form[$this->gender . "_" . $this->number];
-        $this->form = $word->form;
-        $this->number = Merge::Values($this->number, $word->number);
+        if ($full) {
+            $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Words::sortForms(Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number])) : $this->form[$this->gender . "_" . $this->number];
+            $this->form = $word->form;
+            $this->number = Merge::Values($this->number, $word->number);
+        }
         $this->gender = Merge::Values($this->gender, $word->gender);
+        $this->declination = Merge::Values($this->declination, $word->declination);
         $this->translation = Merge::Values($this->translation, $word->translation);
         $this->table = strlen($this->table->table) > strlen($word->table->table) ? $this->table : $word->table;
     }
@@ -399,6 +405,7 @@ class Verb extends Noun
         $this->number = $this->number ?? $word->number;
         $this->table = Table::decideTable($this->table, $word->table);
         $this->tense = $this->tense ?? $word->tense;
+        $this->conjugation = $this->conjugation ?? $word->conjugation;
     }
 
     public function matchSpecParam($word)
@@ -415,15 +422,17 @@ class Verb extends Noun
         return $this->base == $word->base && $this->class == $word->class && $this->mood == $word->mood && $this->tense == $word->tense;
     }
 
-    public function Merge($word)
+    public function Merge($word, $full = true)
     {
-        $this->number = Merge::Values($this->number, $word->number);
-        $this->gender = Merge::Values($this->gender, $word->gender);
-        //pozor na array!!
-        $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
-        $this->person = $word->person;
+        if ($full) {
+            $this->number = Merge::Values($this->number, $word->number);
+            $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
+            $this->person = $word->person;
+            $this->gender = Merge::Values($this->gender, $word->gender);
+        }
         $this->translation = Merge::Values($this->translation, $word->translation);
         $this->table = strlen($this->table->table) > strlen($word->table->table) ? $this->table : $word->table;
+        $this->conjugation = Merge::Values($this->conjugation, $word->conjugation);
     }
 }
 
@@ -691,7 +700,7 @@ class Words
                 if ($word1[$i]->getClass() != $word2[$j]->getClass() || $word1[$i]->getBase() != $word2[$j]->getBase()) continue;
                 if ($word1[$i]->matchSpecParam($word2[$j])) {
                     $word1[$i]->Combine($word2[$j]);
-                    unset($word2[$j]); 
+                    unset($word2[$j]);
                     $word2 = array_values($word2);
                     $j--;
                     $n2--;
@@ -822,7 +831,11 @@ class Merge
     public static function Values($value1, $value2, $sidetoside = false)
     {
         if ($sidetoside) $value1 = [$value1, $value2];
-        if (is_array($value1) && is_array($value2)) {
+        if (is_null($value1) || is_null($value2)) {
+            if (is_string($value1) || is_string($value2))
+                $value1 = [!is_null($value1) ? $value1 : $value2];
+            $value1 = !is_null($value1) ? $value1 : $value2;
+        } else if (is_array($value1) && is_array($value2)) {
             $value1 = array_merge($value1, $value2);
         } else if (is_array($value2) || is_array($value1)) {
             if (is_array($value2)) {

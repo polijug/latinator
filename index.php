@@ -77,7 +77,9 @@ function MLog($text, $die = false)
 
 function jsonEncode($object)
 {
-    return str_replace("\"", "'", json_encode($object, JSON_UNESCAPED_UNICODE));
+    if (is_array($object))
+        return str_replace("\"", "'", json_encode($object, JSON_UNESCAPED_UNICODE));
+    return "'$object'";
 }
 
 class Output

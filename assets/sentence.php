@@ -54,9 +54,8 @@ class Sentence
             $body .= $format["long"];
             if (count($format["other"]) > 0) {
                 $body .= "<p><details><summary>Další možnosti</summary>";
-                foreach ($format["other"] as $oth) {
+                foreach ($format["other"] as $oth)
                     $body .= $oth;
-                }
                 $body .= "</details>";
             }
             $body .= "</item>";
@@ -67,8 +66,6 @@ class Sentence
     }
     private function Decide()
     {
-        mlog($this->words);
-        //end - albi pueri
         $output = [];
         $n = count($this->words);
         $firstPerson = -1; //0 noun; 1,2,3 pronoun, 4 empty pronoun
@@ -267,7 +264,6 @@ class Sentence
                     $j = explode("_", $candidate)[1];
                     $obey = true;
                 }
-                mlog($candidate);
             }
             $short = false;
             if ($end && isset($shortW)) {

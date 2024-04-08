@@ -20,10 +20,12 @@ class Interpretation
                 $this->word[] = $word[$i];
             else {
                 $this->word[] = Words::Merge($word[$i]);
-                //Database::insert($this->word[$i]);
+                Database::insert($this->word[$i]);
             }
         if ($n > 1)
             $this->word = Words::Pairable($this->word);
+        mlog($this->word);
+        mlog("interpretation_28");
         $this->formatAnswer();
     }
     public function formatAnswer()

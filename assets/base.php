@@ -11,17 +11,15 @@ class Base
                 $bool = true;
                 while ($bool && $i <= 1) {
                     $bases = array_values(array_filter($text, function ($val) use ($class, $i) {
-                        $regex = "/^===(?:(?!=).)+===$/i"; //TODO otázka délky Etymology 1
+                        $regex = "/^===(?:(?!=).)+===$/i";
                         if ($i == 1) $regex = "/^====(?:(?!=).)+====$/i";
-                        if ($class != null) {
+                        if ($class != null)
                             $bool = preg_match("/" . ucfirst($class) . "/i", $val);
-                        } else {
+                            else {
                             $not = ["Pronunciation", "Anagrams", "Etymology===$", "Alternative forms", "References"];
-                            foreach ($not as $n) {
-                                if (preg_match("/" . $n . "/i", $val) == 1) {
+                            foreach ($not as $n)
+                                if (preg_match("/" . $n . "/i", $val) == 1)
                                     return false;
-                                }
-                            }
                             $bool = preg_match($regex, $val);
                         }
                         return $bool;
@@ -92,7 +90,6 @@ class Base
                                 $type = $matches["letter"]; //determiners
                                 $person = 3;
                             }
-                            $base[1];/////
                             $sentence = new Pronoun(
                                 $word,
                                 $word,
@@ -104,7 +101,7 @@ class Base
                                 $translate
                             );
                             break;
-                        case "Numeral": //TODO možná spíše english
+                        case "Numeral":
                             $sentence = new Numeral(
                                 $word,
                                 $word,
@@ -117,7 +114,7 @@ class Base
                         case "Verb":
                             preg_match("/la-verb\|(?<number>\d)/i", $base[1], $conj);
                             $conj = $conj["number"];
-                            $sentence = new Verb( //TODO konjugace
+                            $sentence = new Verb(
                                 $word,
                                 $word,
                                 "s",
@@ -303,7 +300,6 @@ class Inflections
                 } else $info = explode("|", $info);
 
                 $word = "";
-                //budu počítat s tím, že to může být jen u jednoho.
 
                 $base = iconv('utf-8', 'ascii//TRANSLIT', $info[0]);
                 switch ($class) {

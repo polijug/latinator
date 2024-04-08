@@ -39,7 +39,7 @@ class WikiText
 
                 $derived = $derive ? $this->isDerived() : $derive;
 
-                //$this->printText();
+                $this->printText();
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
                         return str_starts_with($val, "# inflection of|la") || str_contains($val, "inflection of|la") || str_starts_with($val, "head|la|");
@@ -61,7 +61,6 @@ class WikiText
                             for ($j = 0; $j < $m; $j++) {
                                 $item->addTranslation($translations[$j]->getTranslation());
                                 $type = Words::hasForms($item);
-                                mlog($translations[$j]->getGender());
                                 if ($type > 0)
                                     $item->setTable($translations[$j]->getTable());
                                 if ($type > 0 && $item->getGender() == null)
@@ -75,7 +74,6 @@ class WikiText
                         }
                     }
                 }
-                //wikitext->base() - here get from database, insert, and make real base parse
                 $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                 $wordArray = array_merge($wordArray, $base);
 
@@ -88,7 +86,7 @@ class WikiText
 
                 $derived = $derive ? $this->isDerived() : $derive;
 
-                //$this->printText();
+                $this->printText();
 
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
@@ -135,8 +133,12 @@ class WikiText
                         }
                     }
                 }
-                $base = Base::Parse($this->text, $this->lang, $this->word, $class);
-                $wordArray = array_merge($wordArray, $base);
+                if (!$derived){
+                    $base = Base::Parse($this->text, $this->lang, $this->word, $class);
+                    $wordArray = array_merge($wordArray, $base);
+                }
+                mlog($wordArray);
+                mlog("wikitext_142");
                 return $wordArray;
         }
     }
@@ -144,7 +146,6 @@ class WikiText
     {
         $words = Database::getWordDB(new Word($base, $class));
         if ($words != false) return $words;
-
         $text = WikiText::Isolate(API::enDict($base));
         $text = arrays::array_name_slice($text, "==Latin==");
         $cstext = WikiText::Isolate(API::csDict($base));
@@ -156,9 +157,6 @@ class WikiText
         }
         $en = Base::Parse($text, "en", $base, $class);
         $cs = Base::Parse($cstext, "cs", $base, $class);
-
-        mlog($en);
-        mlog($cs);
 
         $word = Words::Merge(array_merge($cs, $en));
         Database::insert($word);

@@ -20,6 +20,8 @@ class Sentence
             }
             $words = WikiText::auto($sentence[$i], "cs");
             $words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
+            mlog($words);
+            mlog("sentence_26");
             array_push($this->words, $words);
         }
     }
@@ -49,11 +51,15 @@ class Sentence
             $style = $i == 0 ? "style='background-color: #005d69;'" : "";
             $btn .= "<div class='word' id='$word' $style title='" . $short[1] . "'>" . $short[2] . "</div>";
             $body .= "<item id='" . $word . "_body'><p>" . $short[0] . "</p>";
-            $body .= $format["long"] . "<p><details><summary>Další možnosti</summary>";
-            foreach ($format["other"] as $oth) {
-                $body .= $oth;
+            $body .= $format["long"];
+            if (count($format["other"]) > 0) {
+                $body .= "<p><details><summary>Další možnosti</summary>";
+                foreach ($format["other"] as $oth) {
+                    $body .= $oth;
+                }
+                $body .= "</details>";
             }
-            $body .= "</details></item>";
+            $body .= "</item>";
         }
         $btn .= "</div>";
         global $output;

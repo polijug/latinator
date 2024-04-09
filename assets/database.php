@@ -23,11 +23,12 @@ class Database
             $base = $word[$i]->getBase();
             $class = $word[$i]->getClass();
             $wor = $word[$i]->getWord();
-            if (Words::hasForms($word[$i]) > 0)
+            if (Words::hasForms($word[$i]) > 0 && $word[$i]->getTable() != null && $word[$i]->getTable()->getValidity())
                 $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
             $sql = "INSERT INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
-            $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');";
+            if (isset($table))
+                $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');";
             $conn->query($sql);
             $conn->query($tab);
         }
@@ -35,21 +36,21 @@ class Database
     public static function getWordDB($word)
     {
         $conn = self::connect();
-        if(is_string($word))
-        $sql = "SELECT * FROM words WHERE word = '$word'";
-        else if(!is_null($word->getClass())) $sql = "SELECT * FROM words WHERE word = '". $word->getBase() ."' AND base = '" . $word->getBase() . "' AND class = '" . $word->getClass() . "'";
-        else $sql = "SELECT * FROM words WHERE word = '". $word->getBase() ."' AND base = '" . $word->getBase() . "'";
+        if (is_string($word))
+            $sql = "SELECT * FROM words WHERE word = '$word'";
+        else if (!is_null($word->getClass())) $sql = "SELECT * FROM words WHERE word = '" . $word->getBase() . "' AND base = '" . $word->getBase() . "' AND class = '" . $word->getClass() . "'";
+        else $sql = "SELECT * FROM words WHERE word = '" . $word->getBase() . "' AND base = '" . $word->getBase() . "'";
 
         $result = $conn->query($sql);
         if ($result->num_rows == 0) return false;
         $out = [];
         while ($res = $result->fetch_array(MYSQLI_ASSOC)) {
             $act = Words::decodeJSON($res);
-            $table  = $conn->query("SELECT tables FROM tables WHERE base = '".$act->getBase()."' AND class = '".$act->getClass()."'")->fetch_row();
+            $table  = $conn->query("SELECT tables FROM tables WHERE base = '" . $act->getBase() . "' AND class = '" . $act->getClass() . "'")->fetch_row();
             $act->table = html_entity_decode($table[0]);
             $out[] = $act;
         }
-        if($out == []) return false;
+        if ($out == []) return false;
         return $out;
     }
 }

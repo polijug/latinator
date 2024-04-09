@@ -261,12 +261,16 @@ class Sentence
                         break;
                 }
                 if ($j == $m - 1 && !$end) {
+                    mlog($word);
                     $j = explode("_", $candidate)[1];
+                    mlog($candidate);
                     $obey = true;
                 }
             }
             $short = false;
             if ($end && isset($shortW)) {
+                mlog($shortW);
+                mlog("Sentence_271");
                 $short = self::FormateShort($shortW);
                 $output[$i] = ["short" => $short, "long" => $long, "other" => $this->format[$shape]];
             }

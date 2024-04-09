@@ -11,7 +11,7 @@ class Formating
 class Interpretation
 {
     public $word = [];
-    public $format = []; //string
+    public $format = [];
     public function __construct($word)
     {
         $n = count($word);
@@ -34,7 +34,7 @@ class Interpretation
         $o = count($this->word);
         for ($i = 0; $i < $o; $i++) {
             $last = "";
-            for ($p = 0; $p < count($this->word[$i]); $p++) { //for one word more alternatives
+            for ($p = 0; $p < count($this->word[$i]); $p++) {
                 $word = $this->word[$i][$p];
                 mlog($word);
                 mlog($p . "_formatAnswer_40");
@@ -60,7 +60,6 @@ class Interpretation
                                     if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
                                         $b = true;
                                     else $b = false;
-
                                     $arr[] = self::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
                                 }
                             $str[$base][] = $arr;
@@ -112,16 +111,14 @@ class Interpretation
                         } else $str[$base][] = self::Class($word);
                         break;
                 }
-                if ($TBase != $last)
-                    $str[$base]["long_$p"] = self::Long($this->word[$i][$p]);
-                $last = $TBase;
+                $str[$base]["long_$p"] = self::Long($this->word[$i][$p]);
             }
         }
         mlog($str);
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)
-    { 
+    {
         $base = "<b>" . $word->getBase() . "</b>";
         switch ($word->getClass()) {
             case "noun":
@@ -189,7 +186,7 @@ class Interpretation
         for ($k = 0; $k < $o; $k++) {
             $word = $words[$keys[$k]];
             $output[$keys[$k]] = [];
-            $n = count($word)/2;
+            $n = count($word) / 2;
             for ($i = 0; $i < $n; $i++) {
                 $short = "";
                 if (is_array($word[$i]))

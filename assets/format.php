@@ -133,6 +133,7 @@ class Interpretation
                 }
                 $gender = "";
                 $deklinace = is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ";
+                $deklinace = $deklinace == ". deklinace " ? "" : $deklinace;
                 if (!is_null($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
                 if (isset($variables["gender"]) && !is_null($variables["gender"]) && $variables["gender"] != "")
@@ -145,11 +146,13 @@ class Interpretation
                 $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE . ", $deklinace";
                 break;
             case "verb":
+                $conjugation = $word->getConjugation() . ". konjugace";
+                $conjugation = $conjugation == ". konjugace" ? "" : $conjugation;
                 $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
-                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base;
+                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base . " " . $conjugation;
                 } else
                     $short = "infinitiv slovesa " . $base;
                 break;

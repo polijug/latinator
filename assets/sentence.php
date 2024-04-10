@@ -197,7 +197,7 @@ class Sentence
                             }
                         }
                         if (!$end) { //act   ind/inf     pres/impf/futr  3.
-                            $mood = Words::formIntersection($word->getMood(), ["ind", "inf"]);
+                            $mood = Words::formIntersection($word->getMood(), ["indc", "inf"]);
                             $tense = Words::formIntersection($word->getTense(), ["pres", "impf", "futr"]);
                             if ($obey || Words::formIntersection($word->getGender(), "act")[0] == "act") {  //možná moc přísné
                                 if ($mood != [] || $obey)
@@ -312,43 +312,4 @@ class Sentence
         $button = "<b>" . $word->getWord() . "</b><br>" . $word->getTranslation()[0];
         return [$str, $tooltip, $button];
     }
-    /*private function Struct()
-    { //decide when formatting
-        $rank = array();
-        $n = count($this->words);
-        for ($i = 0; $i < $n; $i++) {
-            $rank[$i] = array();
-            $word = $this->words[$i];
-            $m = count($word);
-            for ($j = 0; $j < $m; $j++) {
-                if ($word[$j]->getClass() == "noun" && $i == 0)
-                    $rank[$i][$j] = self::RankWordinStruct($word[$j], "s"); //rank inflections ---
-                else if ($word[$j]->getClass() == "verb" && $i == $n - 1)
-                    $rank[$i][$j] = self::RankWordinStruct($word[$j], "e");
-                else $rank[$i][$j] = 0;
-            }
-        }
-        $this->rank = $rank;
-    }
-    /*private static function RankWordinStruct($word, $position)
-    { //(s/c/e)
-        $rankW = array();
-        $class = $word->getClass();
-        if ($class == "noun" && $position == "s") { //start
-            $form = $word->getForm();
-            if (isset($form["s"]) && Words::formIntersection($form["s"], "nom")[0] == "nom")
-                $rankW["s"] = ["nom" => 1];
-            if (isset($form["p"]) && Words::formIntersection($form["p"], "nom")[0] == "nom")
-                $rankW["p"] = ["nom" => 1];
-        } else if ($class == "verb" && $position == "e") {
-            $keys = array_keys($word->getPerson());
-            $n = count($keys);
-            for ($i = 0; $i < $n; $i++) {
-                $person = $word->getPerson()[$keys[$i]];
-                if (Words::formIntersection($person, 3) == 3)
-                    $rankW[$keys[$i]] = [$person => 1];
-            }
-        }
-        return $rankW;
-    }*/
 }

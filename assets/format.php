@@ -132,6 +132,7 @@ class Interpretation
                     $variables = ["bold" => $b];
                 }
                 $gender = "";
+                $deklinace = is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ";
                 if (!is_null($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
                 if (isset($variables["gender"]) && !is_null($variables["gender"]) && $variables["gender"] != "")
@@ -141,7 +142,7 @@ class Interpretation
                     $boldS = "<bold>";
                     $boldE = "</bold>";
                 }
-                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE;
+                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE . ", $deklinace";
                 break;
             case "verb":
                 $person = "";

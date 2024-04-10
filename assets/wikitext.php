@@ -164,7 +164,7 @@ class WikiText
     }
     private static function Isolate($text)
     {
-        return explode("\n", str_replace(["\n\n", "{", "}", "[", "]"], ["\n"], $text));
+        return explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text));
     }
     private function isDerived()
     {

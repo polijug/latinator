@@ -3,13 +3,6 @@
 
  # to eject (originally drive an actor off a stage by clapping/booing)
 
-//pozor na lb
-9 => '===Pronoun===', 10 => 'la-noun|nihil|g=n', 11 => '# lb|la|indefinite nothing',
-
-16 => '# cln|la|cardinal numbers one;
-
-12 => '# lb|la|mathematics plus'
-
 //with form  - must make
  8 => '===Preposition===', 9 => 'la-prep|ablative, la-prep|accusative', 10 => '# lb|la|+ ablative #English|in, at, on, upon, from (space)',
  17 => '# lb|la|+ ablative under, within, in', 19 => '# lb|la|+ ablative during, within, while in (time)', 20 => '# lb|la|+ ablative about, respecting, concerning (of reference)', 21 => '# lb|la|+ ablative among'
@@ -24,14 +17,9 @@
 
 laudabam - loading
 
-//type of adjective
-'== latina ==', 64 => '=== výslovnost ===', 65 => '* IPA|me', 66 => '=== zájmeno ===', 67 => '* \'\'osobní\'\'', 68 => '==== význam ====', 69 => '# \'\'akuzativ zájmena ego#latina|egō\'\'', 70 => '#* Příklad|la|Quis mē umquam sub tālī larvā cognōscet?|Kdo mě kdy v takové masce pozná?', 71 => '# \'\'ablativ zájmena ego#latina|egō\'\'', 72 => '#* Příklad|la|Iam intelligō. Mutātō nōmine de me fābula narrābat.|Nyní již chápu. Pod jiným jménem byla řeč o mně.',
-//and en
-
 nulli
 
 2 => Pronoun::__set_state(array( 'class' => 'pronoun', 'type' => NULL, 'form' => 'nom', 'number' => 's', 'gender' => NULL, 'table' => NULL, 'base' => 'me', 'translation' => array ( 0 => '0', ), 'form' => 'nom', )), )
-
 
 //udělat sjednocení slovních druhů
 /zbavit se mezery ego
@@ -41,7 +29,6 @@ form' => 'nom//acc//voc'
  '===Adjective===', 4 => 'la-adj|gentīlitius', 5 => '# alternative form of|la|gentilicius'
 
 ☰
-⛛
 ⛶
 //Todo exception fui
 //todo zvýraznění v tabulce
@@ -51,9 +38,6 @@ form' => 'nom//acc//voc'
 //femur - verb translation
 //femur - noun detection
 //mood -> subj
-
-//pozor závorka
-konjugace od for (první konjugace, deponent)
 
 /pozor na to
 'indc ("you are")
@@ -83,8 +67,6 @@ essto
 
 /with-> english
 
- lb|la|copulative to be, exist, have +obj|la|dat'
-
  prázdný překlad
 
  '# man gl|adult male human',
@@ -93,10 +75,6 @@ base: 1. person or infinitive
 laudo/laudare
 
 indikativ perfekta - o slovo více
-
-deklination only in noun and only in en
-
-femina twice
 
 chyba db alba
 

@@ -15,7 +15,7 @@ class Base
                         if ($i == 1) $regex = "/^====(?:(?!=).)+====$/i";
                         if ($class != null)
                             $bool = preg_match("/" . ucfirst($class) . "/i", $val);
-                            else {
+                        else {
                             $not = ["Pronunciation", "Anagrams", "Etymology===$", "Alternative forms", "References"];
                             foreach ($not as $n)
                                 if (preg_match("/" . $n . "/i", $val) == 1)
@@ -46,17 +46,17 @@ class Base
                             preg_match("/<\d.(?<letter>[a-z])/i", $base[1], $matchesDot);
                             $gender = strtolower($matches["letter"]);
                             $gender = strlen($gender) == 1 ? $gender : strtolower($matchesDot["letter"]);
-                            if(strlen($gender) == 0 || !in_array($gender, ["m", "n", "f"])){
+                            if (strlen($gender) == 0 || !in_array($gender, ["m", "n", "f"])) {
                                 $f = preg_match("/|m=/i", $base[1]);
                                 $m = preg_match("/|f=/i", $base[1]);
-                                if($m && !$f)
+                                if ($m && !$f)
                                     $gender = "m";
-                                if(!$m && $f)
+                                if (!$m && $f)
                                     $gender = "f";
-                                if(!$m && !$f)
+                                if (!$m && !$f)
                                     $gender = "n";
                             }
-                            if($gender == "") $gender = null;
+                            if ($gender == "") $gender = null;
                             preg_match("/<(?<number>\d)/i", $base[1], $decl);
                             $decl = $decl["number"];
                             $sentence = new Noun(
@@ -81,12 +81,12 @@ class Base
                             );
                             break;
                         case "Pronoun":
-                            if(str_starts_with($base[1], "head|la|pronoun")){
+                            if (str_starts_with($base[1], "head|la|pronoun")) {
                                 preg_match("/cat2=(?<letter>[a-z]+)/i", $base[1], $matches);
                                 $type = $matches["letter"];
                                 preg_match("/\|(?<letter>[a-z]+) person/i", $base[1], $matches);
                                 $person = $matches["letter"];
-                            } else if(str_starts_with($base[1], "la-det")){
+                            } else if (str_starts_with($base[1], "la-det")) {
                                 preg_match("/cat3=(?<letter>[a-z]+)/i", $base[1], $matches);
                                 $type = $matches["letter"];
                                 $person = 3;
@@ -123,7 +123,7 @@ class Base
                                 1,
                                 "act",
                                 "indc",
-                                $conj, 
+                                $conj,
                                 $translate
                             );
                             break;
@@ -146,7 +146,7 @@ class Base
                         case "Conjunction":
                             $sentence = new Connective($word, $word, $translate);
                             break;
-                        default://TODO možná spíše english
+                        default: //TODO možná spíše english
                             continue 2;
                     }
                     $table = new Table($sentence->getClass(), $sentence->getBase(), $lang);
@@ -182,11 +182,11 @@ class Base
                         case "podstatnéjméno":
                             $gender = null;
                             $decl = null;
-                            if(str_starts_with($base[1], "* ")){
+                            if (str_starts_with($base[1], "* ")) {
                                 preg_match("/rod (?<letter>[a-z])/i", $base[1], $gender);
                                 $gender = Czech::GenderToEn($gender["letter"]);
                             }
-                            if(str_starts_with($base[2], "* ")){
+                            if (str_starts_with($base[2], "* ")) {
                                 $decl = $base[2][2];
                             }
                             $sentence = new Noun(
@@ -218,7 +218,7 @@ class Base
                                 "nom",
                                 "s",
                                 Czech::TypeToEn(explode("''", $base[1], 3)[1]),
-                                null, 
+                                null,
                                 explode("''", $base[2], 3)[1], //TODO english gender
                                 $translate
                             );
@@ -322,7 +322,7 @@ class Inflections
                             null,
                             null,
                             null,
-                            isset($translation) ? $translation : null
+                            $translation ?? null
                         );
                         break;
                     case "noun":
@@ -333,7 +333,7 @@ class Inflections
                             $info[3],
                             null,
                             null,
-                            isset($translation) ? $translation : null
+                            $translation ?? null
                         );
                         break;
                     case "adjective":
@@ -344,7 +344,7 @@ class Inflections
                             $info[4],
                             $info[3],
                             null,
-                            isset($translation) ? $translation : null
+                            $translation ?? null
                         );
                         break;
                     case "verb":
@@ -358,7 +358,7 @@ class Inflections
                                 $info[6], //gender
                                 $info[7],
                                 null,
-                                isset($translation) ? $translation : null
+                                $translation ?? null
                             );
                         else
                         if (is_numeric($info[2])) {
@@ -371,7 +371,7 @@ class Inflections
                                 substr($info[5], 0, 3), //gender
                                 substr($info[6], 0, 3),
                                 null,
-                                isset($translation) ? $translation : null
+                                $translation ?? null
                             ); //mood
                         } else if ($info[2] == "pres") {
                             $word = new Verb(
@@ -383,11 +383,19 @@ class Inflections
                                 $info[3], //gender
                                 $info[4],
                                 null,
-                                isset($translation) ? $translation : null
+                                $translation ?? null
                             );
                         }
                         break;
                     case "numeral":
+                        $word = new Numeral(
+                            $wordd,
+                            $base,
+                            $info[2],
+                            $info[4],
+                            $info[3],
+                            $translation ?? null
+                        );
                         break;
                 }
                 return $word;

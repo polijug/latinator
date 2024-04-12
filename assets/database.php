@@ -38,7 +38,7 @@ class Database
         $conn = self::connect();
         if (is_string($word))
             $sql = "SELECT * FROM words WHERE word = '$word'";
-        else if (!is_null($word->getClass())) $sql = "SELECT * FROM words WHERE word = '" . $word->getBase() . "' AND base = '" . $word->getBase() . "' AND class = '" . $word->getClass() . "'";
+        else if (!isnull($word->getClass())) $sql = "SELECT * FROM words WHERE word = '" . $word->getBase() . "' AND base = '" . $word->getBase() . "' AND class = '" . $word->getClass() . "'";
         else $sql = "SELECT * FROM words WHERE word = '" . $word->getBase() . "' AND base = '" . $word->getBase() . "'";
 
         $result = $conn->query($sql);

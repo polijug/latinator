@@ -37,10 +37,10 @@ class Table
 
     public function getValidity()
     {
-        if (is_null($this->table) || $this->table == "<table</table>")
+        if (isnull($this->table) || $this->table == "<table</table>")
             $this->valid = false;
 
-        return $this->valid && !is_null($this->table) && $this->table != "";
+        return $this->valid && !isnull($this->table) && $this->table != "";
     }
     public function setValidity(){
         $this->valid = true;
@@ -76,9 +76,9 @@ class Table
     }
     public static function isValid($table)
     {
-        if (is_null($table->table) || $table->table == "<table</table>")
+        if (isnull($table->table) || $table->table == "<table</table>")
             $table->valid = false;
 
-        return $table->valid && !is_null($table->table) && $table->table != "";
+        return $table->valid && !isnull($table->table) && $table->table != "";
     }
 }

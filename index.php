@@ -81,6 +81,9 @@ function jsonEncode($object)
         return str_replace("\"", "'", json_encode($object, JSON_UNESCAPED_UNICODE));
     return "'$object'";
 }
+function isnull($object){
+    return is_null($object) || $object == [] || $object == "";
+}
 
 class Output
 {

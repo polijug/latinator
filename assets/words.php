@@ -20,7 +20,7 @@ class Noun extends Word
         $this->gender = $gender;
         $this->translation = $translation;
         $this->declination = is_string($declination) ? $declination : array_filter($declination, static function ($var) {
-            return !is_null($var);
+            return !isnull($var);
         });
     }
 
@@ -31,7 +31,7 @@ class Noun extends Word
             'base': '$this->base',
             'word': '$this->word',
             'translation': " . jsonEncode($this->translation) . ",
-            'gender': " . jsonEncode($this->gender) . ",
+            'gender': " . jsonEncode($this->getGender()) . ",
             'form': " . jsonEncode($this->form) . ",
             'number': " . jsonEncode($this->number) . ",
             'declination': " . jsonEncode($this->declination) . "
@@ -84,6 +84,10 @@ class Noun extends Word
 
     public function getGender()
     {
+        if ($this->class == "noun") {
+            if (is_array($this->gender))
+                $this->gender = $this->gender[0];
+        }
         return $this->gender ?? null;
     }
 
@@ -483,7 +487,7 @@ class Word
     {
         if (is_string($translation))
             array_push($this->translation, strtolower(trim($translation)));
-        else if (is_array($translation) && !is_null($translation) && !is_null($this->translation))
+        else if (is_array($translation) && !isnull($translation) && !isnull($this->translation))
             $this->translation = array_unique(array_merge($this->translation, $translation));
         else $this->translation = $translation;
     }
@@ -768,7 +772,7 @@ class Words
                             $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($adjective->getForm()[$gender[0] . "_" . $numbers[$j]], $other->getForm()[$numbers[$j]]);
                     }
                 }
-            else if (!is_null($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
+            else if (!isnull($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
                 $keys = array_keys($word2->getBold());
                 for ($k = 0; $k < count($keys); $k++)
                     if (array_key_exists($keys[$k], $word1->getForm()))
@@ -782,7 +786,7 @@ class Words
             if (is_array($words[$i])) {
                 $words[$i - 1][0]->setBold($result);
                 $words[$i][0]->setBold($result);
-            } else if (!is_null($words[$i])) {
+            } else if (!isnull($words[$i])) {
                 $words[$i - 1]->setBold($result);
                 $words[$i]->setBold($result);
             }
@@ -831,10 +835,10 @@ class Merge
     public static function Values($value1, $value2, $sidetoside = false)
     {
         if ($sidetoside) $value1 = [$value1, $value2];
-        if (is_null($value1) || is_null($value2)) {
+        if (isnull($value1) || isnull($value2)) {
             if (is_string($value1) || is_string($value2))
-                $value1 = [!is_null($value1) ? $value1 : $value2];
-            $value1 = !is_null($value1) ? $value1 : $value2;
+                $value1 = [!isnull($value1) ? $value1 : $value2];
+            $value1 = !isnull($value1) ? $value1 : $value2;
         } else if (is_array($value1) && is_array($value2)) {
             $value1 = array_merge($value1, $value2);
         } else if (is_array($value2) || is_array($value1)) {

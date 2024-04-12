@@ -68,7 +68,7 @@ class Base
                                 $translate
                             );
                             break;
-                        case "Adjective": //TODO declination
+                        case "Adjective":
                             $sentence = new Adjective(
                                 $word,
                                 $word,
@@ -87,7 +87,7 @@ class Base
                                 $person = $matches["letter"];
                             } else if(str_starts_with($base[1], "la-det")){
                                 preg_match("/cat3=(?<letter>[a-z]+)/i", $base[1], $matches);
-                                $type = $matches["letter"]; //determiners
+                                $type = $matches["letter"];
                                 $person = 3;
                             }
                             $sentence = new Pronoun(
@@ -145,7 +145,7 @@ class Base
                         case "Conjunction":
                             $sentence = new Connective($word, $word, $translate);
                             break;
-                        default:
+                        default://TODO možná spíše english
                             continue 2;
                     }
                     $table = new Table($sentence->getClass(), $sentence->getBase(), $lang);
@@ -185,7 +185,7 @@ class Base
                                 "nom",
                                 "s",
                                 explode("''", $base[1], 3)[1][0],
-                                $base[2][2], //todo
+                                $base[2][2], 
                                 $translate
                             );
                             break;

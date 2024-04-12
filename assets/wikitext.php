@@ -133,7 +133,7 @@ class WikiText
                         }
                     }
                 }
-                if (!$derived){
+                if (!$derived) {
                     $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                     $wordArray = array_merge($wordArray, $base);
                 }
@@ -146,7 +146,7 @@ class WikiText
     {
         $words = Database::getWordDB(new Word($base, $class));
         if ($words != false) return $words;
-        $text = WikiText::Isolate(API::enDict($base));
+        $text = WikiText::Isolate(API::enDict($base), false);
         $text = arrays::array_name_slice($text, "==Latin==");
         $cstext = WikiText::Isolate(API::csDict($base));
         $cstext = arrays::array_name_slice($cstext, "== latina ==");
@@ -162,9 +162,12 @@ class WikiText
         Database::insert($word);
         return $word;
     }
-    private static function Isolate($text)
+    private static function Isolate($text, $normal = true)
     {
-        return explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text));
+        if ($normal)
+            return explode("\n", str_replace(["\n\n", "{", "}", "[", "]"], ["\n"], $text));
+        else
+            return explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text));
     }
     private function isDerived()
     {

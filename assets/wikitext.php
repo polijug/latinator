@@ -74,7 +74,7 @@ class WikiText
                         }
                     }
                 }
-                $base = Base::Parse($this->text, $this->lang, $this->word, $class);
+                $base = WikiText::Base($this->word, $class);
                 $wordArray = array_merge($wordArray, $base);
 
                 return $wordArray;
@@ -134,7 +134,7 @@ class WikiText
                     }
                 }
                 if (!$derived) {
-                    $base = Base::Parse($this->text, $this->lang, $this->word, $class);
+                    $base = WikiText::Base($this->word, $class);
                     $wordArray = array_merge($wordArray, $base);
                 }
                 mlog($wordArray);

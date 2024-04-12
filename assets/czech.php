@@ -120,7 +120,7 @@ class Czech
     public static function Mood($mood)
     {
         switch ($mood) {
-            case "ind":
+            case "indc":
                 return "indikativ";
             case "imp":
                 return "imperativ";
@@ -129,9 +129,6 @@ class Czech
             default:
                 return $mood;
         }
-        /*if ($mood == "actv") return "aktiv";
-        else if ($mood == "inf") return "infinitiv";
-        else return "pasiv";*/
     }
     public static function Number($num)
     {
@@ -164,6 +161,11 @@ class Czech
     public static function GenderToEn($gender)
     {
         if ($gender == "akt") return "act";
+        switch($gender){
+            case "ž": return "f";
+            case "m": return "m";
+            case "s": return "n";
+        }
     }
 
     public static function TableTranslation($table)

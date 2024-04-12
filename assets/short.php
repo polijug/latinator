@@ -78,7 +78,7 @@ class Short
     public static function Mood($mood)
     {
         switch ($mood) {
-            case "ind":
+            case "indc":
                 return "oznamovací";
             case "imp":
                 return "rozkazovací";

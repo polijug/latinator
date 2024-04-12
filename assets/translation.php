@@ -6,7 +6,7 @@ class Translate
         switch ($lang) {
             case "en":
                 $translations = array_values(str_replace(["# l|en", "# "], "", array_filter($text, function ($val) {
-                    return str_starts_with($val, "# ") && !str_contains($val, "|") || str_starts_with($val, "# {");
+                    return str_starts_with($val, "# ") && !str_contains($val, "|") || str_contains($val, "{") && str_starts_with($val, "# ");
                 })));
                 $n = count($translations);
                 $translation = [];

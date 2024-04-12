@@ -44,11 +44,11 @@ class Base
                         case "Noun":
                             preg_match("/g=(?<letter>[a-z])/i", $base[1], $matches);
                             preg_match("/<\d.(?<letter>[a-z])/i", $base[1], $matchesDot);
-                            $gender = strtolower($matchesDot["letter"]);
-                            $gender = strlen($gender) == 1 ? $gender : $matches["letter"];
-                            if(strlen($gender) == 0){
-                                $f = preg_match("/m=/i", $base[1]);
-                                $m = preg_match("/f=/i", $base[1]);
+                            $gender = strtolower($matches["letter"]);
+                            $gender = strlen($gender) == 1 ? $gender : strtolower($matchesDot["letter"]);
+                            if(strlen($gender) == 0 || !in_array($gender, ["m", "n", "f"])){
+                                $f = preg_match("/|m=/i", $base[1]);
+                                $m = preg_match("/|f=/i", $base[1]);
                                 if($m && !$f)
                                     $gender = "m";
                                 if(!$m && $f)
@@ -56,6 +56,7 @@ class Base
                                 if(!$m && !$f)
                                     $gender = "n";
                             }
+                            if($gender == "") $gender = null;
                             preg_match("/<(?<number>\d)/i", $base[1], $decl);
                             $decl = $decl["number"];
                             $sentence = new Noun(
@@ -179,13 +180,22 @@ class Base
                     $base[0] = $preparse[0];
                     switch (str_replace(["=", " "], "", $base[0])) {
                         case "podstatnéjméno":
+                            $gender = null;
+                            $decl = null;
+                            if(str_starts_with($base[1], "* ")){
+                                preg_match("/rod (?<letter>[a-z])/i", $base[1], $gender);
+                                $gender = Czech::GenderToEn($gender["letter"]);
+                            }
+                            if(str_starts_with($base[2], "* ")){
+                                $decl = $base[2][2];
+                            }
                             $sentence = new Noun(
                                 $word,
                                 $word,
                                 "nom",
                                 "s",
-                                explode("''", $base[1], 3)[1][0],
-                                $base[2][2], 
+                                $gender,
+                                $decl,
                                 $translate
                             );
                             break;

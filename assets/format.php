@@ -52,12 +52,12 @@ class Interpretation
                             $n = count($number);
                             for ($j = 0; $j < $n; $j++)
                                 if (!is_array($word->getForm()[$number[$j]])) {
-                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]], $bold))
+                                    if (!isnull($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]], $bold))
                                         $b = true;
                                     else $b = false;
                                     $arr[] = self::Class($word, ["form" => $word->getForm()[$number[$j]], "bold" => $b, "number" => $number[$j]]);
                                 } else for ($k = 0; $k < count($word->getForm()[$number[$j]]); $k++) {
-                                    if (!is_null($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
+                                    if (!isnull($bold) && isset($bold[$word->getGender() . "_" . $number[$j]]) && in_array($word->getForm()[$number[$j]][$k], $bold[$word->getGender() . "_" . $number[$j]]))
                                         $b = true;
                                     else $b = false;
                                     $arr[] = self::Class($word, ["form" => $word->getForm()[$number[$j]][$k], "bold" => $b, "number" => $number[$j]]);
@@ -76,13 +76,13 @@ class Interpretation
                             if (is_array($form)) {
                                 $m = count($form);
                                 for ($j = 0; $j < $m; $j++) {
-                                    if (!is_null($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]][$j], $bold[$keys[$k]]))
+                                    if (!isnull($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]][$j], $bold[$keys[$k]]))
                                         $b = true;
                                     else $b = false;
                                     $arr[] = self::Class($word, ["form" => $form[$j], "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                                 }
                             } else {
-                                if (!is_null($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]], $bold[$keys[$k]]))
+                                if (!isnull($bold) && isset($bold[$keys[$k]]) && in_array($word->getForm()[$keys[$k]], $bold[$keys[$k]]))
                                     $b = true;
                                 else $b = false;
                                 $arr[] = self::Class($word, ["form" => $form, "gender" => $keys[$k][0], "bold" => $b, "number" => $keys[$k][strlen($keys[$k]) - 1]]);
@@ -128,31 +128,33 @@ class Interpretation
                 if ($variables == null) {
                     $bold = $word->getBold();
                     $word->getGender() . "_" .
-                        $b = !is_null($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()]) && in_array($word->getForm()[$word->getNumber()], $bold[$word->getGender() . "_" . $word->getNumber()]);
+                        $b = !isnull($bold) && isset($bold[$word->getGender() . "_" . $word->getNumber()]) && in_array($word->getForm()[$word->getNumber()], $bold[$word->getGender() . "_" . $word->getNumber()]);
                     $variables = ["bold" => $b];
                 }
                 $gender = "";
-                $deklinace = is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ";
-                $deklinace = $deklinace == ". deklinace " ? "" : $deklinace;
-                if (!is_null($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
+                $deklinace = "";
+                if (!isnull($word->getDeclination()))
+                    $deklinace = is_array($word->getDeclination()) ? ", ". implode(". / ", $word->getDeclination()) . ". deklinace " : ", ".$word->getDeclination() . ". deklinace ";
+                if (!isnull($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
-                if (isset($variables["gender"]) && !is_null($variables["gender"]) && $variables["gender"] != "")
+                if (isset($variables["gender"]) && !isnull($variables["gender"]) && $variables["gender"] != "")
                     $gender = " " . Czech::Gender($variables["gender"]) . "a";
                 $boldE = $boldS = "";
                 if ($variables["bold"]) {
                     $boldS = "<bold>";
                     $boldE = "</bold>";
                 }
-                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE . ", $deklinace";
+                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE . $deklinace;
                 break;
             case "verb":
-                $conjugation = $word->getConjugation() . ". konjugace";
-                $conjugation = $conjugation == ". konjugace" ? "" : $conjugation;
+                $conjugation = "";
+                if (!isnull($word->getConjugation()))
+                    $conjugation = ", " .  $word->getConjugation() . ". konjugace";
                 $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
-                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base . " " . $conjugation;
+                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base . $conjugation;
                 } else
                     $short = "infinitiv slovesa " . $base;
                 break;

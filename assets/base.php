@@ -144,9 +144,9 @@ class Base
                             $sentence->ParseWith();
                             break;
                         case "Conjunction":
-                            $sentence = new Connective($word, $word, $translate);
+                            $sentence = new Connective($word, $translate);
                             break;
-                        default: //TODO možná spíše english
+                        default:
                             continue 2;
                     }
                     $table = new Table($sentence->getClass(), $sentence->getBase(), $lang);
@@ -183,7 +183,7 @@ class Base
                             $gender = null;
                             $decl = null;
                             if (str_starts_with($base[1], "* ")) {
-                                preg_match("/rod (?<letter>[a-z])/i", $base[1], $gender);
+                                preg_match("/rod (?<letter>\\p{L})/u", $base[1], $gender);
                                 $gender = Czech::GenderToEn($gender["letter"]);
                             }
                             if (str_starts_with($base[2], "* ")) {

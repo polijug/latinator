@@ -121,6 +121,7 @@ class Czech
     {
         switch ($mood) {
             case "indc":
+            case "ind":
                 return "indikativ";
             case "imp":
                 return "imperativ";

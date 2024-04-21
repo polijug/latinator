@@ -267,7 +267,7 @@ class Preposition extends Word
         $this->with = substr($with, 1, 3);
     }
 
-    public function toJSON()
+    public function toJSON(): string
     {
         return "{
             'class': '$this->class',
@@ -372,6 +372,8 @@ class Verb extends Noun
 
     public function getConjugation()
     {
+        if (is_array($this->conjugation))
+            $this->conjugation = $this->conjugation[0];
         return $this->conjugation ?? null;
     }
     public function setConjugation($con)
@@ -612,6 +614,8 @@ class JSONobj
 
     public function getConjugation()
     {
+        if (is_array($this->conjugation))
+            $this->conjugation = $this->conjugation[0];
         return $this->conjugation ?? null;
     }
     public function setConjugation($con)

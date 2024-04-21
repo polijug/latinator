@@ -11,12 +11,12 @@ class Translate
                 $n = count($translations);
                 $translation = [];
                 for ($i = 0; $i < $n; $i++) {
-                    $item = preg_replace("/ \{[^}]+\}/i", "", $translations[$i]);
+                    $item = preg_replace("/(\{[a-z]\|[a-z]{2}\||\{[^}]+}|})/i", "", $translations[$i]);
                     $item = explode(";", str_replace(", ", ";", $item));
                     $m = count($item);
                     for ($j = 0; $j < $m; $j++) {
                         if (strlen($item[$j]) < 20 && !str_contains($item[$j], " case"))
-                            array_push($translation, $item[$j]);
+                            $translation[] = trim($item[$j]);
                     }
                 }
                 $text = implode(";", $translation);
@@ -29,8 +29,7 @@ class Translate
                 $translations = array_values(str_replace("# ", "", array_filter($text, function ($val) {
                     return str_starts_with($val, "# ");
                 })));
-                $translations = array_values(explode(", ", implode(", ", str_replace(["|", "/"], ", ", $translations))));
-                return $translations;
+                return array_values(explode(", ", implode(", ", str_replace(["|", "/"], ", ", $translations))));
         }
     }
 }

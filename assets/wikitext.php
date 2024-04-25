@@ -57,27 +57,13 @@ class WikiText
                         for ($j = 0; $j < count($inf); $j++) {
                             $item = Inflections::Parse($start[0] . "||" . $inf[$j], $this->lang, $this->word, $obtClass);
                             $translations = WikiText::Base($item->getBase(), $item->getClass()); //todo: no translation
-                            $m = count($translations);
-                            for ($j = 0; $j < $m; $j++) {
-                                $item->addTranslation($translations[$j]->getTranslation());
-                                $type = Words::hasForms($item);
-                                if ($type > 0)
-                                    $item->setTable($translations[$j]->getTable());
-                                if ($type > 0 && $item->getGender() == null)
-                                    $item->setGender($translations[$j]->getGender());
-                                if ($type == 1 && $item->getDeclination() == null)
-                                    $item->setDeclination($translations[$j]->getDeclination());
-                                if ($type == 2 && $item->getConjugation() == null)
-                                    $item->setConjugation($translations[$j]->getConjugation());
-                            }
+                            $item = $this->mergeItemTrans($item, $translations);
                             $wordArray[] = $item;
                         }
                     }
                 }
                 $base = Base::Parse($this->text, $this->lang, $this->word, $class);
-                $wordArray = array_merge($wordArray, $base);
-
-                return $wordArray;
+                return array_merge($wordArray, $base);
             case "cs":
                 $this->text = arrays::array_name_slice($this->text, "== latina ==");
                 if (count($this->text) == 0) return false;
@@ -90,30 +76,17 @@ class WikiText
 
                 if ($derived) {
                     $inflections = array_values(array_filter($this->text, function ($val) {
-                        if (str_starts_with($val, '# \'\''))
-                            return str_starts_with($val, "# ''") || str_starts_with($val, '# \'\'');
+                        return str_starts_with($val, "# ''");
                     }));
                     $n = count($inflections);
                     $lastBase = "";
                     for ($i = 0; $i < $n; $i++) {
                         $item = Inflections::Parse($inflections[$i], $this->lang, $this->word);
-                        if ($item != false) {
+                        if ($item) {
                             if ($item->getBase() != $lastBase || $lastBase == "") {
                                 $translations = WikiText::Base($item->getBase(), $item->getClass());
-                                if ($translations != false) {
-                                    $m = count($translations);
-                                    for ($j = 0; $j < $m; $j++) {
-                                        $item->addTranslation($translations[$j]->getTranslation());
-                                        $type = Words::hasForms($item);
-                                        if ($type > 0)
-                                            $item->setTable($translations[$j]->getTable());
-                                        if ($type > 0 && $item->getGender() == null)
-                                            $item->setGender($translations[$j]->getGender());
-                                        if ($type == 1 && $item->getDeclination() == null)
-                                            $item->setDeclination($translations[$j]->getDeclination());
-                                        if ($type == 2 && $item->getConjugation() == null)
-                                            $item->setConjugation($translations[$j]->getConjugation());
-                                    }
+                                if ($translations) {
+                                    $item = $this->mergeItemTrans($item, $translations);
                                 }
                             } else {
                                 $item->addTranslation($wordArray[$i - 1]->getTranslation());
@@ -143,7 +116,7 @@ class WikiText
     private static function Base($base, $class = null)
     {
         $words = Database::getWordDB(new Word($base, $class));
-        if ($words != false) return $words;
+        if ($words) return $words;
         $text = WikiText::Isolate(API::enDict($base), false);
         $text = arrays::array_name_slice($text, "==Latin==");
         $cstext = WikiText::Isolate(API::csDict($base));
@@ -167,7 +140,8 @@ class WikiText
         else
             return explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text));
     }
-    private function isDerived()
+
+    private function isDerived(): bool
     {
         $array = $this->text;
         $searchStr = $searchStr1 = "head|la";
@@ -182,7 +156,8 @@ class WikiText
         }
         return false;
     }
-    public static function Derived($text, $lang = "en")
+
+    public static function Derived($text, $lang = "en"): bool
     {
         $array = $text;
         $searchStr = "head|la";
@@ -194,5 +169,23 @@ class WikiText
                 return true;
         }
         return false;
+    }
+
+    public function mergeItemTrans($item, $translations)
+    {
+        $m = count($translations);
+        for ($j = 0; $j < $m; $j++) {
+            $item->addTranslation($translations[$j]->getTranslation());
+            $type = Words::hasForms($item);
+            if ($type > 0)
+                $item->setTable($translations[$j]->getTable());
+            if ($type > 0 && $item->getGender() == null)
+                $item->setGender($translations[$j]->getGender());
+            if ($type == 1 && $item->getDeclination() == null)
+                $item->setDeclination($translations[$j]->getDeclination());
+            if ($type == 2 && $item->getConjugation() == null)
+                $item->setConjugation($translations[$j]->getConjugation());
+        }
+        return $item;
     }
 }

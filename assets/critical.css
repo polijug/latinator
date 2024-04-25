@@ -132,7 +132,7 @@ bold {
     border: #008fa8 1px solid;
     background-color: #008fa8;
     cursor: pointer;
-    user-select: all;
+    user-select: none;
     flex-grow: 1;
     margin-right: 0.5rem;
 }

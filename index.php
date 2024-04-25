@@ -78,10 +78,12 @@ function MLog($text, $die = false)
 function jsonEncode($object)
 {
     if (is_array($object))
-        return str_replace("\"", "'", json_encode($object, JSON_UNESCAPED_UNICODE));
-    return "'$object'";
+        return str_replace(['"', "''", ",,"], ["'", "", ","], json_encode($object, JSON_UNESCAPED_UNICODE));
+    return "'" . str_replace(["'", '"'], "", $object) . "'";
 }
-function isnull($object){
+
+function isnull($object): bool
+{
     return is_null($object) || $object == [] || $object == "";
 }
 

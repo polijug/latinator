@@ -129,7 +129,7 @@ class WikiText
         $en = Base::Parse($text, "en", $base, $class);
         $cs = Base::Parse($cstext, "cs", $base, $class);
 
-        $word = Words::Merge(array_merge($cs, $en));
+        $word = Words::Merge(array_merge($en, $cs));
         Database::insert($word);
         return $word;
     }

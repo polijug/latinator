@@ -189,11 +189,9 @@ class Numeral extends Noun
 
 class Adverb extends Word
 {
-    public function __construct($word, $base, $translation = [])
+    public function __construct($base, $translation = [])
     {
-        $this->word = $word;
-        $this->base = trim($base);
-        $this->translation = $translation;
+        parent::__construct($base, $translation);
     }
 
     public $class = "adverb";
@@ -310,8 +308,7 @@ class Connective extends Word
 {
     public function __construct($base, $translation = [])
     {
-        $this->base = trim($base);
-        $this->translation = $translation;
+        parent::__construct($base, $translation);
     }
 
     public $class = "connective";

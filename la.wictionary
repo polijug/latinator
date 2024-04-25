@@ -78,9 +78,7 @@ indikativ perfekta - o slovo více
 
 chyba db alba
 
- 'word' => 'pueri', 'translation' => array ( 0 => 'dítě', 1 => ' chit', 2 => ' otrok', 3 => ' starý mládenec', 4 => 'chlapec', 5 => 'hoch', 
-
- lang of base
+ 'word' => 'pueri', 'translation' => array ( 0 => 'dítě', 1 => ' chit', 2 => ' otrok', 3 => ' starý mládenec', 4 => 'chlapec', 5 => 'hoch',
 
 output of prepositions
 
@@ -88,8 +86,8 @@ two spaces
 
 base with actual page
 
-nezobrazení puella a clara uprostřed 
-
 chyba na neexistujícím slově (puela)
 
-chyba na neexistujícím slově
+Participle
+
+et

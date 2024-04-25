@@ -131,7 +131,6 @@ class Base
                         case "Adverb":
                             $sentence = new Adverb(
                                 $word,
-                                $word,
                                 $translate
                             );
                             break;
@@ -249,7 +248,6 @@ class Base
                             break;
                         case "příslovce":
                             $sentence = new Adverb(
-                                $word,
                                 $word,
                                 $translate
                             );

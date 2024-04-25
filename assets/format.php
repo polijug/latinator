@@ -24,8 +24,6 @@ class Interpretation
             }
         if ($n > 1)
             $this->word = Words::Pairable($this->word);
-        mlog($this->word);
-        mlog("interpretation_28");
         $this->formatAnswer();
     }
     public function formatAnswer()
@@ -36,8 +34,6 @@ class Interpretation
             $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) {
                 $word = $this->word[$i][$p];
-                mlog($word);
-                mlog($p . "_formatAnswer_40");
                 $base = $word->getWord();
                 $TBase = $word->getBase();
                 if (!isset($str[$base])) $str[$base] = [];
@@ -114,7 +110,6 @@ class Interpretation
                 $str[$base]["long_$p"] = self::Long($this->word[$i][$p]);
             }
         }
-        mlog($str);
         $this->format = self::Build($str);
     }
     private static function Class($word, $variables = null)

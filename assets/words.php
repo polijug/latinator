@@ -735,7 +735,6 @@ class Words
     public static function Pairable($words)
     {
         $n = count($words);
-        //mlog($words); //two allein
         $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
         for ($i = 1; $i < $n; $i++) {
             if (is_array($words[0])) {

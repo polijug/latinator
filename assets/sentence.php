@@ -19,8 +19,6 @@ class Sentence
       }
       $words = WikiText::auto($sentence[$i], "cs");
       $words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
-      mlog($words);
-      mlog("sentence_26");
       array_push($this->words, $words);
     }
   }
@@ -259,16 +257,12 @@ class Sentence
             break;
         }
         if ($j == $m - 1 && !$end) {
-          mlog($word);
           $j = explode("_", $candidate)[1];
-          mlog($candidate);
           $obey = true;
         }
       }
       $short = false;
       if ($end && isset($shortW)) {
-        mlog($shortW);
-        mlog("Sentence_271");
         $short = self::FormateShort($shortW);
         $output[$i] = ["short" => $short,
           "long" => $long,
@@ -278,7 +272,6 @@ class Sentence
     $this->format = $output;
   }
   private static function FormateShort($word) {
-    mlog($word);
     switch ($word->getClass()) {
       case "noun":
       case "adjective":

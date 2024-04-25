@@ -14,12 +14,12 @@ class Sentence
     for ($i = 0; $i < $this->count; $i++) {
       $database = Database::getWordDB($sentence[$i]);
       if ($database !== false) {
-        array_push($this->words, $database);
+          $this->words[] = $database;
         continue;
       }
       $words = WikiText::auto($sentence[$i], "cs");
       $words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
-      array_push($this->words, $words);
+        $this->words[] = $words;
     }
   }
   public function Formate() {
@@ -30,8 +30,7 @@ class Sentence
     $this->Print();
   }
   private static function Analysis($sentence) {
-    $sentence = explode(" ", lcfirst(trim($sentence)));
-    return $sentence;
+      return explode(" ", lcfirst(trim($sentence)));
   }
   private function Print() {
     $words = $this->words;
@@ -43,7 +42,7 @@ class Sentence
       $short = $format["short"];
       $word = $words[$i][0]->getWord();
       $style = $i == 0 ? "style='background-color: #005d69;'" : "";
-      $btn .= "<div class='word' id='$word' $style title='" . $short[1] . "'>" . $short[2] . "</div>";
+        $btn .= "<div class='word' id='$word' tabindex=$i $style title='" . $short[1] . "'>" . $short[2] . "</div>";
       $body .= "<item id='" . $word . "_body'><p>" . $short[0] . "</p>";
       $body .= $format["long"];
       if (count($format["other"]) > 0) {
@@ -159,7 +158,7 @@ class Sentence
             break;
           case "verb":
             if ($candidate == "" || explode("_", $candidate)[0] < 2) //podmínka, ale jaká?
-            $candidate = 2 . "_" . $j;
+                $candidate = 2 . "_" . $j;
             if ($i == $n - 1 && $firstPerson != -1) {
               $keys = array_keys($word->getPerson());
               $o = count($keys);
@@ -191,11 +190,9 @@ class Sentence
               }
             }
             if (!$end) {
-              //act   ind/inf     pres/impf/futr  3.
               $mood = Words::formIntersection($word->getMood(), ["indc", "inf"]);
               $tense = Words::formIntersection($word->getTense(), ["pres", "impf", "futr"]);
               if ($obey || Words::formIntersection($word->getGender(), "act")[0] == "act") {
-                //možná moc přísné
                 if ($mood != [] || $obey)
                   if ($tense != [] || $obey) {
                   $number = is_array($word->getNumber()) ? $word->getNumber()[0] : $word->getNumber();
@@ -257,7 +254,7 @@ class Sentence
             break;
         }
         if ($j == $m - 1 && !$end) {
-          $j = explode("_", $candidate)[1];
+            $j = explode("_", $candidate)[1] - 1;
           $obey = true;
         }
       }

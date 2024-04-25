@@ -81,6 +81,7 @@ class Base
                             );
                             break;
                         case "Pronoun":
+                            $type = null;
                             if (str_starts_with($base[1], "head|la|pronoun")) {
                                 preg_match("/cat2=(?<letter>[a-z]+)/i", $base[1], $matches);
                                 $type = $matches["letter"];
@@ -361,8 +362,7 @@ class Inflections
                                 null,
                                 $translation ?? null
                             );
-                        else
-                        if (is_numeric($info[2])) {
+                        else if (is_numeric($info[2])) {
                             $word = new Verb(
                                 $wordd,
                                 $base,
@@ -373,7 +373,7 @@ class Inflections
                                 substr($info[6], 0, 3),
                                 null,
                                 $translation ?? null
-                            ); //mood
+                            );
                         } else if ($info[2] == "pres") {
                             $word = new Verb(
                                 $wordd,

@@ -23,6 +23,7 @@ class Translate
                 $translation = explode(";", str_replace([", ", ","], [";", ";"], API::deepL(/*substr(*/$text/*, 0, 0)*/)));
                 return array_values(array_unique($translation));
             case "cs":
+                if (WikiText::Derived($text, "cs")) return [];
                 $text = arrays::array_name_slice($text, "=== význam ===");
                 if ($text == 0)
                     return false;

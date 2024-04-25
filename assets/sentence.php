@@ -285,16 +285,21 @@ class Sentence
       case "numeral":
       case "pronoun":
         $form = $word->getForm();
-        $form = Short::Form($form[array_keys($form)[0]]);
-        $str = $word->getTranslation()[0] . " - $form. pád čísla " . Short::Number($word->getNumber())
-        . "ho, rod " . Short::Gender_N($word->getGender()) . ", " . Czech::Class($word->getClass());
-        $tooltip = "$form. p., č. " . Short::Number($word->getNumber(), true) . "., rod " . Short::Gender_N($word->getGender(), true) . "., " .
-        Czech::Class($word->getClass());
+        $form = Short::Form($form[array_keys($form)[0]]) . ". pád ";
+        $translation = $word->getTranslation()[0] . " - ";
+        $translation = $translation == " - " ? "" : $translation;
+        $number = "čísla " . Short::Number($word->getNumber()) . "ho, ";
+        $gender = !isnull($word->getGender()) ? "rod " . Short::Gender_N($word->getGender()) . ", " : "";
+        $str = $translation . $form . $number . $gender . Czech::Class($word->getClass());
+        $gender = "rod " . Short::Gender_N($word->getGender(), true) . "., ";
+        $tooltip = "$form. p., č. " . Short::Number($word->getNumber(), true) . "., ". $gender . Czech::Class($word->getClass());
         break;
       case "verb":
         $person = $word->getPerson();
         $person = $person[array_keys($person)[0]];
-        $str = $word->getTranslation()[0] . " - $person. osoba čísla " . Short::Number($word->getNumber()) . "ho, čas " . Short::Tense($word->getTense()) .
+        $translation = $word->getTranslation()[0] . " - ";
+        $translation = $translation == " - " ? "" : $translation;
+        $str = $translation . "$person. osoba čísla " . Short::Number($word->getNumber()) . "ho, čas " . Short::Tense($word->getTense()) .
         ", způsob " . Short::Mood($word->getMood()) . ", rod " . Short::Gender_V($word->getGender()) . ", " . Czech::Class($word->getClass());
         $tooltip = "$person. os., č. " . Short::Number($word->getNumber(), true) . "., čas " . Short::Tense($word->getTense(), true) .
         ", zp. " . substr(Short::Mood($word->getMood()), 0, 3) . "., rod " . Short::Gender_V($word->getGender(), true) . ", " . Czech::Class($word->getClass());

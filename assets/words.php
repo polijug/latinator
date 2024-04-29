@@ -24,7 +24,7 @@ class Noun extends Word
         });
     }
 
-    public function toJSON()
+    public function toJSON(): string
     {
         return "{
             'class': '$this->class',   
@@ -59,7 +59,7 @@ class Noun extends Word
     }
     public function getTable()
     {
-        return isset($this->table) ? $this->table : null;
+        return $this->table ?? null;
     }
 
     public function getBold()
@@ -67,7 +67,7 @@ class Noun extends Word
         return $this->bold ?? null;
     }
 
-    public function getForm()
+    public function getForm(): ?array
     {
         return $this->form ?? null;
     }
@@ -96,12 +96,12 @@ class Noun extends Word
         $this->gender = $gen;
     }
 
-    public function getAllInfo()
+    public function getAllInfo(): array
     {
         return array("base" => $this->base, "form" => $this->form, "number" => $this->number, "gender" => $this->gender);
     }
 
-    public function TestFullness()
+    public function TestFullness(): bool
     {
         $translate = count($this->translation) > 0;
         $base = isset($this->base);
@@ -128,7 +128,7 @@ class Noun extends Word
         $this->form = $this->form ?? $word->form;
     }
 
-    public function matchSpecParam($word)
+    public function matchSpecParam($word): bool
     {
         if ($this->number != $word->number) return false;
         if ($this->form != $word->form) return false;
@@ -191,10 +191,8 @@ class Adverb extends Word
 {
     public function __construct($base, $translation = [])
     {
-        parent::__construct($base, $translation);
+        parent::__construct($base, "adverb", $translation);
     }
-
-    public $class = "adverb";
 }
 
 class Pronoun extends Noun
@@ -225,7 +223,7 @@ class Pronoun extends Noun
         return $this->person ?? null;
     }
 
-    public function toJSON()
+    public function toJSON(): string
     {
         return "{
             'class': '$this->class',
@@ -276,7 +274,7 @@ class Preposition extends Word
         }";
     }
 
-    public function TestFullness()
+    public function TestFullness(): bool
     {
         $translate = count($this->translation) > 0;
         $base = isset($this->base);
@@ -308,10 +306,8 @@ class Connective extends Word
 {
     public function __construct($base, $translation = [])
     {
-        parent::__construct($base, $translation);
+        parent::__construct($base, "connective", $translation);
     }
-
-    public $class = "connective";
 }
 
 class Verb extends Noun
@@ -334,7 +330,7 @@ class Verb extends Noun
         $this->conjugation = $conjugation;
     }
 
-    public function toJSON()
+    public function toJSON(): string
     {
         return "{
             'class': '$this->class',
@@ -357,7 +353,7 @@ class Verb extends Noun
         return $this->tense ?? null;
     }
 
-    public function getPerson()
+    public function getPerson(): ?array
     {
         return $this->person ?? null;
     }
@@ -378,12 +374,12 @@ class Verb extends Noun
         $this->conjugation = $con;
     }
 
-    public function getAllInfo()
+    public function getAllInfo(): array
     {
         return array("base" => $this->base, "tense" => $this->tense, "number" => $this->number, "gender" => $this->gender, "person" => $this->person, "mood" => $this->mood);
     }
 
-    public function TestFullness()
+    public function TestFullness(): bool
     {
         $translate = count($this->translation) > 0;
         $base = isset($this->base);
@@ -411,7 +407,7 @@ class Verb extends Noun
         $this->conjugation = $this->conjugation ?? $word->conjugation;
     }
 
-    public function matchSpecParam($word)
+    public function matchSpecParam($word): bool
     {
         if ($this->number != $word->number) return false;
         if ($this->tense != $word->tense) return false;
@@ -420,7 +416,7 @@ class Verb extends Noun
         return true;
     }
 
-    public function isSame($word)
+    public function isSame($word): bool
     {
         return $this->base == $word->base && $this->class == $word->class && $this->mood == $word->mood && $this->tense == $word->tense;
     }
@@ -429,8 +425,7 @@ class Verb extends Noun
     {
         if ($full) {
             $this->number = Merge::Values($this->number, $word->number);
-            $word->person[$this->gender . "_" . $this->number] = isset($word->person[$this->gender . "_" . $this->number]) ? Merge::Values($this->person[$this->gender . "_" . $this->number], $word->person[$this->gender . "_" . $this->number]) : $this->person[$this->gender . "_" . $this->number];
-            $this->person = $word->person;
+            $this->person = Merge::Values($this->person, $word->person);
             $this->gender = Merge::Values($this->gender, $word->gender);
         }
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -446,13 +441,14 @@ class Word
     protected $word;
     protected $translation = [];
 
-    public function __construct($base, $class)
+    public function __construct($base, $class, $translation = [])
     {
         $this->base = $base;
         $this->word = $base;
         $this->class = $class;
+        $this->translation = $translation;
     }
-    public function getBase()
+    public function getBase(): string
     {
         return trim($this->base);
     }
@@ -472,7 +468,7 @@ class Word
         return $this->word ?? null;
     }
 
-    public function toJSON()
+    public function toJSON(): string
     {
         return "{
             'class': '$this->class',
@@ -485,13 +481,13 @@ class Word
     public function addTranslation($translation)
     {
         if (is_string($translation))
-            array_push($this->translation, strtolower(trim($translation)));
+            $this->translation[] = strtolower(trim($translation));
         else if (is_array($translation) && !isnull($translation) && !isnull($this->translation))
             $this->translation = array_unique(array_merge($this->translation, $translation));
         else $this->translation = $translation;
     }
 
-    public function TestFullness()
+    public function TestFullness(): bool
     {
         $translate = count($this->translation) > 0;
         $base = isset($this->base);
@@ -502,19 +498,17 @@ class Word
     {
         $trans = $word->getTranslation();
         $n = count($trans);
-        for ($i = 0; $i < $n; $i++) {
-            if (!in_array($trans[$i], $this->getTranslation(), true)) {
+        for ($i = 0; $i < $n; $i++)
+            if (!in_array($trans[$i], $this->getTranslation(), true))
                 $this->addTranslation($trans[$i]);
-            }
-        }
     }
 
-    public function isSame($word)
+    public function isSame($word): bool
     {
         return $this->base == $word->base && $this->class == $word->class;
     }
 
-    public function matchSpecParam($word)
+    public function matchSpecParam($word): bool
     {
         return true;
     }
@@ -547,7 +541,7 @@ class JSONobj
     {
         $this->bold = $bold;
     }
-    public function getBase()
+    public function getBase(): string
     {
         return trim($this->base);
     }
@@ -567,7 +561,7 @@ class JSONobj
         return $this->tense ?? null;
     }
 
-    public function getPerson()
+    public function getPerson(): array
     {
         return (array)$this->person;
     }
@@ -577,7 +571,7 @@ class JSONobj
         return $this->mood ?? null;
     }
 
-    public function getTable()
+    public function getTable(): Table
     {
         $table = new Table();
         $table->table = $this->table;
@@ -696,7 +690,7 @@ class Words
 
     public static function Combine($word1, $word2)
     {
-        if ($word1 == false || $word1 == [] || $word2 == false || $word2 == []) return $word1 == false || $word1 == [] ? $word2 : $word1;
+        if (!$word1 || $word1 == [] || !$word2 || $word2 == []) return !$word1 || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];
         for ($i = 0; $i < $n1; $i++) {
@@ -711,14 +705,15 @@ class Words
                     $n2--;
                 }
             }
-            array_push($output, $word1[$i]);
+            $output[] = $word1[$i];
         }
         if (count($word2) > 0) $output = array_merge($output, $word2);
         return $output;
     }
 
-    public static function Merge($words)
+    public static function Merge($words): ?array
     {
+        if(isnull($words)) return [];
         $n = count($words);
         for ($i = 1; $i < $n; $i++) {
             if ($words[$i - 1]->isSame($words[$i])) {
@@ -729,7 +724,7 @@ class Words
         return array_values($words);
     }
 
-    public static function Pairable($words)
+    public static function Pairable($words): array
     {
         $n = count($words);
         $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
@@ -793,7 +788,7 @@ class Words
         }
         return array_values($words);
     }
-    public static function formIntersection($form1, $form2)
+    public static function formIntersection($form1, $form2): array
     {
         if (is_array($form1) && is_array($form2)) {
             $result = array_intersect($form1, $form2);
@@ -806,7 +801,7 @@ class Words
         return $result;
     }
 
-    public static function decodeJSON($word)
+    public static function decodeJSON($word): JSONobj
     {
         if (isset($word["tables"])) $table = $word["tables"];
         $word = json_decode(str_replace(["'", "\n", "\r"], ["\"", "", ""], $word["json"]));
@@ -832,15 +827,19 @@ class Words
 
 class Merge
 {
-    public static function Values($value1, $value2, $sidetoside = false)
+    public static function Values($value1, $value2, $sidetoside = false): array
     {
+        if(isnull($value1) && isnull($value2))
+            return [];
         if ($sidetoside) $value1 = [$value1, $value2];
         if (isnull($value1) || isnull($value2)) {
             if (is_string($value1) || is_string($value2))
                 $value1 = [!isnull($value1) ? $value1 : $value2];
             $value1 = !isnull($value1) ? $value1 : $value2;
         } else if (is_array($value1) && is_array($value2)) {
-            $value1 = array_merge($value1, $value2);
+            if(!is_string(array_keys($value1)[0]))
+                $value1 = array_merge($value1, $value2);
+            else $value1 = array_merge_recursive($value1, $value2);
         } else if (is_array($value2) || is_array($value1)) {
             if (is_array($value2)) {
                 $value2[] = $value1;

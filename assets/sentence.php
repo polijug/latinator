@@ -13,13 +13,15 @@ class Sentence
     $this->count = count($sentence);
     for ($i = 0; $i < $this->count; $i++) {
       $database = Database::getWordDB($sentence[$i]);
-      if ($database !== false) {
+      if ($database) {
           $this->words[] = $database;
         continue;
       }
       $words = WikiText::auto($sentence[$i], "cs");
-      $words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
-        $this->words[] = $words;
+      if($words)
+        $words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
+      else $words = WikiText::auto($sentence[$i], "en");
+      $this->words[] = $words;
     }
   }
   public function Formate() {
@@ -247,6 +249,8 @@ class Sentence
             if ($obey) {
               $shortW = new Connective($word->getBase(), $word->getTranslation());
               $shortW->class = $word->getClass();
+              mlog($shortW);
+              mlog($word);
               $end = true;
               $long = $this->format[$shape][$j];
               unset($this->format[$shape][$j]);

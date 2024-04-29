@@ -3,18 +3,22 @@ class WikiText
 {
     public function __construct(string $text, string $lang, string $word)
     {
-        $this->text = self::Isolate($text);
+        $this->text = self::Isolate($text, $lang);
         $this->lang = $lang;
         $this->word = $word;
+        if(!$this->text) return false;
     }
     public $text;
     public $lang;
     private $word;
     public static function auto($word, $lang)
     {
-        if ($lang == "en")
+        if ($lang == "en"){
             $wikitext = new WikiText(API::enDict($word), "en", $word);
+            if(!$wikitext) $wikitext = new WikiText(API::enDict(ucfirst($word)), "en", ucfirst($word));
+        }
         else $wikitext = new WikiText(API::csDict($word), "cs", $word);
+        if(!$wikitext) return false;
         return $wikitext->Parse();
     }
     public function getWord()
@@ -32,8 +36,6 @@ class WikiText
 
         switch ($this->lang) {
             case "en":
-                $this->text = arrays::array_name_slice($this->text, "==Latin==");
-                if (count($this->text) == 0) return false;
                 if (!$derive)
                     $this->text = arrays::array_name_slice($this->text, "===" . ucfirst($class) . "===");
 
@@ -65,8 +67,6 @@ class WikiText
                 $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                 return array_merge($wordArray, $base);
             case "cs":
-                $this->text = arrays::array_name_slice($this->text, "== latina ==");
-                if (count($this->text) == 0) return false;
                 if (!$derive)
                     $this->text = arrays::array_name_slice($this->text, "=== " . Czech::Class($class) . " ===");
 
@@ -117,10 +117,8 @@ class WikiText
     {
         $words = Database::getWordDB(new Word($base, $class));
         if ($words) return $words;
-        $text = WikiText::Isolate(API::enDict($base), false);
-        $text = arrays::array_name_slice($text, "==Latin==");
-        $cstext = WikiText::Isolate(API::csDict($base));
-        $cstext = arrays::array_name_slice($cstext, "== latina ==");
+        $text = WikiText::Isolate(API::enDict($base),"en", false);
+        $cstext = WikiText::Isolate(API::csDict($base), "cs");
         if (count($text) == 0 && count($cstext) == 0) return false;
         if ($class != null) {
             $text = arrays::array_name_slice($text, "===" . ucfirst($class) . "===");
@@ -133,12 +131,18 @@ class WikiText
         Database::insert($word);
         return $word;
     }
-    private static function Isolate($text, $normal = true)
+    private static function Slice($text, $lang){
+        $name = $lang == "cs" ? "== latina ==" : "==Latin==";
+        $text = arrays::array_name_slice($text, $name);
+        if (count($text) == 0) return false;
+        return $text;
+    }
+    private static function Isolate($text, $lang, $normal = true)
     {
         if ($normal)
-            return explode("\n", str_replace(["\n\n", "{", "}", "[", "]"], ["\n"], $text));
+            return self::Slice(explode("\n", str_replace(["\n\n", "{", "}", "[", "]"], ["\n"], $text)), $lang);
         else
-            return explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text));
+            return self::Slice(explode("\n", str_replace(["\n\n", "{{", "}}", "[", "]"], ["\n", "{", "}"], $text)), $lang);
     }
 
     private function isDerived(): bool

@@ -3,8 +3,7 @@ class Formating
 {
     public static function Formate($words)
     {
-        $int = new Interpretation($words);
-        return $int;
+        return new Interpretation($words);
     }
 }
 
@@ -19,8 +18,9 @@ class Interpretation
             if ($word[$i][0] instanceof JSONobj)
                 $this->word[] = $word[$i];
             else {
-                $this->word[] = Words::Merge($word[$i]);
-                Database::insert($this->word[$i]);
+                $this->word[] = $word[$i] ? Words::Merge($word[$i]) : false;
+                if($this->word[$i])
+                    Database::insert($this->word[$i]);
             }
         if ($n > 1)
             $this->word = Words::Pairable($this->word);

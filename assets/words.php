@@ -324,7 +324,7 @@ class Verb extends Noun
         $this->tense = $tense;
         $this->person = [$gender . "_" . $number => $person]; //or mood_tense_gender_number?
         $this->gender = $gender;
-        $this->mood = $mood;
+        $this->mood = Czech::MoodToEn($mood);
         $this->number = $number;
         $this->translation = $translation;
         $this->conjugation = $conjugation;

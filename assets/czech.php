@@ -131,6 +131,10 @@ class Czech
                 return $mood;
         }
     }
+    public static function MoodToEn($mood){
+        if($mood == "kon") return "sub";
+        return $mood;
+    }
     public static function Number($num)
     {
         if ($num == "s") return "singulár";

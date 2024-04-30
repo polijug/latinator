@@ -173,6 +173,7 @@ class Base
                 $n = count($bases);
                 for ($i = 0; $i < $n; $i++) {
                     $base = arrays::array_name_slice($text, $bases[$i]);
+                    if (Wikitext::Derived($base, "cs")) continue;
                     $translate = [];
                     $preparse = explode("(", $bases[$i]);
                     if ($translation)

@@ -103,10 +103,10 @@ class WikiText
                         }
                     }
                 }
-                if (!$derived) {
+                //if (!$derived) {
                     $base = Base::Parse($this->text, $this->lang, $this->word, $class);
                     $wordArray = array_merge($wordArray, $base);
-                }
+                //}
                 return $wordArray;
         }
     }

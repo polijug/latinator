@@ -273,7 +273,6 @@ class Base
                     $words[] = $sentence;
                 }
         }
-        if($words == []) return false;
         return $words;
     }
 }

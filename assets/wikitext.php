@@ -57,7 +57,7 @@ class WikiText
                         $inf = explode("|;|", $start[1]);
                         for ($j = 0; $j < count($inf); $j++) {
                             $item = Inflections::Parse($start[0] . "||" . $inf[$j], $this->lang, $this->word, $obtClass);
-                            $translations = WikiText::Base($item->getBase(), $item->getClass()); //todo: no translation
+                            $translations = WikiText::Base($item->getBase(), $item->getClass());
                             $item = $this->mergeItemTrans($item, $translations);
                             $wordArray[] = $item;
                         }

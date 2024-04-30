@@ -9,62 +9,73 @@
     <meta content="Latinátor je nástroje, poskytující analýzu latinského textu v češtině" name="description">
     <title>[title]</title>
     <link href="assets/critical.css" rel="stylesheet" type="text/css">
-    <link href="assets/latinator.webp" rel="icon">
+    <link href="assets/latinator.webpp" rel="icon">
+    <style>
+        .search {
+            width: fit-content;
+            margin: 0 auto 0 auto;
+        }
+    </style>
     <!-- <base href=""> -->
 </head>
 
 <body>
-<header>
-    <a href="https://latinator.erza.cz/">
-        <img alt="logo" class="logo" src="assets/latinator.webp">
-        <hgroup class="heading">
-            <h1 class="name">Latinátor</h1>
-            <h4 class="description">Překlad a analýza latinského textu</h4>
-        </hgroup>
-    </a>
-</header>
-<nav>
-    <ul>
-        <li>Překlad věty</li>
-        <li>Výklad slova</li>
-    </ul>
-</nav>
-<section>
-    <input type="search" name="s" placeholder="Hledat">
-    <p>
-        [content]
-    </p>
-</section>
-<footer>
-    <p>&copy; 2023 - [year] <b><a href="https://erza.cz">Erža</a></b></p>
-</footer>
-<script>
-    const elements = document.getElementsByClassName("word");
-    let last = elements[0];
-    for (let i = 0; i < elements.length; i++) {
-        if (i === 0) document.getElementById(elements[i].id + "_body").style.display = "inline";
-        else document.getElementById(elements[i].id + "_body").style.display = "none";
-        ["click", "keyup"].forEach(ev => {
-            elements[i].addEventListener(ev, (event) => {
-                if (event.type != "click" && event.keyCode != 13) return;
-                let id = event.target.id;
-                if (event.target.id == "")
-                    id = event.target.innerText;
-                let element = document.getElementById(id + "_body");
-                if (element.style.display == "none") {
-                    document.getElementById(last.id + "_body").style.display = "none";
-                    last.style.background = "#008fa8"
-                    document.getElementById(id).style.background = "#005d69"
-                    element.style.display = "inline";
-                } else {
-                    element.style.display = "none";
-                    last.style.background = "#008fa8"
-                }
-                last = document.getElementById(id);
-            })
-        });
-    }
-</script>
+    <header>
+        <a href="https://latinator.erza.cz/">
+            <img alt="logo" class="logo" src="assets/latinator.webpp">
+            <hgroup class="heading">
+                <h1 class="name">Latinátor</h1>
+                <h4 class="description">Překlad a analýza latinského textu</h4>
+            </hgroup>
+        </a>
+    </header>
+    <nav>
+        <ul>
+            <li>Překlad věty</li>
+            <li>Výklad slova</li>
+        </ul>
+    </nav>
+    <section>
+        <div class="search">
+            <form action=".">
+                <input type="search" id="s" name="s" placeholder="Hledat">
+                <input type="submit" value="Hledat">
+            </form>
+        </div>
+        <p>
+            [content]
+        </p>
+    </section>
+    <footer>
+        <p>&copy; 2023 - [year] <b><a href="https://erza.cz">Erža</a></b></p>
+    </footer>
+    <script>
+        const elements = document.getElementsByClassName("word");
+        let last = elements[0];
+        for (let i = 0; i < elements.length; i++) {
+            if (i === 0) document.getElementById(elements[i].id + "_body").style.display = "inline";
+            else document.getElementById(elements[i].id + "_body").style.display = "none";
+            ["click", "keyup"].forEach(ev => {
+                elements[i].addEventListener(ev, (event) => {
+                    if (event.type != "click" && event.keyCode != 13) return;
+                    let id = event.target.id;
+                    if (event.target.id == "")
+                        id = event.target.innerText;
+                    let element = document.getElementById(id + "_body");
+                    if (element.style.display == "none") {
+                        document.getElementById(last.id + "_body").style.display = "none";
+                        last.style.background = "#008fa8"
+                        document.getElementById(id).style.background = "#005d69"
+                        element.style.display = "inline";
+                    } else {
+                        element.style.display = "none";
+                        last.style.background = "#008fa8"
+                    }
+                    last = document.getElementById(id);
+                })
+            });
+        }
+    </script>
 </body>
 
 </html>

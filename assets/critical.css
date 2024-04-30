@@ -27,6 +27,11 @@ body {
     padding-right: 10px;
 }
 
+.search{
+    width: fit-content;
+    margin: 0 auto 0 auto;
+}
+
 .heading,
 .logo {
     display: inline-block;

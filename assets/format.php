@@ -177,6 +177,9 @@ class Interpretation
             $str .= "<p> <h4>Tabulka $type</h4>";
             $str .= $word->getTable()->table;
         }
+        $base = $word->getBase();
+        $str .= "<small>Zdroj a další informace:<br><a target=_blank href=https://en.wiktionary.org/wiki/$base#Latin>Wiktionary ($base)</a><br>" . 
+            "<a target=_blank href=https://cs.wiktionary.org/wiki/$base#latina>Wikislovník ($base)</a></small>";
         return $str;
     }
     private static function Build($words)

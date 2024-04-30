@@ -249,8 +249,6 @@ class Sentence
             if ($obey) {
               $shortW = new Connective($word->getBase(), $word->getTranslation());
               $shortW->class = $word->getClass();
-              mlog($shortW);
-              mlog($word);
               $end = true;
               $long = $this->format[$shape][$j];
               unset($this->format[$shape][$j]);
@@ -278,15 +276,16 @@ class Sentence
       case "adjective":
       case "numeral":
       case "pronoun":
-        $form = $word->getForm();
-        $form = Short::Form($form[array_keys($form)[0]]) . ". pád ";
+        $formN = $word->getForm();
+        $formN = Short::Form($formN[array_keys($formN)[0]]);
+        $form = $formN . ". pád ";
         $translation = $word->getTranslation()[0] . " - ";
         $translation = $translation == " - " ? "" : $translation;
         $number = "čísla " . Short::Number($word->getNumber()) . "ho, ";
         $gender = !isnull($word->getGender()) ? "rod " . Short::Gender_N($word->getGender()) . ", " : "";
         $str = $translation . $form . $number . $gender . Czech::Class($word->getClass());
         $gender = "rod " . Short::Gender_N($word->getGender(), true) . "., ";
-        $tooltip = "$form. p., č. " . Short::Number($word->getNumber(), true) . "., ". $gender . Czech::Class($word->getClass());
+        $tooltip = "$formN. p., č. " . Short::Number($word->getNumber(), true) . "., ". $gender . Czech::Class($word->getClass());
         break;
       case "verb":
         $person = $word->getPerson();

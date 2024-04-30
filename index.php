@@ -15,46 +15,29 @@ include_once("assets/format.php");
 include_once("assets/database.php");
 include_once("assets/sentence.php");
 include_once("assets/short.php");
+include_once("assets/definition.php");
 if (PHP_MAJOR_VERSION < 8)
     include_once("assets/compatibility.php");
-/*
- * ask for sentence - frontend
- * * receive in get parameter s
- * analyse sentence
- * * cut sentence
- * ask API
- * * first wikidictionary.cz (cs)
- * * second wikidictionary.com (en)
- * * third latinissimple.com through API
- * * * for english APIs use DeepL API to translate
- * * * formulation of czech from jazykova prirucka or wikidic.cz
- * it is needed somehow receive and store table of conjunction and declination
- * for each word store infos like translation, actual person, time (passive/active) / gender, conjunction, number
- *
- */
+
 $start = microtime(true);
 const version = "0.2";
 $output = new Output();
 
 $sentence = GExisT("s"); //"s" stands for sentence
+$definition = GExisT("d");
 
-if (!$sentence) { //show main page
+if (!$sentence && !$definition) { //show main page
     die("<H1 style='color: red'> Na stránce se pracuje! </H1>");
+} else if($sentence && !$definition){
+    $sent = new Sentence($sentence);
+    $sent->Formate();
+} else if (!$sentence && $definition){
+    $def = new Definition($definition);
+    $def->print();
+} else {
+    //chyba
 }
 
-/*
- * class - slovní druh
- * base
- * tense - čas (5)
- * person - osoba (5)
- * gender - rod (1, 2, 3, 4, 5)
- * number - číslo (1, 2, 3, 5)
- * form - pád (1, 2, 3, 4)
- * mood - způsob (5)
- */
-
-$sent = new Sentence($sentence);
-$sent->Formate();
 
 
 $time_elapsed_secs = microtime(true) - $start;

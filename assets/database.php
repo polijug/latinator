@@ -20,13 +20,14 @@ class Database
         $conn = self::connect();
         $n = count($word);
         for ($i = 0; $i < $n; $i++) {
+            if($word[$i] instanceof JSONobj) continue;
             $base = $word[$i]->getBase();
             $class = $word[$i]->getClass();
             $wor = $word[$i]->getWord();
             if (Words::hasForms($word[$i]) > 0 && $word[$i]->getTable() != null && $word[$i]->getTable()->getValidity())
                 $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
-            $sql = "INSERT INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
+            $sql = "INSERT IGNORE INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
             if (isset($table))
                 $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');";
             $conn->query($sql);

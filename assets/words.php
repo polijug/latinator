@@ -751,6 +751,7 @@ class Words
                 $word2 = $words[$i - 1][$k];
             $result = [];
             if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
+            if($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
 
             $numbers = self::formIntersection($word1->getNumber(), $word2->getNumber());
             $gender = self::formIntersection($word1->getGender(), $word2->getGender());

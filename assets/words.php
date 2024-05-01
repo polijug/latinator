@@ -140,9 +140,11 @@ class Noun extends Word
     public function Merge($word, $full = true)
     {
         if ($full) {
-            $word->form[$this->number] = isset($word->form[$this->number]) ? Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
-            $this->form = $word->form;
-            $this->number = Merge::Values($this->number, $word->number);
+            $word->form = (array)$word->form;
+            $word->form[$this->number] = isset($word->form[$this->number]) ?
+                    Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
+                $this->form = $word->form;
+                $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -166,8 +168,8 @@ class Adjective extends Noun
     public function Merge($word, $full = true)
     {
         if ($full) {
-            $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Words::sortForms(Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number])) : $this->form[$this->gender . "_" . $this->number];
-            $this->form = $word->form;
+            $word->form = (array)$word->form;
+            $this->form = Merge::Values($this->form, $word->form);
             $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
@@ -630,6 +632,10 @@ class JSONobj
     {
         $this->type = $type;
     }
+    public function isSame($word): bool
+    {
+        return $this->base == $word->base && $this->class == $word->class;
+    }
 }
 
 class Words
@@ -842,7 +848,14 @@ class Merge
         } else if (is_array($value1) && is_array($value2)) {
             if(!is_string(array_keys($value1)[0]))
                 $value1 = array_merge($value1, $value2);
-            else $value1 = array_merge_recursive($value1, $value2);
+            else {
+                $value1 = array_merge_recursive($value1, $value2);
+                $keys = array_keys($value1);
+                for ($k = 0; $k < count($keys); $k++){
+                    $value1[$keys[$k]] = arrays::remove_null(array_values(array_unique($value1[$keys[$k]])));
+                }
+                return $value1;
+            }
         } else if (is_array($value2) || is_array($value1)) {
             if (is_array($value2)) {
                 $value2[] = $value1;

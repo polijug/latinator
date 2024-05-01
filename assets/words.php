@@ -14,7 +14,7 @@ class Noun extends Word
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->form = [$number => $form];
         $this->number = $number;
         $this->gender = $gender;
@@ -246,7 +246,7 @@ class Preposition extends Word
     {
         $this->word = $word;
         $with = Czech::FormToEn($with);
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->with = $with;
         $this->translation = $translation;
     }
@@ -320,7 +320,7 @@ class Verb extends Noun
     public function __construct($word, $base, $number, $tense, $person, $gender, $mood, $conjugation = null, $translation = [])
     {
         $this->word = $word;
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->tense = $tense;
         $this->person = [$gender . "_" . $number => $person]; //or mood_tense_gender_number?
         $this->gender = $gender;
@@ -450,7 +450,7 @@ class Word
     }
     public function getBase(): string
     {
-        return trim($this->base);
+        return str_trim($this->base);
     }
 
     public function getClass()
@@ -481,7 +481,7 @@ class Word
     public function addTranslation($translation)
     {
         if (is_string($translation))
-            $this->translation[] = strtolower(trim($translation));
+            $this->translation[] = strtolower(str_trim($translation));
         else if (is_array($translation) && !isnull($translation) && !isnull($this->translation))
             $this->translation = array_unique(array_merge($this->translation, $translation));
         else $this->translation = $translation;
@@ -543,7 +543,7 @@ class JSONobj
     }
     public function getBase(): string
     {
-        return trim($this->base);
+        return str_trim($this->base);
     }
 
     public function getClass()

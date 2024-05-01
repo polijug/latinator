@@ -14,12 +14,12 @@ class Translate
                     $item = preg_replace("/(\{[a-z]\|[a-z]{2}\||\{[^}]+}|})/i", "", $translations[$i]);
                     $item = str_replace([";", "l|en|"], [",", ""], $item);
                     if (!str_contains($item, " case"))
-                        $translation[] = trim($item);
+                        $translation[] = str_trim($item);
                 }
                 $text = implode(";", $translation);
                 $translation = explode(";", API::deepL($text));
                 for ($i = 0; $i < count($translation); $i++) 
-                    $translation[$i] = trim(implode(", ", array_values(array_unique(explode(", ", $translation[$i])))));
+                    $translation[$i] = str_trim(implode(", ", array_values(array_unique(explode(", ", $translation[$i])))));
                 return array_values(array_unique($translation));
             case "cs":
                 if (WikiText::Derived($text, "cs")) return [];

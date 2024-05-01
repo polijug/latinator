@@ -32,7 +32,7 @@ class Sentence
     $this->Print();
   }
   private static function Analysis($sentence) {
-      return explode(" ", lcfirst(trim($sentence)));
+      return explode(" ", lcfirst(str_trim($sentence)));
   }
   private function Print() {
     $words = $this->words;

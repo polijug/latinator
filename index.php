@@ -70,6 +70,22 @@ function isnull($object): bool
     return is_null($object) || $object == [] || $object == "";
 }
 
+function str_trim($str){
+    $lstop = false;
+    $rstop = false;
+    $rep = [",", ".", " "];
+    for($i = 0; $i < strlen($str) && (!$lstop || !$rstop); $i++){
+        if(in_array($str[$i], $rep) && !$lstop){
+            $str = substr($str, 1, strlen($str) - 1);
+            $i--;
+        } else $lstop = true;
+        if(in_array($str[strlen($str) - 1], $rep) && !$rstop)
+            $str = substr($str, 0, strlen($str) - 1);
+        else $rstop = true;
+    }
+    return $str;
+}
+
 class Output
 {
     public function __construct()

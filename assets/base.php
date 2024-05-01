@@ -4,7 +4,7 @@ class Base
     public static function Parse($text, $lang, $word, $class = null, $translation = true)
     {
         $words = [];
-        $word = trim($word);
+        $word = str_trim($word);
         switch ($lang) {
             case "en":
                 $i = 0;

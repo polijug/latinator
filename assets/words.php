@@ -725,12 +725,16 @@ class Words
     {
         if(isnull($words)) return [];
         $n = count($words);
-        for ($i = 1; $i < $n; $i++) {
-            if ($words[$i - 1]->isSame($words[$i])) {
-                $words[$i]->Merge($words[$i - 1]);
-                unset($words[$i - 1]);
+        for ($i = 0; $i < $n; $i++)
+            for($j = $i+1; $j < $n; $j++) {
+                if ($words[$i]->isSame($words[$j])) {
+                    $words[$i]->Merge($words[$j]);
+                    unset($words[$j]);
+                    $words = array_values($words);
+                    $n--;
+                    $j--;
+                }
             }
-        }
         return array_values($words);
     }
 

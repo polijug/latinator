@@ -1,6 +1,14 @@
 <?php
 class arrays
 {
+    public static function remove_null($array){
+        for($i = 0; $i < count($array); $i++){
+            if($array[$i] == null){
+                unset($array[$i]);
+            }
+        }
+        return array_values($array);
+    }
     static function array_name_slice($array, $startname, $avoid = 0)
     {
         $Sregex = preg_quote("/" . $startname . "/i");

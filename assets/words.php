@@ -14,7 +14,7 @@ class Noun extends Word
     {
         $this->word = $word;
         $form = Czech::FormToEn($form);
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->form = [$number => $form];
         $this->number = $number;
         $this->gender = $gender;
@@ -47,7 +47,9 @@ class Noun extends Word
 
     public function setBold($array)
     {
-        $this->bold = $array;
+        if(isnull($this->bold))
+            $this->bold = $array;
+        else $this->bold = Merge::Values($this->bold, $array);
     }
     public function getDeclination()
     {
@@ -138,9 +140,11 @@ class Noun extends Word
     public function Merge($word, $full = true)
     {
         if ($full) {
-            $word->form[$this->number] = isset($word->form[$this->number]) ? Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
-            $this->form = $word->form;
-            $this->number = Merge::Values($this->number, $word->number);
+            $word->form = (array)$word->form;
+            $word->form[$this->number] = isset($word->form[$this->number]) ?
+                    Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
+                $this->form = $word->form;
+                $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -164,8 +168,8 @@ class Adjective extends Noun
     public function Merge($word, $full = true)
     {
         if ($full) {
-            $word->form[$this->gender . "_" . $this->number] = isset($word->form[$this->gender . "_" . $this->number]) ? Words::sortForms(Merge::Values($this->form[$this->gender . "_" . $this->number], $word->form[$this->gender . "_" . $this->number])) : $this->form[$this->gender . "_" . $this->number];
-            $this->form = $word->form;
+            $word->form = (array)$word->form;
+            $this->form = Merge::Values($this->form, $word->form);
             $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
@@ -246,7 +250,7 @@ class Preposition extends Word
     {
         $this->word = $word;
         $with = Czech::FormToEn($with);
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->with = $with;
         $this->translation = $translation;
     }
@@ -320,7 +324,7 @@ class Verb extends Noun
     public function __construct($word, $base, $number, $tense, $person, $gender, $mood, $conjugation = null, $translation = [])
     {
         $this->word = $word;
-        $this->base = trim($base);
+        $this->base = str_trim($base);
         $this->tense = $tense;
         $this->person = [$gender . "_" . $number => $person]; //or mood_tense_gender_number?
         $this->gender = $gender;
@@ -450,7 +454,7 @@ class Word
     }
     public function getBase(): string
     {
-        return trim($this->base);
+        return str_trim($this->base);
     }
 
     public function getClass()
@@ -481,7 +485,7 @@ class Word
     public function addTranslation($translation)
     {
         if (is_string($translation))
-            $this->translation[] = strtolower(trim($translation));
+            $this->translation[] = strtolower(str_trim($translation));
         else if (is_array($translation) && !isnull($translation) && !isnull($this->translation))
             $this->translation = array_unique(array_merge($this->translation, $translation));
         else $this->translation = $translation;
@@ -539,11 +543,13 @@ class JSONobj
     }
     public function setBold($bold)
     {
+        if(isnull($this->bold))
         $this->bold = $bold;
+    else $this->bold = Merge::Values($this->bold, $bold);
     }
     public function getBase(): string
     {
-        return trim($this->base);
+        return str_trim($this->base);
     }
 
     public function getClass()
@@ -625,6 +631,10 @@ class JSONobj
     public function setType($type)
     {
         $this->type = $type;
+    }
+    public function isSame($word): bool
+    {
+        return $this->base == $word->base && $this->class == $word->class;
     }
 }
 
@@ -715,12 +725,16 @@ class Words
     {
         if(isnull($words)) return [];
         $n = count($words);
-        for ($i = 1; $i < $n; $i++) {
-            if ($words[$i - 1]->isSame($words[$i])) {
-                $words[$i]->Merge($words[$i - 1]);
-                unset($words[$i - 1]);
+        for ($i = 0; $i < $n; $i++)
+            for($j = $i+1; $j < $n; $j++) {
+                if ($words[$i]->isSame($words[$j])) {
+                    $words[$i]->Merge($words[$j]);
+                    unset($words[$j]);
+                    $words = array_values($words);
+                    $n--;
+                    $j--;
+                }
             }
-        }
         return array_values($words);
     }
 
@@ -729,15 +743,15 @@ class Words
         $n = count($words);
         $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
         for ($i = 1; $i < $n; $i++) {
-            if (is_array($words[0])) {
-                $word1 = $words[$i][0];
-                $word2 = $words[$i - 1][0];
-            } else {
-                $word1 = $words[$i];
-                $word2 = $words[$i - 1];
-            }
+            if(!is_array($words[$i])) $words[$i] = [$words[$i]];
+            if(!is_array($words[$i-1])) $words[$i-1] = [$words[$i-1]];
+        for ($j = 0; $j < count($words[$i]); $j++)
+        for($k = 0; $k < count($words[$i-1]); $k++){
+                $word1 = $words[$i][$j];
+                $word2 = $words[$i - 1][$k];
             $result = [];
             if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
+            if($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
 
             $numbers = self::formIntersection($word1->getNumber(), $word2->getNumber());
             $gender = self::formIntersection($word1->getGender(), $word2->getGender());
@@ -779,13 +793,13 @@ class Words
             }
             if ($result == []) continue;
             if (is_array($words[$i])) {
-                $words[$i - 1][0]->setBold($result);
-                $words[$i][0]->setBold($result);
+                $words[$i - 1][$k]->setBold($result);
+                $words[$i][$j]->setBold($result);
             } else if (!isnull($words[$i])) {
                 $words[$i - 1]->setBold($result);
                 $words[$i]->setBold($result);
             }
-        }
+        }}
         return array_values($words);
     }
     public static function formIntersection($form1, $form2): array
@@ -839,7 +853,14 @@ class Merge
         } else if (is_array($value1) && is_array($value2)) {
             if(!is_string(array_keys($value1)[0]))
                 $value1 = array_merge($value1, $value2);
-            else $value1 = array_merge_recursive($value1, $value2);
+            else {
+                $value1 = array_merge_recursive($value1, $value2);
+                $keys = array_keys($value1);
+                for ($k = 0; $k < count($keys); $k++){
+                    $value1[$keys[$k]] = arrays::remove_null(array_values(array_unique($value1[$keys[$k]])));
+                }
+                return $value1;
+            }
         } else if (is_array($value2) || is_array($value1)) {
             if (is_array($value2)) {
                 $value2[] = $value1;

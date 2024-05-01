@@ -63,7 +63,7 @@ class WikiText
                         }
                     }
                 }
-                $base = Base::Parse($this->text, $this->lang, $this->word, $class);
+                $base = WikiText::Base($this->word);
                 return array_merge($wordArray, $base);
             case "cs":
                 if (!$derive)
@@ -103,11 +103,8 @@ class WikiText
                         }
                     }
                 }
-                //if (!$derived) {
-                    $base = Base::Parse($this->text, $this->lang, $this->word, $class);
-                    $wordArray = array_merge($wordArray, $base);
-                //}
-                return $wordArray;
+                    $base =  WikiText::Base($this->word);
+                return array_merge($wordArray, $base);
         }
     }
     private static function Base($base, $class = null)
@@ -166,7 +163,7 @@ class WikiText
             $searchStr = "# ''";
         $n = count($array);
         for ($i = $lang == "cs" ? 2 : 1; $i < $n; $i++) {
-            if (str_starts_with($array[$i], $searchStr) && $array[$i] != "head|la|conjunction" && !str_starts_with($array[$i], "head|la|pronoun"))
+            if (str_contains($array[$i], $searchStr) && $array[$i] != "head|la|conjunction" && !str_contains($array[$i], "head|la|pronoun"))
                 return true;
         }
         return false;

@@ -169,7 +169,7 @@ class Interpretation
         $translation = $word->getTranslation();
         $n = count($translation);
         for ($i = 0; $i < $n; $i++)
-            $str .= "<li>" . $translation[$i] . "</li>";
+            $str .= "<li>" . str_trim($translation[$i]) . "</li>";
         $type = Words::hasForms($word);
         if ($type == 1) $type = "skloňování";
         if ($type == 2) $type = "časování";

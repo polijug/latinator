@@ -47,7 +47,9 @@ class Noun extends Word
 
     public function setBold($array)
     {
-        $this->bold = $array;
+        if(isnull($this->bold))
+            $this->bold = $array;
+        else $this->bold = Merge::Values($this->bold, $array);
     }
     public function getDeclination()
     {
@@ -539,7 +541,9 @@ class JSONobj
     }
     public function setBold($bold)
     {
+        if(isnull($this->bold))
         $this->bold = $bold;
+    else $this->bold = Merge::Values($this->bold, $bold);
     }
     public function getBase(): string
     {
@@ -729,13 +733,12 @@ class Words
         $n = count($words);
         $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
         for ($i = 1; $i < $n; $i++) {
-            if (is_array($words[0])) {
-                $word1 = $words[$i][0];
-                $word2 = $words[$i - 1][0];
-            } else {
-                $word1 = $words[$i];
-                $word2 = $words[$i - 1];
-            }
+            if(!is_array($words[$i])) $words[$i] = [$words[$i]];
+            if(!is_array($words[$i-1])) $words[$i-1] = [$words[$i-1]];
+        for ($j = 0; $j < count($words[$i]); $j++)
+        for($k = 0; $k < count($words[$i-1]); $k++){
+                $word1 = $words[$i][$j];
+                $word2 = $words[$i - 1][$k];
             $result = [];
             if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
 
@@ -779,13 +782,13 @@ class Words
             }
             if ($result == []) continue;
             if (is_array($words[$i])) {
-                $words[$i - 1][0]->setBold($result);
-                $words[$i][0]->setBold($result);
+                $words[$i - 1][$k]->setBold($result);
+                $words[$i][$j]->setBold($result);
             } else if (!isnull($words[$i])) {
                 $words[$i - 1]->setBold($result);
                 $words[$i]->setBold($result);
             }
-        }
+        }}
         return array_values($words);
     }
     public static function formIntersection($form1, $form2): array

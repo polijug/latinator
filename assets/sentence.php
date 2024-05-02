@@ -8,6 +8,8 @@ class Sentence
   public $rank;
 
   public function __construct($sentence) {
+    global $output;
+    $output->setTitle($sentence);
     $sentence = self::Analysis($sentence);
     $this->sentence = $sentence;
     $this->count = count($sentence);
@@ -43,7 +45,7 @@ class Sentence
       $format = $this->format[$i];
       $short = $format["short"];
       $word = $words[$i][0]->getWord();
-      $style = $i == 0 ? "style='background-color: #005d69;'" : "";
+      $style = $i == 0 ? "style='background-color: #017a8a'" : "";
         $btn .= "<div class='word' id='$word' tabindex=$i $style title='" . $short[1] . "'>" . $short[2] . "</div>";
       $body .= "<item id='" . $word . "_body'><p>" . $short[0] . "</p>";
       $body .= $format["long"];

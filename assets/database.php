@@ -54,4 +54,12 @@ class Database
         if ($out == []) return false;
         return $out;
     }
+
+    public static function randomWord(){
+        $conn = self::connect();
+        $sql = "SELECT word FROM words ORDER BY RAND() LIMIT 3";
+        $result = $conn->query($sql)->fetch_all();
+        return($result);
+        mlog($result);
+    }
 }

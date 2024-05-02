@@ -7,15 +7,9 @@
     <meta content="Erža" name="author">
     <meta content="latina, latinský jazyk, skloňování, tabulky, překlad, výklad, slovník" name="keywords">
     <meta content="Latinátor je nástroje, poskytující analýzu latinského textu v češtině" name="description">
-    <title>[title]</title>
+    <title>[title] | Latinátor</title>
     <link href="assets/critical.css" rel="stylesheet" type="text/css">
     <link href="assets/latinator.webpp" rel="icon">
-    <style>
-        .search {
-            width: fit-content;
-            margin: 0 auto 0 auto;
-        }
-    </style>
     <!-- <base href=""> -->
 </head>
 
@@ -38,7 +32,7 @@
     <section>
         <div class="search">
             <form action=".">
-                <input type="search" id="s" name="s" placeholder="Hledat">
+                <input type="search" id="s" name="s" placeholder="[placeholder]" >
                 <input type="submit" value="Hledat">
             </form>
         </div>
@@ -65,7 +59,7 @@
                     if (element.style.display == "none") {
                         document.getElementById(last.id + "_body").style.display = "none";
                         last.style.background = "#008fa8"
-                        document.getElementById(id).style.background = "#005d69"
+                        document.getElementById(id).style.background = "#017a8a"
                         element.style.display = "inline";
                     } else {
                         element.style.display = "none";

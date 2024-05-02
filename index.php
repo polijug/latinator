@@ -94,9 +94,19 @@ class Output
     }
     public function return()
     {
+        $this->setPlaceholder();
         header('Content-type: text/html; charset=utf-8');
         print(str_replace(["[title]", "[content]"], "", $this->content));
         die;
+    }
+    public function setPlaceholder(){
+        $plac = Database::randomWord();
+        $str = "";
+        for($i = 0; $i < 3; $i++){
+            $str .= $plac[$i][0];
+            $str .= $i < 2 ? ", " : "...";
+        }
+        $this->content = str_replace("[placeholder]", $str, $this->content);
     }
     public function setTitle($title)
     {

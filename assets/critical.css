@@ -1,6 +1,7 @@
 :root {
     --Main: #005d69;
     --Secondary: #008fa8;
+    --Tertiary: #017a8a;
     --Back: #140e0f;
     --Text: #fff;
     --SText: #dbc8cb;
@@ -25,11 +26,6 @@ body {
 .logo {
     width: 20%;
     padding-right: 10px;
-}
-
-.search{
-    width: fit-content;
-    margin: 0 auto 0 auto;
 }
 
 .heading,
@@ -134,10 +130,29 @@ bold {
 .word {
     padding: 0 auto;
     text-align: center;
-    border: #008fa8 1px solid;
-    background-color: #008fa8;
+    border: var(--Secondary) 1px solid;
+    background-color: var(--Secondary);
     cursor: pointer;
     user-select: none;
     flex-grow: 1;
     margin-right: 0.5rem;
+}
+
+/**search**/
+.search{
+    width: fit-content;
+    margin: 5px auto 0 auto;
+}
+input[type=search]{
+    border:var(--Secondary) 1px solid;
+    background-color: var(--Tertiary);
+    
+}
+input[type=search]::placeholder{
+    color:var(--SText);
+}
+input[type=submit]{
+    background-color: var(--Tertiary);
+    border: 0px;
+    height: 19px;
 }

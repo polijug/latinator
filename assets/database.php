@@ -20,20 +20,24 @@ class Database
         $conn = self::connect();
         $n = count($word);
         for ($i = 0; $i < $n; $i++) {
-            if($word[$i] instanceof JSONobj) continue;
+            if ($word[$i] instanceof JSONobj) continue;
             $base = $word[$i]->getBase();
             $class = $word[$i]->getClass();
             $wor = $word[$i]->getWord();
-            if (Words::hasForms($word[$i]) > 0 && $word[$i]->getTable() != null && $word[$i]->getTable()->getValidity())
-                $table = htmlentities($word[$i]->getTable()->table);
             $json = $word[$i]->toJSON();
             $sql = "INSERT IGNORE INTO words (base, class, word, json) VALUES ('$base', '$class', '$wor',  \"$json\")";
-            if (isset($table))
-                $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$table');";
             $conn->query($sql);
-            $conn->query($tab);
         }
     }
+    public static function insertTable($str, $class, $base)
+    {
+        if(strlen($str) == 0) return;
+        $str = htmlentities($str);
+        $conn = self::connect();
+        $tab = "INSERT IGNORE INTO tables (base, class, tables) VALUES ('$base', '$class', '$str');";
+        $conn->query($tab);
+    }
+
     public static function getWordDB($word)
     {
         $conn = self::connect();
@@ -55,11 +59,11 @@ class Database
         return $out;
     }
 
-    public static function randomWord(){
+    public static function randomWord()
+    {
         $conn = self::connect();
         $sql = "SELECT word FROM words ORDER BY RAND() LIMIT 3";
         $result = $conn->query($sql)->fetch_all();
-        return($result);
-        mlog($result);
+        return ($result);
     }
 }

@@ -16,6 +16,7 @@ class Table
                     if ($lang == "en")
                         $table = Czech::TableTranslation(strtolower($table));
                     $this->table = str_replace("style", "xd", $table);
+                    Database::insertTable($this->table, $class, $word);
                 } catch (Exception $exception) {
                     $this->valid = false;
                 }

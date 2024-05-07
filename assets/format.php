@@ -164,7 +164,7 @@ class Interpretation
         return $short;
     }
     private static function Long($word)
-    {
+    { //and title
         $str = "<h4>Překlady</h4>";
         $translation = $word->getTranslation();
         $n = count($translation);

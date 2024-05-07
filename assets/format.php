@@ -168,7 +168,7 @@ class Interpretation
     private static function Title($word)
     {
         $translation = $word->getTranslation()[0];
-        return $word->base . " ($translation) - " . Czech::Class($word->getClass()) . ", " . self::DeclConj($word);
+        return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . ", " . self::DeclConj($word);
     }
 
     private static function DeclConj($word)
@@ -206,7 +206,7 @@ class Interpretation
         for ($k = 0; $k < $o; $k++) {
             $word = $words[$keys[$k]];
             $output[$keys[$k]] = [];
-            $n = count($word) / 2;
+            $n = count($word) / 3; //because there are three - word, long and title
             for ($i = 0; $i < $n; $i++) {
                 $short = "<bold>" . $word["title_$i"] . "</bold><br>";
                 if (is_array($word[$i]))

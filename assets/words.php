@@ -47,7 +47,7 @@ class Noun extends Word
 
     public function setBold($array)
     {
-        if(isnull($this->bold))
+        if (isnull($this->bold))
             $this->bold = $array;
         else $this->bold = Merge::Values($this->bold, $array);
     }
@@ -61,7 +61,14 @@ class Noun extends Word
     }
     public function getTable()
     {
-        return $this->table ?? null;
+        if (is_string($this->table)) {
+            $table = new Table();
+            $table->table = $this->table;
+            $table->setValidity();
+            $this->table = $table;
+        } else $table = $this->table;
+
+        return $table ?? null;
     }
 
     public function getBold()
@@ -543,7 +550,7 @@ class JSONobj
     }
     public function setBold($bold)
     {
-        if(isnull($this->bold))
+        if (isnull($this->bold))
         $this->bold = $bold;
     else $this->bold = Merge::Values($this->bold, $bold);
     }
@@ -579,9 +586,13 @@ class JSONobj
 
     public function getTable(): Table
     {
+        if (is_string($this->table)) {
         $table = new Table();
         $table->table = $this->table;
         $table->setValidity();
+            $this->table = $table;
+        } else $table = $this->table;
+
         return $table;
     }
 

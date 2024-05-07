@@ -149,9 +149,9 @@ class Noun extends Word
         if ($full) {
             $word->form = (array)$word->form;
             $word->form[$this->number] = isset($word->form[$this->number]) ?
-                    Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
-                $this->form = $word->form;
-                $this->number = Merge::Values($this->number, $word->number);
+                Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
+            $this->form = $word->form;
+            $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
         $this->translation = Merge::Values($this->translation, $word->translation);
@@ -551,8 +551,8 @@ class JSONobj
     public function setBold($bold)
     {
         if (isnull($this->bold))
-        $this->bold = $bold;
-    else $this->bold = Merge::Values($this->bold, $bold);
+            $this->bold = $bold;
+        else $this->bold = Merge::Values($this->bold, $bold);
     }
     public function getBase(): string
     {
@@ -587,9 +587,9 @@ class JSONobj
     public function getTable(): Table
     {
         if (is_string($this->table)) {
-        $table = new Table();
-        $table->table = $this->table;
-        $table->setValidity();
+            $table = new Table();
+            $table->table = $this->table;
+            $table->setValidity();
             $this->table = $table;
         } else $table = $this->table;
 
@@ -734,10 +734,10 @@ class Words
 
     public static function Merge($words): ?array
     {
-        if(isnull($words)) return [];
+        if (isnull($words)) return [];
         $n = count($words);
         for ($i = 0; $i < $n; $i++)
-            for($j = $i+1; $j < $n; $j++) {
+            for ($j = $i + 1; $j < $n; $j++) {
                 if ($words[$i]->isSame($words[$j])) {
                     $words[$i]->Merge($words[$j]);
                     unset($words[$j]);
@@ -754,63 +754,64 @@ class Words
         $n = count($words);
         $pairable = ["noun", "adjective", "numeral", "pronoun", "preposition"];
         for ($i = 1; $i < $n; $i++) {
-            if(!is_array($words[$i])) $words[$i] = [$words[$i]];
-            if(!is_array($words[$i-1])) $words[$i-1] = [$words[$i-1]];
-        for ($j = 0; $j < count($words[$i]); $j++)
-        for($k = 0; $k < count($words[$i-1]); $k++){
-                $word1 = $words[$i][$j];
-                $word2 = $words[$i - 1][$k];
-            $result = [];
-            if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
-            if($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
+            if (!is_array($words[$i])) $words[$i] = [$words[$i]];
+            if (!is_array($words[$i - 1])) $words[$i - 1] = [$words[$i - 1]];
+            for ($j = 0; $j < count($words[$i]); $j++)
+                for ($k = 0; $k < count($words[$i - 1]); $k++) {
+                    $word1 = $words[$i][$j];
+                    $word2 = $words[$i - 1][$k];
+                    $result = [];
+                    if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
+                    if ($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
 
-            $numbers = self::formIntersection($word1->getNumber(), $word2->getNumber());
-            $gender = self::formIntersection($word1->getGender(), $word2->getGender());
+                    $numbers = self::formIntersection($word1->getNumber(), $word2->getNumber());
+                    $gender = self::formIntersection($word1->getGender(), $word2->getGender());
 
-            $m = count($numbers);
-            if ($word1->getClass() == "preposition" xor $word2->getClass() == "preposition") {
-                if ($word1->getClass() == "preposition") {
-                    $preposition =  $word1;
-                    $other = $word2;
-                } else {
-                    $preposition =  $word2;
-                    $other = $word1;
-                }
-                $keys = array_keys($other->getForm());
-                $n = count($keys);
-                for ($i = 0; $i < $n; $i++) {
-                    $result[$keys[$i]] = Words::formIntersection($other->getForm(), $preposition->getWith());
-                }
-            } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
-                for ($j = 0; $j < $m; $j++) {
-                    if ($word1->getClass() != "adjective" and $word2->getClass() != "adjective")
-                        $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($word1->getForm()[$numbers[$j]], $word2->getForm()[$numbers[$j]]);
-                    else if ($word1->getClass() == "adjective" xor $word2->getClass() == "adjective") {
-                        $adjective = $word1->getClass() == "adjective" ? $word1 : $word2;
-                        $other = $word2->getClass() != "adjective" ? $word2 : $word1;
-                        if (isset($adjective->getForm()[$gender[0] . "_" . $numbers[$j]]) && isset($other->getForm()[$numbers[$j]]))
-                            $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($adjective->getForm()[$gender[0] . "_" . $numbers[$j]], $other->getForm()[$numbers[$j]]);
+                    $m = count($numbers);
+                    if ($word1->getClass() == "preposition" xor $word2->getClass() == "preposition") {
+                        if ($word1->getClass() == "preposition") {
+                            $preposition =  $word1;
+                            $other = $word2;
+                        } else {
+                            $preposition =  $word2;
+                            $other = $word1;
+                        }
+                        $keys = array_keys($other->getForm());
+                        $n = count($keys);
+                        for ($i = 0; $i < $n; $i++) {
+                            $result[$keys[$i]] = Words::formIntersection($other->getForm(), $preposition->getWith());
+                        }
+                    } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
+                        for ($j = 0; $j < $m; $j++) {
+                            if ($word1->getClass() != "adjective" and $word2->getClass() != "adjective")
+                                $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($word1->getForm()[$numbers[$j]], $word2->getForm()[$numbers[$j]]);
+                            else if ($word1->getClass() == "adjective" xor $word2->getClass() == "adjective") {
+                                $adjective = $word1->getClass() == "adjective" ? $word1 : $word2;
+                                $other = $word2->getClass() != "adjective" ? $word2 : $word1;
+                                if (isset($adjective->getForm()[$gender[0] . "_" . $numbers[$j]]) && isset($other->getForm()[$numbers[$j]]))
+                                    $result[$gender[0] . "_" . $numbers[$j]] = self::formIntersection($adjective->getForm()[$gender[0] . "_" . $numbers[$j]], $other->getForm()[$numbers[$j]]);
+                            }
+                        }
+                    else if (!isnull($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
+                        $keys = array_keys($word2->getBold());
+                        for ($k = 0; $k < count($keys); $k++)
+                            if (array_key_exists($keys[$k], $word1->getForm()))
+                                $result[$keys[$k]] = self::formIntersection($word2->getBold()[$keys[$k]], $word1->getForm()[$keys[$k]]);
+                    } else {
+                        $keys = self::formIntersection(array_keys($word1->getForm()), array_keys($word2->getForm()));
+                        for ($k = 0; $k < count($keys); $k++)
+                            $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
+                    }
+                    if ($result == []) continue;
+                    if (is_array($words[$i])) {
+                        $words[$i - 1][$k]->setBold($result);
+                        $words[$i][$j]->setBold($result);
+                    } else if (!isnull($words[$i])) {
+                        $words[$i - 1]->setBold($result);
+                        $words[$i]->setBold($result);
                     }
                 }
-            else if (!isnull($word2->getBold())) { //if is present search by this, if not same return, else for each gender find corelation (if index isnt present continue)
-                $keys = array_keys($word2->getBold());
-                for ($k = 0; $k < count($keys); $k++)
-                    if (array_key_exists($keys[$k], $word1->getForm()))
-                        $result[$keys[$k]] = self::formIntersection($word2->getBold()[$keys[$k]], $word1->getForm()[$keys[$k]]);
-            } else {
-                $keys = self::formIntersection(array_keys($word1->getForm()), array_keys($word2->getForm()));
-                for ($k = 0; $k < count($keys); $k++)
-                    $result[$keys[$k]] = self::formIntersection($word2->getForm()[$keys[$k]], $word1->getForm()[$keys[$k]]);
-            }
-            if ($result == []) continue;
-            if (is_array($words[$i])) {
-                $words[$i - 1][$k]->setBold($result);
-                $words[$i][$j]->setBold($result);
-            } else if (!isnull($words[$i])) {
-                $words[$i - 1]->setBold($result);
-                $words[$i]->setBold($result);
-            }
-        }}
+        }
         return array_values($words);
     }
     public static function formIntersection($form1, $form2): array
@@ -836,11 +837,11 @@ class Words
         $out->word = $word->word;
         $out->translation = $word->translation;
         if (isset($word->gender)) $out->gender = $word->gender;
-        if (isset($word->form)) $out->form = $word->form;
+        if (isset($word->form)) $out->form = (array)$word->form;
         if (isset($word->number)) $out->number = $word->number;
         if (isset($table)) $out->table = html_entity_decode($table);
         if (isset($word->tense)) $out->tense = $word->tense;
-        if (isset($word->person)) $out->person = $word->person;
+        if (isset($word->person)) $out->person = (array)$word->person;
         if (isset($word->mood)) $out->mood = $word->mood;
         if (isset($word->with)) $out->with = $word->with;
         if (isset($word->conjugation)) $out->conjugation = $word->conjugation;
@@ -854,7 +855,7 @@ class Merge
 {
     public static function Values($value1, $value2, $sidetoside = false): array
     {
-        if(isnull($value1) && isnull($value2))
+        if (isnull($value1) && isnull($value2))
             return [];
         if ($sidetoside) $value1 = [$value1, $value2];
         if (isnull($value1) || isnull($value2)) {
@@ -862,12 +863,12 @@ class Merge
                 $value1 = [!isnull($value1) ? $value1 : $value2];
             $value1 = !isnull($value1) ? $value1 : $value2;
         } else if (is_array($value1) && is_array($value2)) {
-            if(!is_string(array_keys($value1)[0]))
+            if (!is_string(array_keys($value1)[0]))
                 $value1 = array_merge($value1, $value2);
             else {
                 $value1 = array_merge_recursive($value1, $value2);
                 $keys = array_keys($value1);
-                for ($k = 0; $k < count($keys); $k++){
+                for ($k = 0; $k < count($keys); $k++) {
                     $value1[$keys[$k]] = arrays::remove_null(array_values(array_unique($value1[$keys[$k]])));
                 }
                 return $value1;

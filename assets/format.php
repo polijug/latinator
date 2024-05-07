@@ -19,7 +19,7 @@ class Interpretation
                 $this->word[] = $word[$i];
             else {
                 $this->word[] = $word[$i] ? Words::Merge($word[$i]) : false;
-                if($this->word[$i])
+                if ($this->word[$i])
                     Database::insert($this->word[$i]);
             }
         if ($n > 1)
@@ -108,6 +108,7 @@ class Interpretation
                         break;
                 }
                 $str[$base]["long_$p"] = self::Long($this->word[$i][$p]);
+                $str[$base]["title_$p"] = self::Title($this->word[$i][$p]);
             }
         }
         $this->format = self::Build($str);
@@ -129,7 +130,7 @@ class Interpretation
                 $gender = "";
                 $deklinace = "";
                 if (!isnull($word->getDeclination()))
-                    $deklinace = is_array($word->getDeclination()) ? ", ". implode(". / ", $word->getDeclination()) . ". deklinace " : ", ".$word->getDeclination() . ". deklinace ";
+                    $deklinace = is_array($word->getDeclination()) ? ", " . implode(". / ", $word->getDeclination()) . ". deklinace " : ", " . $word->getDeclination() . ". deklinace ";
                 if (!isnull($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
                 if (isset($variables["gender"]) && !isnull($variables["gender"]) && $variables["gender"] != "")
@@ -143,8 +144,9 @@ class Interpretation
                 break;
             case "verb":
                 $conjugation = "";
-                if (!isnull($word->getConjugation()))
+                if (!isnull($word->getConjugation())) if (!isnull($word->getConjugation()))
                     $conjugation = ", " .  $word->getConjugation() . ". konjugace";
+                $conjugation = ", " .  $word->getConjugation() . ". konjugace";
                 $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
@@ -163,6 +165,20 @@ class Interpretation
         }
         return $short;
     }
+    private static function Title($word)
+    {
+        $translation = $word->getTranslation()[0];
+        return $word->base . " ($translation) - " . Czech::Class($word->getClass()) . ", " . self::DeclConj($word);
+    }
+
+    private static function DeclConj($word)
+    {
+        if (!isnull($word->getDeclination()))
+            return is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ";
+        if (!isnull($word->getConjugation()))
+            return $word->getConjugation() . ". konjugace";
+    }
+
     private static function Long($word)
     { //and title
         $str = "<h4>Překlady</h4>";
@@ -178,7 +194,7 @@ class Interpretation
             $str .= $word->getTable()->table;
         }
         $base = $word->getBase();
-        $str .= "<small>Zdroj a další informace:<br><a target=_blank href=https://en.wiktionary.org/wiki/$base#Latin>Wiktionary ($base)</a><br>" . 
+        $str .= "<small>Zdroj a další informace:<br><a target=_blank href=https://en.wiktionary.org/wiki/$base#Latin>Wiktionary ($base)</a><br>" .
             "<a target=_blank href=https://cs.wiktionary.org/wiki/$base#latina>Wikislovník ($base)</a></small>";
         return $str;
     }
@@ -192,11 +208,11 @@ class Interpretation
             $output[$keys[$k]] = [];
             $n = count($word) / 2;
             for ($i = 0; $i < $n; $i++) {
-                $short = "";
+                $short = "<bold>" . $word["title_$i"] . "</bold><br>";
                 if (is_array($word[$i]))
                     for ($j = 0; $j < count($word[$i]); $j++)
                         $short .= $word[$i][$j] . "<br>";
-                if ($short == "") $short = $word[$i];
+                else $short .= $word[$i];
                 $str = "<details><summary>" . $short . "</summary>";
                 $str .= "<div>" . $word["long_$i"] . "</div></details>";
                 $output[$keys[$k]][] = $str;

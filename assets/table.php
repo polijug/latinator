@@ -1,7 +1,7 @@
 <?php
 class Table
 {
-    public function __construct($class = "", $word ="", $lang = "")
+    public function __construct($class = "", $word = "", $lang = "")
     {
         switch ($class) {
             case "noun":
@@ -12,7 +12,7 @@ class Table
                 try {
                     $table = "<table" . strip_tags(explode("</table", explode("<table", self::retrieveTable($word, $class, $lang), 2)[1], 2)[0], ["tr", "br", "th", "td", "table"]) . "</table>";
                     if (strlen($table) == 14) $this->valid = false;
-                    $table = preg_replace(["/\([^)]+\)/i", "/\d/i"], "", $table);
+                    $table = preg_replace(["/\([^)]+\)/i"/*, "/\d/i"*/], "", $table);
                     if ($lang == "en")
                         $table = Czech::TableTranslation(strtolower($table));
                     $this->table = str_replace("style", "xd", $table);
@@ -28,9 +28,6 @@ class Table
     }
     public $table;
     private $valid = true;
-    public function getFormatedTable($word)
-    {
-    }
 
     private function toBold($word)
     {
@@ -43,7 +40,8 @@ class Table
 
         return $this->valid && !isnull($this->table) && $this->table != "";
     }
-    public function setValidity(){
+    public function setValidity()
+    {
         $this->valid = true;
     }
     public static function parseSections($word, $class, $lang)

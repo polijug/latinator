@@ -163,7 +163,7 @@ class Interpretation
         $translation = $word->getTranslation()[0];
 
         return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . self::DeclConj($word);
-    }>>>>>>> dev
+    }
 
     private static function DeclConj($word)
     {

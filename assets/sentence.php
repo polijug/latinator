@@ -166,7 +166,7 @@ class Sentence
 						}
 						break;
 					case "verb":
-						if ($candidate == "" || explode("_", $candidate)[0] < 2) //podmínka, ale jaká?
+						if ($candidate == "" || explode("_", $candidate)[0] < 2)//podmínka, ale jaká?
 							$candidate = 2 . "_" . $j;
 						if ($i == $n - 1 && $firstPerson != -1) {
 							$keys = array_keys($word->getPerson());
@@ -254,7 +254,7 @@ class Sentence
 						$val = 1;
 					default:
 					    $val = !isset($val) ? 0 : $val;
-						if ($candidate == "")
+						if ($candidate == "" || explode("_", $candidate)[0] < $val)
 							$candidate = $val . "_$j";
 						if ($obey) {
 							$shortW = new Connective($word->getBase(), $word->getTranslation());
@@ -269,6 +269,7 @@ class Sentence
 					$j = explode("_", $candidate)[1] - 1;
 					$obey = true;
 				}
+				$val = null;
 			}
 			$short = false;
 			if ($end && isset($shortW)) {

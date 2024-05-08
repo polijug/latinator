@@ -128,9 +128,6 @@ class Interpretation
                     $variables = ["bold" => $b];
                 }
                 $gender = "";
-                $deklinace = "";
-                if (!isnull($word->getDeclination()))
-                    $deklinace = is_array($word->getDeclination()) ? ", " . implode(". / ", $word->getDeclination()) . ". deklinace " : ", " . $word->getDeclination() . ". deklinace ";
                 if (!isnull($word->getGender()) && !is_array($word->getGender()) && $word->getGender() != "")
                     $gender = " " . Czech::Gender($word->getGender()) . "a";
                 if (isset($variables["gender"]) && !isnull($variables["gender"]) && $variables["gender"] != "")
@@ -140,27 +137,23 @@ class Interpretation
                     $boldS = "<bold>";
                     $boldE = "</bold>";
                 }
-                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . ", " . Czech::Class($word->getClass()) . " " . $base . $boldE . $deklinace;
+                $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . $boldE;
                 break;
             case "verb":
-                $conjugation = "";
-                if (!isnull($word->getConjugation())) if (!isnull($word->getConjugation()))
-                    $conjugation = ", " .  $word->getConjugation() . ". konjugace";
-                $conjugation = ", " .  $word->getConjugation() . ". konjugace";
                 $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
-                        Czech::Mood($word->getMood()) . ", " . Czech::Class($word->getClass()) . " " . $base . $conjugation;
+                        Czech::Mood($word->getMood());
                 } else
                     $short = "infinitiv slovesa " . $base;
                 break;
             case "adverb":
             case "connective":
-                $short = Czech::Class($word->getClass()) . " " . $base;
+                $short = "";
                 break;
             case "preposition":
-                $short = Czech::Class($word->getClass()) . " s " . Czech::Form($variables != null ? $variables["with"] : $word->getWith()) . "em, " . $base;
+                $short = "s " . Czech::Form($variables != null ? $variables["with"] : $word->getWith()) . "em";
                 break;
         }
         return $short;
@@ -168,15 +161,17 @@ class Interpretation
     private static function Title($word)
     {
         $translation = $word->getTranslation()[0];
-        return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . ", " . self::DeclConj($word);
-    }
+
+        return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . self::DeclConj($word);
+    }>>>>>>> dev
 
     private static function DeclConj($word)
     {
+        if(Words::hasForms($word) == 0) return "";
         if (!isnull($word->getDeclination()))
-            return is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ";
+            return ", " .  (is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ");
         if (!isnull($word->getConjugation()))
-            return $word->getConjugation() . ". konjugace";
+            return ", " . $word->getConjugation() . ". konjugace";
     }
 
     private static function Long($word)
@@ -187,7 +182,7 @@ class Interpretation
         for ($i = 0; $i < $n; $i++)
             $str .= "<li>" . str_trim($translation[$i]) . "</li>";
         $type = Words::hasForms($word);
-        if ($type == 1) $type = "skloňování";
+        if ($type == 1) $type = "skloňování"; 
         if ($type == 2) $type = "časování";
         if (is_string($type) && $word->getTable() != null && $word->getTable()->getValidity()) {
             $str .= "<p> <h4>Tabulka $type</h4>";

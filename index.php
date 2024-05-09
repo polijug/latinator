@@ -31,14 +31,14 @@ set_error_handler("error_handler", E_ERROR);
 register_shutdown_function("fatal_handler");
 
 $start = microtime(true);
-const version = "0.2";
+const version = "0.3.1";
 $output = new Output();
 
 $sentence = GExisT("s"); //"s" stands for sentence
 $definition = GExisT("d");
 
 if (!$sentence && !$definition) { //show main page
-    echo file_get_contents("assets/lp.html");
+    echo file_get_contents("assets/head.html") . file_get_contents("assets/lp.html");
     die("<H1 style='color: red'> Na stránce se pracuje! </H1>");
 } else if ($sentence && !$definition) {
     $sent = new Sentence($sentence);
@@ -152,7 +152,7 @@ class Output
 {
     public function __construct()
     {
-        $this->content = str_replace("[year]", date("Y"), file_get_contents("assets/main.html"));
+        $this->content = file_get_contents("assets/head.html") . str_replace("[year]", date("Y"), file_get_contents("assets/main.html"));
     }
     public function return()
     {

@@ -38,6 +38,7 @@ $sentence = GExisT("s"); //"s" stands for sentence
 $definition = GExisT("d");
 
 if (!$sentence && !$definition) { //show main page
+    echo file_get_contents("assets/lp.html");
     die("<H1 style='color: red'> Na stránce se pracuje! </H1>");
 } else if ($sentence && !$definition) {
     $sent = new Sentence($sentence);

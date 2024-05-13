@@ -31,6 +31,11 @@ class Table
 
     private function toBold($word)
     {
+            $search = preg_quote($word);
+
+            $search = str_replace(['a', "e", "i", "o"/*, "u"*/], ['(a|ā)', "(e|ē)", "(i|ī)", "(o|ō)"], $search);
+
+            return preg_replace('/\b' . $search . '\b/iu', '<b>$0</b>', $this->table);
     }
 
     public function getValidity()

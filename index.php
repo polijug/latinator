@@ -167,7 +167,7 @@ class Output
         $this->printed = true;
         $this->setPlaceholder();
         header('Content-type: text/html; charset=utf-8');
-        print(str_replace(["[title]", "[content]"], "", $this->content));
+        print(str_replace(["[title] |", "[content]", "[title]"], "", $this->content));
         die;
     }
     public function setPlaceholder()

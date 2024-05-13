@@ -70,9 +70,8 @@ function MLog($text, $die = false)
 
 function jsonEncode($object)
 {
-    mlog($object);
     if (is_array($object))
-        return str_replace(['"', "''", ",,"], ["'", "", ","], json_encode($object, JSON_UNESCAPED_UNICODE));
+        return str_replace(['"', "''", ",,"], ["'", "", ","], json_encode(arrays::remove_null($object), JSON_UNESCAPED_UNICODE));
     return "'" . str_replace(["'", '"'], "", $object) . "'";
 }
 

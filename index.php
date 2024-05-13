@@ -32,14 +32,17 @@ register_shutdown_function("fatal_handler");
 
 $start = microtime(true);
 const version = "0.3.1";
-$output = new Output();
 
 $sentence = GExisT("s"); //"s" stands for sentence
 $definition = GExisT("d");
 
+if (!$sentence && !$definition)
+    $output = new Output(true);
+else
+    $output = new Output();
+
 if (!$sentence && !$definition) { //show main page
-    echo str_replace("[title] | ", "", file_get_contents("assets/head.html") . file_get_contents("assets/lp.html"));
-    die("<H1 style='color: red'> Na stránce se pracuje! </H1>");
+    $output->return();
 } else if ($sentence && !$definition) {
     $sent = new Sentence($sentence);
     $sent->Formate();
@@ -47,6 +50,7 @@ if (!$sentence && !$definition) { //show main page
     $def = new Definition($definition);
     $def->print();
 } else {
+    exit;
     //chyba
 }
 
@@ -114,7 +118,8 @@ function error_handler($eN, $eMessage, $eFile, $eLine, $eContext)
     $str</details>", true);
 }
 
-function email($to, $from, $text, $subject){
+function email($to, $from, $text, $subject)
+{
     $mail = new PHPMailer(true);
     $mail->setLanguage('cs', 'libraries/PHPMailer/language');
     $mail->isSMTP();
@@ -150,12 +155,20 @@ function fatal_handler()
 
 class Output
 {
-    public function __construct()
+    public function __construct($lp = false)
     {
-        $this->content = file_get_contents("assets/head.html") . str_replace("[year]", date("Y"), file_get_contents("assets/main.html"));
+        $file = file_get_contents("assets/head.html");
+        if ($lp)
+            $file .= str_replace("[title] | ", "", file_get_contents("assets/lp.html"));
+        else
+            $file .= file_get_contents("assets/main.html");
+        $file .= file_get_contents("assets/footer.html");
+        $this->content = str_replace("[year]", date("Y"), $file);
     }
     public function return()
     {
+        if ($this->printed) die;
+        $this->printed = true;
         $this->setPlaceholder();
         header('Content-type: text/html; charset=utf-8');
         print(str_replace(["[title]", "[content]"], "", $this->content));
@@ -186,4 +199,5 @@ class Output
         if ($die) $this->return();
     }
     private $content;
+    private $printed = false;
 }

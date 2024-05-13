@@ -139,7 +139,8 @@ bold {
 }
 
 /**search**/
-.search{
+search{
+    display: block;
     width: fit-content;
     margin: 5px auto 0 auto;
 }

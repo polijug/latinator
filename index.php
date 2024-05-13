@@ -105,7 +105,7 @@ function error_handler($eN, $eMessage, $eFile, $eLine, $eContext)
     v souboru: $eFile : $eLine<p>
     Chyba: <code>$eMessage</code>";
     global $output;
-    email("erza@erza.cz", "erza@erza.cz", $str, "Chyba Latinatoru $eFile : $eLine");
+    //email("erza@erza.cz", "erza@erza.cz", $str, "Chyba Latinatoru $eFile : $eLine");
     $output->setContent("<h1>Chyba vyhledávání slov</h1>
     Taková chyba se může vyskytnout, obzvláště na nově zavedené stránce. <p>
     Doporučuji překontrolovat zadání, nebo zkusit hledání s jiným dotazem. Chybu vykazuje většinou jen jedno ze slov. <p>

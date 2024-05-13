@@ -52,7 +52,7 @@ nav {
     background-color: var(--Secondary);
 }
 
-nav>ul {
+nav>div {
     list-style: none;
     margin: 0 auto 0 auto;
     max-width: fit-content;
@@ -60,14 +60,19 @@ nav>ul {
     user-select: none;
 }
 
-nav>ul>li {
+nav>div>button {
     display: inline-block;
     padding: 5px 10px 5px 10px;
+    color: var(--Text);
     font-size: 1.5rem;
-    background-color: var(--Main);
-    border: solid 1px var(--Secondary);
+    background-color: var(--Tertiary);
+    border: solid 1px var(--Main);
     margin: 1px;
     cursor: pointer;
+}
+
+nav>div>button:hover{
+    background-color: var(--Main);
 }
 
 a {

@@ -10,9 +10,9 @@ class Table
             case "adjective":
             case "verb":
                 try {
-                    $table = "<table" . strip_tags(explode("</table", explode("<table", self::retrieveTable($word, $class, $lang), 2)[1], 2)[0], ["tr", "br", "th", "td", "table"]) . "</table>";
+                    $table = "<table" . strip_tags(explode("</table", explode("<table", self::retrieveTable($word, $class, $lang), 2)[1], 2)[0], ["tr", "br", "th", "td", "table", "sup"]) . "</table>";
                     if (strlen($table) == 14) $this->valid = false;
-                    $table = preg_replace(["/\([^)]+\)/i"/*, "/\d/i"*/], "", $table);
+                    $table = preg_replace(["/\([^)]+\)/i", "/\d<\/sup>/i"], "", $table);
                     if ($lang == "en")
                         $table = Czech::TableTranslation(strtolower($table));
                     $this->table = str_replace("style", "xd", $table);
@@ -29,8 +29,13 @@ class Table
     public $table;
     private $valid = true;
 
-    private function toBold($word)
+    public function toBold($word)
     {
+            $search = preg_quote($word);
+
+            $search = str_replace(['a', "e", "i", "o"/*, "u"*/], ['(a|ā)', "(e|ē)", "(i|ī)", "(o|ō)"], $search);
+
+            return preg_replace('/\b' . $search . '\b/iu', '<b>$0</b>', $this->table);
     }
 
     public function getValidity()

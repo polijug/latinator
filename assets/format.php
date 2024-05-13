@@ -186,7 +186,7 @@ class Interpretation
         if ($type == 2) $type = "časování";
         if (is_string($type) && $word->getTable() != null && $word->getTable()->getValidity()) {
             $str .= "<p> <h4>Tabulka $type</h4>";
-            $str .= $word->getTable()->table;
+            $str .= $word->getTable()->toBold($word->getWord());
         }
         $base = $word->getBase();
         $str .= "<small>Zdroj a další informace:<br><a target=_blank href=https://en.wiktionary.org/wiki/$base#Latin>Wiktionary ($base)</a><br>" .

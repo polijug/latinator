@@ -33,7 +33,6 @@ class Sentence
 		$this->format = $format->format;
 		$this->words = $format->word;
 		$this->Decide();
-		mlog($this->words);
 		$this->Print();
 	}
 	private static function Analysis($sentence)

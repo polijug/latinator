@@ -868,6 +868,13 @@ class Merge
             else {
                 $value1 = array_merge_recursive($value1, $value2);
                 $keys = array_keys($value1);
+                /*$keys2 = array_keys($value2);
+                if($keys != $keys2){
+                    $keys = array_unique(array_merge($keys, $keys2));
+                    for($i = 0; $i < count($keys); $i++)
+                        if(!key_exists($keys[$i], $value1))
+                            $value1[$keys[$i]] = $value2[$keys[$i]];
+                }*/
                 for ($k = 0; $k < count($keys); $k++) {
                     $value1[$keys[$k]] = arrays::remove_null(array_values(array_unique($value1[$keys[$k]])));
                 }

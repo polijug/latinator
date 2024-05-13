@@ -34,3 +34,40 @@
             <input type="submit" value="Hledat">
         </form>
     </search>
+    <script>
+        if(findGetParameter("s") !== null || findGetParameter("d") === null && findGetParameter("s") === null) {document.getElementById("preklad").style.background = "var(--Main)"
+		document.getElementById("s").name = "s"
+		}
+        if(findGetParameter("d") !== null){ document.getElementById("vyklad").style.background = "var(--Main)"
+		document.getElementById("s").name = "d"
+		}
+
+        document.getElementById("preklad").addEventListener("click", (event) => menu(event))
+        document.getElementById("vyklad").addEventListener("click", (event) => menu(event))
+
+        function menu(event){
+            let target = event.target;
+            if(target.id == "preklad"){
+                if(findGetParameter("d") !== null)
+                    location.href = "?s=" + findGetParameter("d")
+                else location.href = "?s="
+            }else{
+                if(findGetParameter("s") !== null)
+                    location.href = "?d=" + findGetParameter("s")
+                else location.href = "?d="
+            }
+            console.log(event)
+        }
+        function findGetParameter(parameterName) {
+            let result = null,
+                tmp = [];
+            location.search
+                .substring(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+    </script>

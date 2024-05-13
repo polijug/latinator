@@ -30,7 +30,6 @@ require 'libraries/PHPMailer/src/SMTP.php';
 set_error_handler("error_handler", E_ERROR);
 register_shutdown_function("fatal_handler");
 
-$start = microtime(true);
 const version = "0.3.1";
 
 $sentence = GExisT("s"); //"s" stands for sentence
@@ -51,11 +50,8 @@ if (!$sentence && !$definition) { //show main page
     $def->print();
 } else {
     exit;
-    //chyba
+    //report error
 }
-
-$time_elapsed_secs = microtime(true) - $start;
-MLog($time_elapsed_secs, true);
 
 //better usage
 function GExisT($string)

@@ -2,12 +2,25 @@
 class arrays
 {
     public static function remove_null($array){
-        for($i = 0; $i < count($array); $i++){
-            if($array[$i] == null){
-                unset($array[$i]);
+        $keys = array_keys($array);
+        if(!is_string($keys[0])) {
+            for ($i = 0; $i < count($array); $i++) {
+                if ($array[$i] == null) {
+                    unset($array[$i]);
+                }
             }
+            return array_values($array);
+        } else{
+            for ($i = 0; $i < count($keys); $i++) {
+                if(is_array($array[$keys[$i]]))
+                    $array[$keys[$i]] = self::remove_null($array[$keys[$i]]);
+                if($array[$keys[$i]] == null)
+                    unset($array[$keys[$i]]);
+                if($keys[$i] == "")
+                    unset($array[$keys[$i]]);
+            }
+            return $array;
         }
-        return array_values($array);
     }
     static function array_name_slice($array, $startname, $avoid = 0)
     {

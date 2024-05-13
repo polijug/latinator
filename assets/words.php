@@ -148,9 +148,7 @@ class Noun extends Word
     {
         if ($full) {
             $word->form = (array)$word->form;
-            $word->form[$this->number] = isset($word->form[$this->number]) ?
-                Words::sortForms(Merge::Values($this->form[$this->number], $word->form[$this->number])) : $this->form[$this->number];
-            $this->form = $word->form;
+            $this->form = Merge::Values($word->form, $this->form);
             $this->number = Merge::Values($this->number, $word->number);
         }
         $this->gender = Merge::Values($this->gender, $word->gender);
@@ -866,11 +864,9 @@ class Merge
             if (!is_string(array_keys($value1)[0]))
                 $value1 = array_merge($value1, $value2);
             else {
-                $value1 = array_merge_recursive($value1, $value2);
-                $keys = array_keys($value1);
-                for ($k = 0; $k < count($keys); $k++) {
-                    $value1[$keys[$k]] = arrays::remove_null(array_values(array_unique($value1[$keys[$k]])));
-                }
+                $keys = array_unique(array_merge(array_keys($value1), array_keys($value2)));
+                for($i = 0; $i < count($keys); $i++)
+                    $value1[$keys[$i]] = arrays::remove_null(self::Values($value1[$keys[$i]], $value2[$keys[$i]]));
                 return $value1;
             }
         } else if (is_array($value2) || is_array($value1)) {

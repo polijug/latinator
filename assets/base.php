@@ -357,7 +357,7 @@ class Inflections
                                 "futrperf", //tense
                                 (int) $info[2], //person
                                 $info[6], //gender
-                                $info[7],
+                                substr($info[7], 0, 3),
                                 null,
                                 $translation ?? null
                             );
@@ -381,7 +381,7 @@ class Inflections
                                 $info[2], //tense
                                 0, //person
                                 $info[3], //gender
-                                $info[4],
+                                substr($info[4], 0, 3),
                                 null,
                                 $translation ?? null
                             );

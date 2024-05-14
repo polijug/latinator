@@ -112,7 +112,7 @@ class WikiText
         $words = Database::getWordDB(new Word($base, $class));
         if ($words) return $words;
         $text = WikiText::Isolate(API::enDict($base),"en", false);
-        $cstext = WikiText::Isolate(API::csDict($base), "cs");
+        $cstext = WikiText::Isolate(API::csDict($base), "cs", false);
         if (count($text) == 0 && count($cstext) == 0) return false;
         if ($class != null) {
             $text = arrays::array_name_slice($text, "===" . ucfirst($class) . "===");

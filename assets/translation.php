@@ -29,6 +29,11 @@ class Translate
                 $translations = array_values(str_replace("# ", "", array_filter($text, function ($val) {
                     return str_starts_with($val, "# ");
                 })));
+                $n = count($translations);
+                for ($i = 0; $i < $n; $i++) {
+                    $translations[$i] = str_trim(preg_replace("/(\{[a-z]\|[a-z]{2}\||\{[^}]+}|})/i", "", $translations[$i]));
+                }
+
                 return array_values(explode(", ", implode(", ", str_replace(["|", "/"], ", ", $translations))));
         }
     }

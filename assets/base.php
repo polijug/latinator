@@ -312,6 +312,7 @@ class Inflections
                 $word = "";
 
                 $base = iconv('utf-8', 'ascii//TRANSLIT', $info[0]);
+                if(isnull($base)) return;
                 switch ($class) {
                     case "pronoun":
                         $word = new Pronoun(
@@ -409,7 +410,7 @@ class Inflections
                 } else if (isset($info[6]) && $info[6] == "slovesa") {
                     $word = new Verb(
                         $wordd,
-                        explode("#", $info[7])[0],
+                        explode("#", $info[count($info)-1])[0],
                         $info[2][0],
                         Czech::TenseToEn(substr($info[4], 0, 4)),
                         Czech::Person($info[0]),

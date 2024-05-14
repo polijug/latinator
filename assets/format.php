@@ -167,10 +167,11 @@ class Interpretation
 
     private static function DeclConj($word)
     {
-        if(Words::hasForms($word) == 0) return "";
-        if (!isnull($word->getDeclination()))
+        $forms = Words::hasForms($word);
+        if($forms == 0) return "";
+        if ($forms == 1 && !isnull($word->getDeclination()))
             return ", " .  (is_array($word->getDeclination()) ? implode(". / ", $word->getDeclination()) . ". deklinace " : $word->getDeclination() . ". deklinace ");
-        if (!isnull($word->getConjugation()))
+        if ($forms == 2 && !isnull($word->getConjugation()))
             return ", " . $word->getConjugation() . ". konjugace";
     }
 

@@ -98,7 +98,6 @@ table {
 
 /*details*/
 details {
-    user-select: none;
     background-color: #008fa8;
     /*(--Second);*/
     padding: 0.6rem 0.6rem 0;
@@ -106,6 +105,7 @@ details {
 }
 
 summary {
+    user-select: none;
     cursor: pointer;
     padding-bottom: 0.6rem;
 }

@@ -185,7 +185,10 @@ class Czech
             "supine" => "přídavné jméno", "non-finite forms" => "neurčité slovesné tvary", "reflexive" => "zvratné"
         ];
         $search = array_keys($translations);
+        $n = count($search);
+        for($i = 0; $i < $n; $i++)
+            $search[$i] = "/\b" . $search[$i] . "\b/iu";
         $replace = array_values($translations);
-        return str_replace($search, $replace, $table);
+        return preg_replace($search, $replace, $table);
     }
 }

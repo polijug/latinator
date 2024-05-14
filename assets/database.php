@@ -29,6 +29,7 @@ class Database
             $conn->query($sql);
         }
     }
+
     public static function insertTable($str, $class, $base)
     {
         if(strlen($str) == 0) return;
@@ -38,7 +39,25 @@ class Database
         $conn->query($tab);
     }
 
-    public static function getWordDB($word)
+    public static function valid($word){
+        $conn = self::connect();
+        $sql = "SELECT * FROM valid WHERE word = '" . $word . "'";
+        $result = $conn->query($sql);
+        if($result->num_rows > 0) return true;
+        return false;
+    }
+
+    public static function insertValid($word)
+    {
+        $conn = self::connect();
+        if(is_array($word))
+            $wor = $word[0]->getWord();
+        else $wor = $word->getWord();
+        $sql = "INSERT IGNORE INTO valid (word) VALUES ('$wor')";
+        $conn->query($sql);
+    }
+
+    public static function getWordDB($word, $base = false)
     {
         $conn = self::connect();
         if (is_string($word))

@@ -16,7 +16,8 @@ class Sentence
 		$this->count = count($sentence);
 		for ($i = 0; $i < $this->count; $i++) {
 			$database = Database::getWordDB($sentence[$i]);
-			if ($database) {
+            $valid = Database::valid($sentence[$i]);
+			if ($database && $valid) {
 				$this->words[] = $database;
 				continue;
 			}

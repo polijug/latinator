@@ -135,15 +135,15 @@ class Sentence
 								unset($this->format[$shape][$j]);
 								$end = true;
 							} else {
-								$keys = $word->getForm();
+								$keys = array_keys($word->getForm());
 								$o = count($keys);
 								for ($k = 0; $k < $o && !$end; $k++) {
-									$arr = Words::formIntersection($word->getForm[$keys[$k]], ["nom", "acc"]);
+									$arr = Words::formIntersection($word->getForm()[$keys[$k]], ["nom", "acc"]);
 									if ($obey || in_array("acc", $arr) || in_array("nom", $arr)) {
 										//možná špatné pořadí
 										$form = in_array("acc", $arr) ? "acc" : "nom";
 										if ($obey)
-											$form = $word->getForm[$keys[$k]][0];
+											$form = $word->getForm()[$keys[$k]][0];
 										if (is_array($word->getGender())) $gender = $keys[$k][0];
 										else $gender = $word->getGender();
 										$shortW = new Noun(

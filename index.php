@@ -155,7 +155,7 @@ class Output
     {
         $file = file_get_contents("assets/head.html");
         if ($lp)
-            $file .= str_replace("[title] | ", "", file_get_contents("assets/lp.html"));
+            $file .= str_replace("[title] |", "", file_get_contents("assets/lp.html"));
         else
             $file .= file_get_contents("assets/main.html");
         $file .= file_get_contents("assets/footer.html");
@@ -167,7 +167,7 @@ class Output
         $this->printed = true;
         $this->setPlaceholder();
         header('Content-type: text/html; charset=utf-8');
-        print(str_replace(["[title] |", "[content]", "[title]"], "", $this->content));
+        print(str_replace(["[content]", "[title]"], "", $this->content));
         die;
     }
     public function setPlaceholder()

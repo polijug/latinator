@@ -12,7 +12,7 @@ class Translate
                 $translation = [];
                 for ($i = 0; $i < $n; $i++) {
                     $item = preg_replace("/(\{[a-z]\|[a-z]{2}\||\{[^}]+}|})/i", "", $translations[$i]);
-                    $item = str_replace([";", "l|en|"], [",", ""], $item);
+                    $item = str_replace([";", "l|en|", "#English|"], [",", ""], $item);
                     if (!str_contains($item, " case"))
                         $translation[] = str_trim($item);
                 }

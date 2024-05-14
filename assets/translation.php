@@ -20,7 +20,7 @@ class Translate
                 $translation = explode(";", API::deepL($text));
                 for ($i = 0; $i < count($translation); $i++) 
                     $translation[$i] = str_trim(implode(", ", array_values(array_unique(explode(", ", $translation[$i])))));
-                return array_values(array_unique($translation));
+                return array_values(arrays::remove_null(array_unique($translation)));
             case "cs":
                 if (WikiText::Derived($text, "cs")) return [];
                 $text = arrays::array_name_slice($text, "=== význam ===");
@@ -34,7 +34,7 @@ class Translate
                     $translations[$i] = str_trim(preg_replace("/(\{[a-z]\|[a-z]{2}\||\{[^}]+}|})/i", "", $translations[$i]));
                 }
 
-                return array_values(explode(", ", implode(", ", str_replace(["|", "/"], ", ", $translations))));
+                return arrays::remove_null(array_values(explode(", ", implode(", ", str_replace(["|", "/"], ", ", $translations)))));
         }
     }
 }

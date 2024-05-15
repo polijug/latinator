@@ -110,7 +110,8 @@ class WikiText
     private static function Base($base, $class = null)
     {
         $words = Database::getWordDB(new Word($base, $class));
-        if ($words) return $words;
+        $valid = Database::valid($base);
+        if ($words && $valid || $words && $class != null) return $words;
         $text = WikiText::Isolate(API::enDict($base),"en", false);
         $cstext = WikiText::Isolate(API::csDict($base), "cs", false);
         if (count($text) == 0 && count($cstext) == 0) return false;

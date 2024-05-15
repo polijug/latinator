@@ -165,9 +165,9 @@ class Adjective extends Noun
         $this->word = $word;
         $form = Czech::FormToEn($form);
         parent::__construct($word, $base, $form, $number, $gender, $declination, $translation);
-        if(is_array($gender)){
+        if (is_array($gender)) {
             $this->form = [];
-            for($i = 0; $i < count($gender); $i++){
+            for ($i = 0; $i < count($gender); $i++) {
                 $this->form[$gender[$i] . "_" . $number] = $form;
             }
         } else $this->form = [$gender . "_" . $number => $form];
@@ -650,6 +650,21 @@ class JSONobj
     {
         return $this->base == $word->base && $this->class == $word->class;
     }
+    public function matchSpecParam($word): bool
+    {
+        $form = Words::hasForms($word);
+        if ($form == 1) {
+            if ($this->number != $word->number) return false;
+            if ($this->form != $word->form) return false;
+        }
+        if ($form == 2) {
+            if ($this->number != $word->number) return false;
+            if ($this->tense != $word->tense) return false;
+            if ($this->person != $word->person) return false;
+            if ($this->mood != $word->mood) return false;
+        }
+        return true;
+    }
 }
 
 class Words
@@ -785,7 +800,7 @@ class Words
                             $result[$keys[$l]] = Words::formIntersection($other->getForm(), $preposition->getWith());
                         }
                     } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
-                        for ($l = 0; $l< $m; $l++) {
+                        for ($l = 0; $l < $m; $l++) {
                             if ($word1->getClass() != "adjective" and $word2->getClass() != "adjective")
                                 $result[$gender[0] . "_" . $numbers[$l]] = self::formIntersection($word1->getForm()[$numbers[$l]], $word2->getForm()[$numbers[$l]]);
                             else if ($word1->getClass() == "adjective" xor $word2->getClass() == "adjective") {
@@ -870,7 +885,7 @@ class Merge
                 $value1 = array_merge($value1, $value2);
             else {
                 $keys = array_unique(array_merge(array_keys($value1), array_keys($value2)));
-                for($i = 0; $i < count($keys); $i++)
+                for ($i = 0; $i < count($keys); $i++)
                     $value1[$keys[$i]] = arrays::remove_null(self::Values($value1[$keys[$i]], $value2[$keys[$i]]));
                 return $value1;
             }

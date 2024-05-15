@@ -25,6 +25,7 @@ class Sentence
 			if ($words)
 				$words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
 			else $words = WikiText::auto($sentence[$i], "en");
+			if($words == false) $words = [];
 			$this->words[] = $words;
 		}
 	}
@@ -49,8 +50,14 @@ class Sentence
 		for ($i = 0; $i < $n; $i++) {
 			$format = $this->format[$i];
 			$short = $format["short"];
-			$word = $words[$i][0]->getWord();
 			$style = $i == 0 ? "style='background-color: #017a8a'" : "";
+			if(isnull($words[$i][0])){
+				$word = $this->sentence[$i];
+				$btn .= "<div class='word' id='$word' $style tabindex=$i><b>$word</b><br>slovo neexistuje</div>";
+				$body .= "<item id='".$word . "_body'><p><b>Slovo nenalezeno ve slovníku.</b></p></item>";
+				continue;
+			}
+			$word = $words[$i][0]->getWord();
 			$btn .= "<div class='word' id='$word' tabindex=$i $style title='" . $short[1] . "'>" . $short[2] . "</div>";
 			$body .= "<item id='" . $word . "_body'><p>" . $short[0] . "</p>";
 			$body .= $format["long"];
@@ -74,6 +81,7 @@ class Sentence
 		$firstNumber = "";
 		for ($i = 0; $i < $n; $i++) {
 			$m = count($this->words[$i]);
+			if(isnull($this->words[$i][0])) continue;
 			$end = false;
 			$candidate = "";
 			$obey = false;

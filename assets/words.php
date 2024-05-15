@@ -758,6 +758,7 @@ class Words
 
     public static function Combine($word1, $word2)
     {
+        if ((!$word1 || $word1 == []) && (!$word2 || $word2 == [])) return false;
         if (!$word1 || $word1 == [] || !$word2 || $word2 == []) return !$word1 || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];

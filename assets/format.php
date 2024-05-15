@@ -33,11 +33,12 @@ class Interpretation
         $str = [];
         $o = count($this->word);
         for ($i = 0; $i < $o; $i++) {
-            $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) {
                 $word = $this->word[$i][$p];
+                if(isnull($word)){
+                    continue;
+                }
                 $base = $word->getWord();
-                $TBase = $word->getBase();
                 if (!isset($str[$base])) $str[$base] = [];
                 switch ($word->getClass()) {
                     case "noun":

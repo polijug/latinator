@@ -571,6 +571,10 @@ class JSONobj
     {
         return $this->translation ?? null;
     }
+    public function addTranslation($translation)
+    {
+        $this->translation = $translation;
+    }
 
     public function getTense()
     {
@@ -664,6 +668,31 @@ class JSONobj
             if ($this->mood != $word->mood) return false;
         }
         return true;
+    }
+    public function Combine($word)
+    {
+        $form = Words::hasForms($word);
+        $trans = $word->getTranslation();
+        $n = count($trans);
+        for ($i = 0; $i < $n; $i++)
+            if (!in_array($trans[$i], $this->getTranslation(), true))
+                $this->addTranslation($trans[$i]);
+        if ($word->getClass() == "preposition")
+            $this->with = $this->with ?? $word->with;
+        if ($form == 1) {
+            $this->gender = $this->gender ?? $word->gender;
+            $this->number = $this->number ?? $word->number;
+            $this->declination = $this->declination ?? $word->declination;
+            $this->table = Table::decideTable($this->table, $word->table);
+            $this->form = $this->form ?? $word->form;
+        }
+        if ($form == 2) {
+            $this->mood = $this->mood ?? $word->mood;
+            $this->number = $this->number ?? $word->number;
+            $this->table = Table::decideTable($this->table, $word->table);
+            $this->tense = $this->tense ?? $word->tense;
+            $this->conjugation = $this->conjugation ?? $word->conjugation;
+        }
     }
 }
 

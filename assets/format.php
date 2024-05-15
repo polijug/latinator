@@ -19,8 +19,10 @@ class Interpretation
                 $this->word[] = $word[$i];
             else {
                 $this->word[] = $word[$i] ? Words::Merge($word[$i]) : false;
-                if ($this->word[$i])
+                if ($this->word[$i]){
                     Database::insert($this->word[$i]);
+                    Database::insertValid($this->word[$i]);
+                }
             }
         if ($n > 1)
             $this->word = Words::Pairable($this->word);

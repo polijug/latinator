@@ -77,14 +77,14 @@ function jsonEncode($object)
 
 function isnull($object): bool
 {
-    return is_null($object) || $object == [] || $object == "";
+    return is_null($object) || $object == [] || $object == "" || $object == " ";
 }
 
 function str_trim($str)
 {
     $lstop = false;
     $rstop = false;
-    $rep = [",", ".", " "];
+    $rep = [",", ".", " ", ":"];
     for ($i = 0; $i < strlen($str) && (!$lstop || !$rstop); $i++) {
         if (in_array($str[$i], $rep) && !$lstop) {
             $str = substr($str, 1, strlen($str) - 1);

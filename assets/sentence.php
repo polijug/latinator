@@ -16,7 +16,7 @@ class Sentence
 		$this->count = count($sentence);
 		for ($i = 0; $i < $this->count; $i++) {
 			$database = Database::getWordDB($sentence[$i]);
-            $valid = Database::valid($sentence[$i]);
+			$valid = Database::valid($sentence[$i]);
 			if ($database && $valid) {
 				$this->words[] = $database;
 				continue;
@@ -25,7 +25,7 @@ class Sentence
 			if ($words)
 				$words = Words::Combine($words, WikiText::auto($sentence[$i], "en"));
 			else $words = WikiText::auto($sentence[$i], "en");
-			if($words == false) $words = [];
+			if ($words == false) $words = [];
 			$this->words[] = $words;
 		}
 	}
@@ -51,10 +51,10 @@ class Sentence
 			$format = $this->format[$i];
 			$short = $format["short"];
 			$style = $i == 0 ? "style='background-color: #017a8a'" : "";
-			if(isnull($words[$i][0])){
+			if (isnull($words[$i][0])) {
 				$word = $this->sentence[$i];
 				$btn .= "<div class='word' id='$word' $style tabindex=$i><b>$word</b><br>slovo neexistuje</div>";
-				$body .= "<item id='".$word . "_body'><p><b>Slovo nenalezeno ve slovníku.</b></p></item>";
+				$body .= "<item id='" . $word . "_body'><p><b>Slovo nenalezeno ve slovníku.</b></p></item>";
 				continue;
 			}
 			$word = $words[$i][0]->getWord();
@@ -81,7 +81,7 @@ class Sentence
 		$firstNumber = "";
 		for ($i = 0; $i < $n; $i++) {
 			$m = count($this->words[$i]);
-			if(isnull($this->words[$i][0])) continue;
+			if (isnull($this->words[$i][0])) continue;
 			$end = false;
 			$candidate = "";
 			$obey = false;
@@ -147,10 +147,9 @@ class Sentence
 								$keys = array_keys($word->getForm());
 								$o = count($keys);
 								for ($k = 0; $k < $o && !$end; $k++) {
-									$arr = Words::formIntersection($word->getForm()[$keys[$k]], ["nom", "acc"]);
-									if ($obey || in_array("acc", $arr) || in_array("nom", $arr)) {
-										//možná špatné pořadí
-										$form = in_array("acc", $arr) ? "acc" : "nom";
+									$arr = Words::formIntersection($word->getForm()[$keys[$k]], ["acc"]);
+									if ($obey || in_array("acc", $arr)) {
+										$form = "acc";
 										if ($obey)
 											$form = $word->getForm()[$keys[$k]][0];
 										if (is_array($word->getGender())) $gender = $keys[$k][0];
@@ -175,7 +174,7 @@ class Sentence
 						}
 						break;
 					case "verb":
-						if ($candidate == "" || explode("_", $candidate)[0] < 2)//podmínka, ale jaká?
+						if ($candidate == "" || explode("_", $candidate)[0] < 2) //podmínka, ale jaká?
 							$candidate = 2 . "_" . $j;
 						if ($i == $n - 1 && $firstPerson != -1) {
 							$keys = array_keys($word->getPerson());
@@ -262,7 +261,7 @@ class Sentence
 					case "connective":
 						$val = 1;
 					default:
-					    $val = !isset($val) ? 0 : $val;
+						$val = !isset($val) ? 0 : $val;
 						if ($candidate == "" || explode("_", $candidate)[0] < $val)
 							$candidate = $val . "_$j";
 						if ($obey) {

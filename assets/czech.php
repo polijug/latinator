@@ -18,6 +18,8 @@ class Czech
                 return "příslovce";
             case "connective":
                 return "spojka";
+            case "preposition":
+                return "předložka";
             default:
                 return $class;
         }

@@ -97,10 +97,11 @@ class Interpretation
                             $arr[] = self::Class($word, ["person" => $word->getPerson()[$keys[$k]], "gender" => substr($keys[$k], 0, 3), "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                         $str[$base][] = $arr;
                         break;
+                    case "connective":
                     case "adverb":
                         $str[$base][] = self::Class($word);
                         break;
-                    case "connective":
+                    case "preposition":
                         if (is_array($word->with)) {
                             $arr = [];
                             $n = count($word->with);

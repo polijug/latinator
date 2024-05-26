@@ -97,9 +97,10 @@ class Sentence
 						$val = $val ?? 3;
 					case "pronoun":
 						$val = $val ?? 4;
-						if ($candidate == "" || explode("_", $candidate)[0] < $val)
-							$candidate = $val . "_" . $j;
-						if ($i == 0 && $word->getClass() == "noun" || $word->getClass() == "pronoun") {
+						if (($candidate == "" || explode("_", $candidate)[0] < $val) && !isnull($word->getTranslation())){
+                            $candidate = $val . "_" . $j;
+                        }
+						if ($i == 0 && ($word->getClass() == "noun" || $word->getClass() == "pronoun")) {
 							$keys = array_keys($word->getForm());
 							$o = count($keys);
 							for ($k = 0; $k < $o && !$end; $k++) {
@@ -174,7 +175,7 @@ class Sentence
 						}
 						break;
 					case "verb":
-						if ($candidate == "" || explode("_", $candidate)[0] < 2)//podmínka, ale jaká?
+						if (($candidate == "" || explode("_", $candidate)[0] < 2) && !isnull($word->getTranslation()))//podmínka, ale jaká?
 							$candidate = 2 . "_" . $j;
 						if ($i == $n - 1 && $firstPerson != -1) {
 							$keys = array_keys($word->getPerson());
@@ -262,7 +263,8 @@ class Sentence
 						$val = 1;
 					default:
 					    $val = !isset($val) ? 0 : $val;
-						if ($candidate == "" || explode("_", $candidate)[0] < $val)
+                        mlog($word->getTranslation());
+						if (($candidate == "" || explode("_", $candidate)[0] < $val) && !isnull($word->getTranslation()))
 							$candidate = $val . "_$j";
 						if ($obey) {
 							$shortW = new Connective($word->getBase(), $word->getTranslation());

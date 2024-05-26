@@ -164,7 +164,7 @@ class Interpretation
     }
     private static function Title($word)
     {
-        $translation = $word->getTranslation()[0];
+        $translation = $word->getTranslation(0);
 
         return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . self::DeclConj($word);
     }

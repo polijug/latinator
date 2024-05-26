@@ -174,7 +174,7 @@ class Sentence
 						}
 						break;
 					case "verb":
-						if ($candidate == "" || explode("_", $candidate)[0] < 2) //podmínka, ale jaká?
+						if ($candidate == "" || explode("_", $candidate)[0] < 2)//podmínka, ale jaká?
 							$candidate = 2 . "_" . $j;
 						if ($i == $n - 1 && $firstPerson != -1) {
 							$keys = array_keys($word->getPerson());
@@ -261,7 +261,7 @@ class Sentence
 					case "connective":
 						$val = 1;
 					default:
-						$val = !isset($val) ? 0 : $val;
+					    $val = !isset($val) ? 0 : $val;
 						if ($candidate == "" || explode("_", $candidate)[0] < $val)
 							$candidate = $val . "_$j";
 						if ($obey) {
@@ -301,7 +301,7 @@ class Sentence
 				$formN = $word->getForm();
 				$formN = Short::Form($formN[array_keys($formN)[0]]);
 				$form = $formN . ". pád ";
-				$translation = $word->getTranslation()[0] . " - ";
+				$translation = $word->getTranslation(0) . " - ";
 				$translation = $translation == " - " ? "" : $translation;
 				$number = "čísla " . Short::Number($word->getNumber()) . "ho, ";
 				$gender = !isnull($word->getGender()) ? "rod " . Short::Gender_N($word->getGender()) . ", " : "";
@@ -312,7 +312,7 @@ class Sentence
 			case "verb":
 				$person = $word->getPerson();
 				$person = $person[array_keys($person)[0]];
-				$translation = $word->getTranslation()[0] . " - ";
+				$translation = $word->getTranslation(0) . " - ";
 				$translation = $translation == " - " ? "" : $translation;
 				$str = $translation . "$person. osoba čísla " . Short::Number($word->getNumber()) . "ho, čas " . Short::Tense($word->getTense()) .
 					", způsob " . Short::Mood($word->getMood()) . ", rod " . Short::Gender_V($word->getGender()) . ", " . Czech::Class($word->getClass());
@@ -320,15 +320,15 @@ class Sentence
 					", zp. " . substr(Short::Mood($word->getMood()), 0, 3) . "., rod " . Short::Gender_V($word->getGender(), true) . ", " . Czech::Class($word->getClass());
 				break;
 			case "preposition":
-				$str = $word->getTranslation()[0] . " - s " . Short::Form($word->form) . ". pádem, " . Czech::Class($word->getClass());
+				$str = $word->getTranslation(0) . " - s " . Short::Form($word->form) . ". pádem, " . Czech::Class($word->getClass());
 				$tooltip = "s " . Short::Form($word->form) . ". p., " . Czech::Class($word->getClass());
 				break;
 			default:
-				$str = $word->getTranslation()[0] . " - " . Czech::Class($word->getClass());
+				$str = $word->getTranslation(0) . " - " . Czech::Class($word->getClass());
 				$tooltip = Czech::Class($word->getClass());
 				break;
 		}
-		$button = "<b>" . $word->getWord() . "</b><br>" . $word->getTranslation()[0];
+		$button = "<b>" . $word->getWord() . "</b><br>" . $word->getTranslation(0);
 		return [
 			$str,
 			$tooltip,

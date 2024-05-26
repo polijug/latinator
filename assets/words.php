@@ -864,7 +864,9 @@ class Words
                         $keys = array_keys($other->getForm());
                         $m = count($keys);
                         for ($l = 0; $l < $m; $l++) {
-                            $result[$keys[$l]] = Words::formIntersection($other->getForm(), $preposition->getWith());
+                            $form = Words::formIntersection($other->getForm(), $preposition->getWith());
+                            if($form != [])
+                                $result[$keys[$l]] = $form;
                         }
                     } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
                         for ($l = 0; $l < $m; $l++) {

@@ -259,7 +259,6 @@ class Preposition extends Word
     public function __construct($word, $base, $with, $translation)
     {
         $this->word = $word;
-        $with = Czech::FormToEn($with);
         $this->base = str_trim($base);
         $this->with = $with;
         $this->translation = $translation;
@@ -268,6 +267,7 @@ class Preposition extends Word
     public $base;
     public $with;
     public $class = "preposition";
+    public $bold;
 
     public function ParseWith($lang = "cs")
     { //TODO in en
@@ -281,6 +281,19 @@ class Preposition extends Word
             preg_match_all("/\{la-prep\|(?<letter>[a-z]{3})/u", $this->with, $form);
             $this->with = $form['letter'];
         }
+    }
+
+    public function getBold()
+    {
+        return $this->bold ?? null;
+    }
+
+    public function setBold($bold){
+        $this->bold = $bold;
+    }
+
+    public function getWith(){
+        return $this->with ?? null;
     }
 
     public function toJSON(): string
@@ -318,7 +331,7 @@ class Preposition extends Word
     public function Merge($word)
     {
         $this->translation = Merge::Values($this->with, $word->with);
-        $this->translation = Merge::Values($this->translation, $word->translation, true);
+        $this->translation = Merge::Values($this->translation, $word->translation);
     }
 }
 
@@ -478,9 +491,16 @@ class Word
         return $this->class ?? null;
     }
 
-    public function getTranslation()
+    public function getTranslation($int = 1)
     {
-        return $this->translation ?? null;
+        if($int == 1)
+            return $this->translation ?? null;
+        else{
+            $translation = $this->translation[0];
+            if(strlen($translation) > 23)
+                return explode(", ", $translation)[0];
+            return $translation;
+        }
     }
 
     public function getWord()
@@ -573,9 +593,16 @@ class JSONobj
         return $this->class ?? null;
     }
 
-    public function getTranslation()
+    public function getTranslation($int = 1)
     {
-        return $this->translation ?? null;
+        if($int == 1)
+            return $this->translation ?? null;
+        else{
+            $translation = $this->translation[0];
+            if(strlen($translation) > 23)
+                return explode(", ", $translation)[0];
+            return $translation;
+        }
     }
     public function addTranslation($translation)
     {
@@ -659,6 +686,10 @@ class JSONobj
     public function isSame($word): bool
     {
         return $this->base == $word->base && $this->class == $word->class;
+    }
+    public function getWith()
+    {
+        return $this->with ?? null;
     }
     public function matchSpecParam($word): bool
     {

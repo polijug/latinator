@@ -128,7 +128,7 @@ class Sentence
 							}
 						}
 						if (!$end) {
-							if ($word->getBold() != null) {
+							if ($word->getBold() != null && strlen(array_keys($word->getBold())[0]) < 3) {
 								$key = array_keys($word->getBold())[0];
 								$shortW = new Noun(
 									$word->getWord(),

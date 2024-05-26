@@ -269,12 +269,18 @@ class Preposition extends Word
     public $with;
     public $class = "preposition";
 
-    public function ParseWith()
+    public function ParseWith($lang = "cs")
     { //TODO in en
         if (!isset($this->with))
             return;
-        $with = explode("''", $this->with)[1];
-        $this->with = substr($with, 1, 3);
+        if($lang == "cs") {
+            $with = explode("''", $this->with)[1];
+            $this->with = Czech::FormToEn(str_trim(substr($with, 1, 3)));
+        }
+        else{
+            preg_match_all("/\{la-prep\|(?<letter>[a-z]{3})/u", $this->with, $form);
+            $this->with = $form['letter'];
+        }
     }
 
     public function toJSON(): string

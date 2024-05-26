@@ -144,7 +144,6 @@ class Interpretation
                 $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . $boldE;
                 break;
             case "verb":
-                $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .

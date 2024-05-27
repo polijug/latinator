@@ -263,7 +263,6 @@ class Sentence
 						$val = 1;
 					default:
 					    $val = !isset($val) ? 0 : $val;
-                        mlog($word->getTranslation());
 						if (($candidate == "" || explode("_", $candidate)[0] < $val) && !isnull($word->getTranslation()))
 							$candidate = $val . "_$j";
 						if ($obey) {

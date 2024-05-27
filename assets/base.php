@@ -141,7 +141,7 @@ class Base
                                 $base[1],
                                 $translate
                             );
-                            $sentence->ParseWith();
+                            $sentence->ParseWith("en");
                             break;
                         case "Conjunction":
                             $sentence = new Connective($word, $translate);

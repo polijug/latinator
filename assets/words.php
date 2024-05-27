@@ -165,9 +165,9 @@ class Adjective extends Noun
         $this->word = $word;
         $form = Czech::FormToEn($form);
         parent::__construct($word, $base, $form, $number, $gender, $declination, $translation);
-        if(is_array($gender)){
+        if (is_array($gender)) {
             $this->form = [];
-            for($i = 0; $i < count($gender); $i++){
+            for ($i = 0; $i < count($gender); $i++) {
                 $this->form[$gender[$i] . "_" . $number] = $form;
             }
         } else $this->form = [$gender . "_" . $number => $form];
@@ -259,7 +259,6 @@ class Preposition extends Word
     public function __construct($word, $base, $with, $translation)
     {
         $this->word = $word;
-        $with = Czech::FormToEn($with);
         $this->base = str_trim($base);
         $this->with = $with;
         $this->translation = $translation;
@@ -268,13 +267,33 @@ class Preposition extends Word
     public $base;
     public $with;
     public $class = "preposition";
+    public $bold;
 
-    public function ParseWith()
+    public function ParseWith($lang = "cs")
     { //TODO in en
         if (!isset($this->with))
             return;
-        $with = explode("''", $this->with)[1];
-        $this->with = substr($with, 1, 3);
+        if($lang == "cs") {
+            $with = explode("''", $this->with)[1];
+            $this->with = Czech::FormToEn(str_trim(substr($with, 2, 3)));
+        }
+        else{
+            preg_match_all("/\{la-prep\|(?<letter>[a-z]{3})/u", $this->with, $form);
+            $this->with = $form['letter'];
+        }
+    }
+
+    public function getBold()
+    {
+        return $this->bold ?? null;
+    }
+
+    public function setBold($bold){
+        $this->bold = $bold;
+    }
+
+    public function getWith(){
+        return $this->with ?? null;
     }
 
     public function toJSON(): string
@@ -311,8 +330,8 @@ class Preposition extends Word
 
     public function Merge($word)
     {
-        $this->translation = Merge::Values($this->with, $word->with);
-        $this->translation = Merge::Values($this->translation, $word->translation, true);
+        $this->with = Merge::Values($this->with, $word->with);
+        $this->translation = Merge::Values($this->translation, $word->translation);
     }
 }
 
@@ -472,9 +491,16 @@ class Word
         return $this->class ?? null;
     }
 
-    public function getTranslation()
+    public function getTranslation($int = 1)
     {
-        return $this->translation ?? null;
+        if($int == 1)
+            return $this->translation ?? null;
+        else{
+            $translation = $this->translation[0];
+            if(strlen($translation) > 23)
+                return explode(", ", $translation)[0];
+            return $translation;
+        }
     }
 
     public function getWord()
@@ -515,6 +541,11 @@ class Word
         for ($i = 0; $i < $n; $i++)
             if (!in_array($trans[$i], $this->getTranslation(), true))
                 $this->addTranslation($trans[$i]);
+    }
+
+    public function Merge($word)
+    {
+        $this->translation = Merge::Values($this->translation, $word->translation);
     }
 
     public function isSame($word): bool
@@ -567,9 +598,20 @@ class JSONobj
         return $this->class ?? null;
     }
 
-    public function getTranslation()
+    public function getTranslation($int = 1)
     {
-        return $this->translation ?? null;
+        if($int == 1)
+            return $this->translation ?? null;
+        else{
+            $translation = $this->translation[0];
+            if(strlen($translation) > 23)
+                return explode(", ", $translation)[0];
+            return $translation;
+        }
+    }
+    public function addTranslation($translation)
+    {
+        $this->translation = $translation;
     }
 
     public function getTense()
@@ -650,6 +692,50 @@ class JSONobj
     {
         return $this->base == $word->base && $this->class == $word->class;
     }
+    public function getWith()
+    {
+        return $this->with ?? null;
+    }
+    public function matchSpecParam($word): bool
+    {
+        $form = Words::hasForms($word);
+        if ($form == 1) {
+            if ($this->number != $word->number) return false;
+            if ($this->form != $word->form) return false;
+        }
+        if ($form == 2) {
+            if ($this->number != $word->number) return false;
+            if ($this->tense != $word->tense) return false;
+            if ($this->person != $word->person) return false;
+            if ($this->mood != $word->mood) return false;
+        }
+        return true;
+    }
+    public function Combine($word)
+    {
+        $form = Words::hasForms($word);
+        $trans = $word->getTranslation();
+        $n = count($trans);
+        for ($i = 0; $i < $n; $i++)
+            if (!in_array($trans[$i], $this->getTranslation(), true))
+                $this->addTranslation($trans[$i]);
+        if ($word->getClass() == "preposition")
+            $this->with = $this->with ?? $word->with;
+        if ($form == 1) {
+            $this->gender = $this->gender ?? $word->gender;
+            $this->number = $this->number ?? $word->number;
+            $this->declination = $this->declination ?? $word->declination;
+            $this->table = Table::decideTable($this->table, $word->table);
+            $this->form = $this->form ?? $word->form;
+        }
+        if ($form == 2) {
+            $this->mood = $this->mood ?? $word->mood;
+            $this->number = $this->number ?? $word->number;
+            $this->table = Table::decideTable($this->table, $word->table);
+            $this->tense = $this->tense ?? $word->tense;
+            $this->conjugation = $this->conjugation ?? $word->conjugation;
+        }
+    }
 }
 
 class Words
@@ -714,6 +800,7 @@ class Words
 
     public static function Combine($word1, $word2)
     {
+        if ((!$word1 || $word1 == []) && (!$word2 || $word2 == [])) return false;
         if (!$word1 || $word1 == [] || !$word2 || $word2 == []) return !$word1 || $word1 == [] ? $word2 : $word1;
         $n1 = count($word1);
         $output = [];
@@ -764,6 +851,7 @@ class Words
                     $word1 = $words[$i][$j];
                     $word2 = $words[$i - 1][$k];
                     $result = [];
+                    if(!$word1 || !$word2 || isnull($word1) || isnull($word2)) continue;
                     if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
                     if ($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
 
@@ -782,10 +870,12 @@ class Words
                         $keys = array_keys($other->getForm());
                         $m = count($keys);
                         for ($l = 0; $l < $m; $l++) {
-                            $result[$keys[$l]] = Words::formIntersection($other->getForm(), $preposition->getWith());
+                            $form = Words::formIntersection($other->getForm(), $preposition->getWith());
+                            if($form != [])
+                                $result[$keys[$l]] = $form;
                         }
                     } else if ($word1->getClass() != "adjective" or $word2->getClass() != "adjective")
-                        for ($l = 0; $l< $m; $l++) {
+                        for ($l = 0; $l < $m; $l++) {
                             if ($word1->getClass() != "adjective" and $word2->getClass() != "adjective")
                                 $result[$gender[0] . "_" . $numbers[$l]] = self::formIntersection($word1->getForm()[$numbers[$l]], $word2->getForm()[$numbers[$l]]);
                             else if ($word1->getClass() == "adjective" xor $word2->getClass() == "adjective") {
@@ -870,7 +960,7 @@ class Merge
                 $value1 = array_merge($value1, $value2);
             else {
                 $keys = array_unique(array_merge(array_keys($value1), array_keys($value2)));
-                for($i = 0; $i < count($keys); $i++)
+                for ($i = 0; $i < count($keys); $i++)
                     $value1[$keys[$i]] = arrays::remove_null(self::Values($value1[$keys[$i]], $value2[$keys[$i]]));
                 return $value1;
             }

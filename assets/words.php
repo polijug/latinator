@@ -330,7 +330,7 @@ class Preposition extends Word
 
     public function Merge($word)
     {
-        $this->translation = Merge::Values($this->with, $word->with);
+        $this->with = Merge::Values($this->with, $word->with);
         $this->translation = Merge::Values($this->translation, $word->translation);
     }
 }

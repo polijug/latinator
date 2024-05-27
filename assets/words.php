@@ -543,6 +543,11 @@ class Word
                 $this->addTranslation($trans[$i]);
     }
 
+    public function Merge($word)
+    {
+        $this->translation = Merge::Values($this->translation, $word->translation);
+    }
+
     public function isSame($word): bool
     {
         return $this->base == $word->base && $this->class == $word->class;

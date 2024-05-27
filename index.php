@@ -43,9 +43,11 @@ else
 if (!$sentence && !$definition) { //show main page
     $output->return();
 } else if ($sentence && !$definition) {
+    $output->setValue($sentence);
     $sent = new Sentence($sentence);
     $sent->Formate();
 } else if (!$sentence && $definition) {
+    $output->setValue($definition);
     $def = new Definition($definition);
     $def->print();
 } else {
@@ -167,7 +169,7 @@ class Output
         $this->printed = true;
         $this->setPlaceholder();
         header('Content-type: text/html; charset=utf-8');
-        print(str_replace(["[content]", "[title]"], "", $this->content));
+        print(str_replace(["[content]", "[title]", "[value]"], "", $this->content));
         die;
     }
     public function setPlaceholder()
@@ -179,6 +181,10 @@ class Output
             $str .= $i < 2 ? ", " : "...";
         }
         $this->content = str_replace("[placeholder]", $str, $this->content);
+    }
+    public function setValue($value){
+        $value = str_replace([" ", "+", "%20"], [" ", " ", " "], $value);
+        $this->content = str_replace("[value]", $value, $this->content);
     }
     public function setTitle($title)
     {

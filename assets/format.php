@@ -33,11 +33,12 @@ class Interpretation
         $str = [];
         $o = count($this->word);
         for ($i = 0; $i < $o; $i++) {
-            $last = "";
             for ($p = 0; $p < count($this->word[$i]); $p++) {
                 $word = $this->word[$i][$p];
+                if(isnull($word)){
+                    continue;
+                }
                 $base = $word->getWord();
-                $TBase = $word->getBase();
                 if (!isset($str[$base])) $str[$base] = [];
                 switch ($word->getClass()) {
                     case "noun":
@@ -96,10 +97,11 @@ class Interpretation
                             $arr[] = self::Class($word, ["person" => $word->getPerson()[$keys[$k]], "gender" => substr($keys[$k], 0, 3), "number" => $keys[$k][strlen($keys[$k]) - 1]]);
                         $str[$base][] = $arr;
                         break;
+                    case "connective":
                     case "adverb":
                         $str[$base][] = self::Class($word);
                         break;
-                    case "connective":
+                    case "preposition":
                         if (is_array($word->with)) {
                             $arr = [];
                             $n = count($word->with);
@@ -142,7 +144,6 @@ class Interpretation
                 $short = $boldS . Czech::Form(isset($variables["form"]) ? $variables["form"] : $word->getForm()[$word->getNumber()]) . " " . Czech::Number(isset($variables["number"]) ? $variables["number"] : $word->getNumber()) . "u" . $gender . $boldE;
                 break;
             case "verb":
-                $person = "";
                 if ($variables["person"] != "0") {
                     $person = is_array($variables["person"]) ? implode(". / ", $variables["person"]) . ". osoby " : $variables["person"] . ". osoba ";
                     $short = $person . "" . Czech::Number($variables != null ? $variables["number"] : $word->getNumber()) . "u " . Czech::Tense($word->getTense()) . " " . Czech::Gender($variables != null ? $variables["gender"] : $word->getGender()) . " " .
@@ -162,7 +163,7 @@ class Interpretation
     }
     private static function Title($word)
     {
-        $translation = $word->getTranslation()[0];
+        $translation = $word->getTranslation(0);
 
         return $word->getBase() . " ($translation) - " . Czech::Class($word->getClass()) . self::DeclConj($word);
     }

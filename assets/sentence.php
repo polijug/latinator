@@ -210,7 +210,7 @@ class Sentence
 						if (!$end) {
 							$mood = Words::formIntersection($word->getMood(), ["indc", "inf"]);
 							$tense = Words::formIntersection($word->getTense(), ["pres", "impf", "futr"]);
-							if ($obey || Words::formIntersection($word->getGender(), "act")[0] == "act") {
+							if ($obey /*|| Words::formIntersection($word->getGender(), "act")[0] == "act"*/) {
 								if ($mood != [] || $obey)
 									if ($tense != [] || $obey) {
 										$number = is_array($word->getNumber()) ? $word->getNumber()[0] : $word->getNumber();

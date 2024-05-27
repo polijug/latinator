@@ -851,6 +851,7 @@ class Words
                     $word1 = $words[$i][$j];
                     $word2 = $words[$i - 1][$k];
                     $result = [];
+                    if(!$word1 || !$word2 || isnull($word1) || isnull($word2)) continue;
                     if (!in_array($word1->getClass(), $pairable) || !in_array($word2->getClass(), $pairable)) continue;
                     if ($word1->getClass() == "noun" && $word2->getClass() == "noun") continue;
 

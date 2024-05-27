@@ -275,7 +275,7 @@ class Preposition extends Word
             return;
         if($lang == "cs") {
             $with = explode("''", $this->with)[1];
-            $this->with = Czech::FormToEn(str_trim(substr($with, 1, 3)));
+            $this->with = Czech::FormToEn(str_trim(substr($with, 2, 3)));
         }
         else{
             preg_match_all("/\{la-prep\|(?<letter>[a-z]{3})/u", $this->with, $form);

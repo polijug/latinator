@@ -588,9 +588,9 @@ class JSONobj
             $this->bold = $bold;
         else $this->bold = Merge::Values($this->bold, $bold);
     }
-    public function getBase(): string
+    public function getBase()
     {
-        return str_trim($this->base);
+        return isnull($this->base) ? str_trim($this->base) : null;
     }
 
     public function getClass()
